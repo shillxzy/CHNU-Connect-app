@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197 d17.13
+VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CHNU-Connect.DAL", "CHNU-Connect.DAL\CHNU-Connect.DAL.csproj", "{CD7DC633-9F33-450D-9B49-B196CC76CB91}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CHNU-Connect.DAL", "CHNU-Co
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CHNU-Connect.API", "CHNU-Connect.API\CHNU-Connect.API.csproj", "{E1B26B24-11EB-4D48-9193-B6504BAFC1C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CHNU-Connect.BLL", "CHNU-Connect.BLL\CHNU-Connect.BLL.csproj", "{D859AEB8-6FBC-4185-AB73-E7D215EC2A33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +26,10 @@ Global
 		{E1B26B24-11EB-4D48-9193-B6504BAFC1C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1B26B24-11EB-4D48-9193-B6504BAFC1C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1B26B24-11EB-4D48-9193-B6504BAFC1C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D859AEB8-6FBC-4185-AB73-E7D215EC2A33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D859AEB8-6FBC-4185-AB73-E7D215EC2A33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D859AEB8-6FBC-4185-AB73-E7D215EC2A33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D859AEB8-6FBC-4185-AB73-E7D215EC2A33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
