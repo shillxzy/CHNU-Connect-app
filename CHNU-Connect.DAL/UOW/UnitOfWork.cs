@@ -10,11 +10,23 @@ namespace CHNU_Connect.DAL.UOW
         private readonly Dictionary<Type, object> _repositories;
         private IDbContextTransaction? _transaction;
 
+        private IUserRepository? _userRepository;
+        private IPostRepository? _postRepository;
+        private IEventRepository? _eventRepository;
+        private IGroupRepository? _groupRepository;
+        private IMessageRepository? _messageRepository;
+
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
             _repositories = new Dictionary<Type, object>();
         }
+
+        public IUserRepository UserRepository => _userRepository ??= new UserRepository(_context);
+        public IPostRepository PostRepository => _postRepository ??= new PostRepository(_context);
+        public IEventRepository EventRepository => _eventRepository ??= new EventRepository(_context);
+        public IGroupRepository GroupRepository => _groupRepository ??= new GroupRepository(_context);
+        public IMessageRepository MessageRepository => _messageRepository ??= new MessageRepository(_context);
 
         public IGenericRepository<T> Repository<T>() where T : class
         {
