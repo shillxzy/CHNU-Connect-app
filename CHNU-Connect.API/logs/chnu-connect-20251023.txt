@@ -4,3 +4,70 @@
 2025-10-23 21:35:50.987 +03:00 [INF] Application started. Press Ctrl+C to shut down.
 2025-10-23 21:35:50.989 +03:00 [INF] Hosting environment: Development
 2025-10-23 21:35:50.990 +03:00 [INF] Content root path: C:\Users\dmska\source\repos\CHNU-Connect\CHNU-Connect.API
+2025-10-23 21:45:21.955 +03:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-23 21:45:28.276 +03:00 [INF] Now listening on: https://localhost:7083
+2025-10-23 21:45:28.278 +03:00 [INF] Now listening on: http://localhost:5271
+2025-10-23 21:45:28.324 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 21:45:28.326 +03:00 [INF] Hosting environment: Development
+2025-10-23 21:45:28.327 +03:00 [INF] Content root path: C:\Users\dmska\source\repos\CHNU-Connect\CHNU-Connect.API
+2025-10-23 21:47:31.565 +03:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-23 21:47:36.988 +03:00 [INF] Now listening on: https://localhost:7083
+2025-10-23 21:47:36.990 +03:00 [INF] Now listening on: http://localhost:5271
+2025-10-23 21:47:37.035 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 21:47:37.038 +03:00 [INF] Hosting environment: Development
+2025-10-23 21:47:37.039 +03:00 [INF] Content root path: C:\Users\dmska\source\repos\CHNU-Connect\CHNU-Connect.API
+2025-10-23 21:47:52.565 +03:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-23 21:47:57.950 +03:00 [INF] Now listening on: https://localhost:7083
+2025-10-23 21:47:57.953 +03:00 [INF] Now listening on: http://localhost:5271
+2025-10-23 21:47:57.987 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 21:47:57.988 +03:00 [INF] Hosting environment: Development
+2025-10-23 21:47:57.991 +03:00 [INF] Content root path: C:\Users\dmska\source\repos\CHNU-Connect\CHNU-Connect.API
+2025-10-23 21:48:31.083 +03:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-23 21:48:37.590 +03:00 [INF] Now listening on: https://localhost:7083
+2025-10-23 21:48:37.592 +03:00 [INF] Now listening on: http://localhost:5271
+2025-10-23 21:48:37.632 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 21:48:37.634 +03:00 [INF] Hosting environment: Development
+2025-10-23 21:48:37.638 +03:00 [INF] Content root path: C:\Users\dmska\source\repos\CHNU-Connect\CHNU-Connect.API
+2025-10-23 21:49:43.798 +03:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-23 21:49:50.639 +03:00 [INF] Now listening on: https://localhost:7083
+2025-10-23 21:49:50.642 +03:00 [INF] Now listening on: http://localhost:5271
+2025-10-23 21:49:50.746 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 21:49:50.750 +03:00 [INF] Hosting environment: Development
+2025-10-23 21:49:50.751 +03:00 [INF] Content root path: C:\Users\dmska\source\repos\CHNU-Connect\CHNU-Connect.API
+2025-10-23 21:51:09.255 +03:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-23 21:51:14.457 +03:00 [INF] Now listening on: https://localhost:7083
+2025-10-23 21:51:14.459 +03:00 [INF] Now listening on: http://localhost:5271
+2025-10-23 21:51:14.491 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 21:51:14.493 +03:00 [INF] Hosting environment: Development
+2025-10-23 21:51:14.496 +03:00 [INF] Content root path: C:\Users\dmska\source\repos\CHNU-Connect\CHNU-Connect.API
+2025-10-23 21:51:25.798 +03:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-23 21:51:31.739 +03:00 [INF] Now listening on: https://localhost:7083
+2025-10-23 21:51:31.740 +03:00 [INF] Now listening on: http://localhost:5271
+2025-10-23 21:51:31.773 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 21:51:31.775 +03:00 [INF] Hosting environment: Development
+2025-10-23 21:51:31.778 +03:00 [INF] Content root path: C:\Users\dmska\source\repos\CHNU-Connect\CHNU-Connect.API
+2025-10-23 22:17:09.498 +03:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-23 22:17:15.923 +03:00 [INF] Now listening on: https://localhost:7083
+2025-10-23 22:17:15.925 +03:00 [INF] Now listening on: http://localhost:5271
+2025-10-23 22:17:15.967 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 22:17:15.969 +03:00 [INF] Hosting environment: Development
+2025-10-23 22:17:15.971 +03:00 [INF] Content root path: C:\Users\dmska\source\repos\CHNU-Connect\CHNU-Connect.API
+2025-10-23 22:21:14.198 +03:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-23 22:21:19.628 +03:00 [INF] Now listening on: https://localhost:7083
+2025-10-23 22:21:19.630 +03:00 [INF] Now listening on: http://localhost:5271
+2025-10-23 22:21:19.672 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 22:21:19.674 +03:00 [INF] Hosting environment: Development
+2025-10-23 22:21:19.676 +03:00 [INF] Content root path: C:\Users\dmska\source\repos\CHNU-Connect\CHNU-Connect.API
+2025-10-23 22:25:06.445 +03:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-23 22:25:11.993 +03:00 [INF] Now listening on: https://localhost:7083
+2025-10-23 22:25:11.995 +03:00 [INF] Now listening on: http://localhost:5271
+2025-10-23 22:25:12.043 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 22:25:12.045 +03:00 [INF] Hosting environment: Development
+2025-10-23 22:25:12.048 +03:00 [INF] Content root path: C:\Users\dmska\source\repos\CHNU-Connect\CHNU-Connect.API
+2025-10-23 22:25:41.114 +03:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-23 22:25:46.639 +03:00 [INF] Now listening on: https://localhost:7083
+2025-10-23 22:25:46.642 +03:00 [INF] Now listening on: http://localhost:5271
+2025-10-23 22:25:46.683 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-23 22:25:46.685 +03:00 [INF] Hosting environment: Development
+2025-10-23 22:25:46.686 +03:00 [INF] Content root path: C:\Users\dmska\source\repos\CHNU-Connect\CHNU-Connect.API
+2025-10-23 22:33:55.079 +03:00 [INF] New user registered: @chnu.edu.ua

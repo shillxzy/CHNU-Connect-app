@@ -43,7 +43,7 @@ namespace CHNU_Connect.API
                     }
                 });
 
-                // Add JWT Authentication to Swagger
+                // Add JWT Authorization support
                 c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
@@ -96,21 +96,19 @@ namespace CHNU_Connect.API
 
             // ---------- MIDDLEWARE PIPELINE ----------
             app.UseMiddleware<CHNU_Connect.API.Middleware.GlobalExceptionHandlingMiddleware>();
-            
-            if (app.Environment.IsDevelopment())
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
             {
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "CHNU Connect API v1");
-                    c.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
-                });
-            }
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CHNU Connect API v1");
+                c.RoutePrefix = "swagger"; 
+            });
 
             app.UseHttpsRedirection();
             app.UseCors("AllowAll");
             app.UseAuthentication();
             app.UseAuthorization();
+
             app.MapControllers();
 
             app.Run();
