@@ -25,6 +25,7 @@ namespace CHNU_Connect.API
             }
 
 
+            app.UseMiddleware<CHNU_Connect.API.Middleware.GlobalExceptionHandlingMiddleware>();
             app.UseHttpsRedirection();
 
             // app.UseAuthorization();
