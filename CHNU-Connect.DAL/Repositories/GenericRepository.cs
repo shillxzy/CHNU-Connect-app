@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CHNU_Connect.DAL.Repositories
 {
-    public class GenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         private readonly AppDbContext _context;
         private readonly DbSet<T> _dbSet;
