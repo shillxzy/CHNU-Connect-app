@@ -1,11 +1,11 @@
-﻿using KnowledgeCheck.BLL.DTOs.Auth;
+﻿using CHNU_Connect.BLL.DTOs.Auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KnowledgeCheck.BLL.Services.Interfaces
+namespace CHNU_Connect.BLL.Services.Interfaces
 {
     public interface IAuthService
     {
