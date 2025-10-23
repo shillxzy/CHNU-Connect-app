@@ -1,6 +1,8 @@
 using CHNU_Connect.BLL.DTOs.Auth;
 using CHNU_Connect.BLL.Services.Interfaces;
 using CHNU_Connect.DAL.Repositories.Interfaces;
+using CHNU_Connect.API.Logging;
+using Microsoft.Extensions.Configuration;
 using Mapster;
 
 namespace CHNU_Connect.BLL.Services
@@ -8,10 +10,12 @@ namespace CHNU_Connect.BLL.Services
     public class AuthService : IAuthService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IConfiguration _configuration;
 
-        public AuthService(IUserRepository userRepository)
+        public AuthService(IUserRepository userRepository, IConfiguration configuration)
         {
             _userRepository = userRepository;
+            _configuration = configuration;
         }
 
         public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
@@ -22,10 +26,12 @@ namespace CHNU_Connect.BLL.Services
                 throw new UnauthorizedAccessException("Invalid credentials");
             }
 
+            var token = JwtConfig.GenerateJwtToken(user.Id.ToString(), user.Email, user.Role, _configuration);
+            
             return new LoginResponseDto
             {
-                Token = "dummy-jwt-token", // In real app, generate proper JWT
-                RefreshToken = "dummy-refresh-token",
+                Token = token,
+                RefreshToken = "dummy-refresh-token", // In real app, generate proper refresh token
                 UserId = user.Id,
                 Email = user.Email,
                 Role = user.Role

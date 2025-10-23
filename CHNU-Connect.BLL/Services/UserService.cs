@@ -81,5 +81,11 @@ namespace CHNU_Connect.BLL.Services
             await _userRepository.SaveChangesAsync();
             return true;
         }
+
+        public async Task<UserDto?> GetByEmailAsync(string email)
+        {
+            var user = await _userRepository.GetByEmailAsync(email);
+            return user?.Adapt<UserDto>();
+        }
     }
 }
