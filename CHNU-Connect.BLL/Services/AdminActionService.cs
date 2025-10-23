@@ -18,9 +18,9 @@ namespace CHNU_Connect.BLL.Services
         public async Task<AdminActionDto> CreateAdminActionAsync(CreateAdminActionDto dto)
         {
             var action = dto.Adapt<AdminAction>();
-            var createdAction = await _adminActionRepository.AddAsync(action);
-            await _adminActionRepository.SaveChangesAsync();
-            return createdAction.Adapt<AdminActionDto>();
+            await _adminActionRepository.InsertAsync(action);
+            await _adminActionRepository.SaveAsync();
+            return action.Adapt<AdminActionDto>();
         }
 
         public async Task<AdminActionDto?> GetByIdAsync(int id)
@@ -55,8 +55,8 @@ namespace CHNU_Connect.BLL.Services
             if (action == null)
                 return false;
 
-            await _adminActionRepository.DeleteAsync(action);
-            await _adminActionRepository.SaveChangesAsync();
+            _adminActionRepository.Delete(action);
+            await _adminActionRepository.SaveAsync();
             return true;
         }
     }

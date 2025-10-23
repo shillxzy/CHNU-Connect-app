@@ -69,11 +69,11 @@ namespace CHNU_Connect.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePost([FromBody] CreatePostDto request)
+        public async Task<IActionResult> CreatePost([FromBody] CreatePostDto request, int? currentUserId)
         {
             try
             {
-                var currentUserId = GetCurrentUserId();
+                currentUserId = GetCurrentUserId();
                 if (currentUserId == null)
                     return Unauthorized();
 

@@ -75,16 +75,14 @@ namespace CHNU_Connect.BLL.Configuration
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
-                .Map(dest => dest.CreatedById, src => src.CreatorId)
-                .Map(dest => dest.IsPublic, src => src.IsPublic)
+                .Map(dest => dest.CreatorId, src => src.CreatorId)
                 .Map(dest => dest.CreatedAt, src => src.CreatedAt);
 
             TypeAdapterConfig<CreateGroupDto, Group>
                 .NewConfig()
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
-                .Map(dest => dest.CreatorId, src => src.CreatedById)
-                .Map(dest => dest.IsPublic, src => src.IsPublic);
+                .Map(dest => dest.CreatorId, src => src.CreatorId);
 
             // Comment mappings
             TypeAdapterConfig<Comment, CommentDto>
@@ -119,15 +117,12 @@ namespace CHNU_Connect.BLL.Configuration
                 .NewConfig()
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.GroupId, src => src.GroupId)
-                .Map(dest => dest.UserId, src => src.UserId)
-                .Map(dest => dest.Role, src => src.Role)
-                .Map(dest => dest.JoinedAt, src => src.JoinedAt);
+                .Map(dest => dest.UserId, src => src.UserId);
 
             TypeAdapterConfig<CreateGroupMemberDto, GroupMember>
                 .NewConfig()
                 .Map(dest => dest.GroupId, src => src.GroupId)
-                .Map(dest => dest.UserId, src => src.UserId)
-                .Map(dest => dest.Role, src => src.Role);
+                .Map(dest => dest.UserId, src => src.UserId);
 
             // PostLike mappings
             TypeAdapterConfig<PostLike, PostLikeDto>
@@ -147,15 +142,14 @@ namespace CHNU_Connect.BLL.Configuration
                 .NewConfig()
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.AdminId, src => src.AdminId)
-                .Map(dest => dest.TargetUserId, src => src.TargetUserId)
-                .Map(dest => dest.Action, src => src.Action)
-                .Map(dest => dest.Reason, src => src.Reason)
+                .Map(dest => dest.TargetId, src => src.TargetUserId)
+                .Map(dest => dest.ActionType, src => src.Action)
                 .Map(dest => dest.CreatedAt, src => src.CreatedAt);
 
             TypeAdapterConfig<CreateAdminActionDto, AdminAction>
                 .NewConfig()
                 .Map(dest => dest.AdminId, src => src.AdminId)
-                .Map(dest => dest.TargetUserId, src => src.TargetUserId)
+                .Map(dest => dest.TargetUserId, src => src.TargetId)
                 .Map(dest => dest.Action, src => src.Action)
                 .Map(dest => dest.Reason, src => src.Reason);
         }

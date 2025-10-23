@@ -18,9 +18,9 @@ namespace CHNU_Connect.BLL.Services
         public async Task<CommentDto> CreateCommentAsync(CreateCommentDto dto)
         {
             var comment = dto.Adapt<Comment>();
-            var createdComment = await _commentRepository.AddAsync(comment);
-            await _commentRepository.SaveChangesAsync();
-            return createdComment.Adapt<CommentDto>();
+            await _commentRepository.InsertAsync(comment);
+            await _commentRepository.SaveAsync();
+            return comment.Adapt<CommentDto>();
         }
 
         public async Task<CommentDto?> GetByIdAsync(int id)
@@ -50,8 +50,8 @@ namespace CHNU_Connect.BLL.Services
                 throw new ArgumentException("Comment not found");
 
             dto.Adapt(comment);
-            await _commentRepository.UpdateAsync(comment);
-            await _commentRepository.SaveChangesAsync();
+            _commentRepository.Update(comment);
+            await _commentRepository.SaveAsync();
             return comment.Adapt<CommentDto>();
         }
 
@@ -61,8 +61,8 @@ namespace CHNU_Connect.BLL.Services
             if (comment == null)
                 return false;
 
-            await _commentRepository.DeleteAsync(comment);
-            await _commentRepository.SaveChangesAsync();
+            _commentRepository.Delete(comment);
+            await _commentRepository.SaveAsync();
             return true;
         }
     }

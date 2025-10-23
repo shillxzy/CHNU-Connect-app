@@ -18,9 +18,9 @@ namespace CHNU_Connect.BLL.Services
         public async Task<PostLikeDto> CreatePostLikeAsync(CreatePostLikeDto dto)
         {
             var like = dto.Adapt<PostLike>();
-            var createdLike = await _postLikeRepository.AddAsync(like);
-            await _postLikeRepository.SaveChangesAsync();
-            return createdLike.Adapt<PostLikeDto>();
+            await _postLikeRepository.InsertAsync(like);
+            await _postLikeRepository.SaveAsync();
+            return like.Adapt<PostLikeDto>();
         }
 
         public async Task<PostLikeDto?> GetByIdAsync(int id)
@@ -49,8 +49,8 @@ namespace CHNU_Connect.BLL.Services
             if (like == null)
                 return false;
 
-            await _postLikeRepository.DeleteAsync(like);
-            await _postLikeRepository.SaveChangesAsync();
+            _postLikeRepository.Delete(like);
+            await _postLikeRepository.SaveAsync();
             return true;
         }
 

@@ -18,9 +18,9 @@ namespace CHNU_Connect.BLL.Services
         public async Task<GroupMemberDto> CreateGroupMemberAsync(CreateGroupMemberDto dto)
         {
             var member = dto.Adapt<GroupMember>();
-            var createdMember = await _groupMemberRepository.AddAsync(member);
-            await _groupMemberRepository.SaveChangesAsync();
-            return createdMember.Adapt<GroupMemberDto>();
+            await _groupMemberRepository.InsertAsync(member);
+            await _groupMemberRepository.SaveAsync();
+            return member.Adapt<GroupMemberDto>();
         }
 
         public async Task<GroupMemberDto?> GetByIdAsync(int id)
@@ -50,8 +50,8 @@ namespace CHNU_Connect.BLL.Services
                 throw new ArgumentException("Group member not found");
 
             dto.Adapt(member);
-            await _groupMemberRepository.UpdateAsync(member);
-            await _groupMemberRepository.SaveChangesAsync();
+            _groupMemberRepository.Update(member);
+            await _groupMemberRepository.SaveAsync();
             return member.Adapt<GroupMemberDto>();
         }
 
@@ -61,8 +61,8 @@ namespace CHNU_Connect.BLL.Services
             if (member == null)
                 return false;
 
-            await _groupMemberRepository.DeleteAsync(member);
-            await _groupMemberRepository.SaveChangesAsync();
+            _groupMemberRepository.Delete(member);
+            await _groupMemberRepository.SaveAsync();
             return true;
         }
 

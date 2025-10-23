@@ -11,5 +11,6 @@ namespace CHNU_Connect.BLL.DTOs.EventParticipant
         public Guid Id { get; set; }
         public Guid EventId { get; set; }
         public Guid UserId { get; set; }
+        public DateTime JoinedAt { get; set; }
     }
 }

@@ -20,9 +20,9 @@ namespace CHNU_Connect.BLL.Services
         public async Task<EventDto> CreateEventAsync(CreateEventDto dto)
         {
             var eventEntity = dto.Adapt<Event>();
-            var createdEvent = await _eventRepository.AddAsync(eventEntity);
-            await _eventRepository.SaveChangesAsync();
-            return createdEvent.Adapt<EventDto>();
+            await _eventRepository.InsertAsync(eventEntity);
+            await _eventRepository.SaveAsync();
+            return eventEntity.Adapt<EventDto>();
         }
 
         public async Task<EventDto?> GetByIdAsync(int id)
@@ -58,8 +58,8 @@ namespace CHNU_Connect.BLL.Services
                 throw new ArgumentException("Event not found");
 
             dto.Adapt(eventEntity);
-            await _eventRepository.UpdateAsync(eventEntity);
-            await _eventRepository.SaveChangesAsync();
+            _eventRepository.Update(eventEntity);
+            await _eventRepository.SaveAsync();
             return eventEntity.Adapt<EventDto>();
         }
 
@@ -69,8 +69,8 @@ namespace CHNU_Connect.BLL.Services
             if (eventEntity == null)
                 return false;
 
-            await _eventRepository.DeleteAsync(eventEntity);
-            await _eventRepository.SaveChangesAsync();
+            _eventRepository.Delete(eventEntity);
+            await _eventRepository.SaveAsync();
             return true;
         }
 
@@ -89,8 +89,8 @@ namespace CHNU_Connect.BLL.Services
                 JoinedAt = DateTime.UtcNow
             };
 
-            await _eventParticipantRepository.AddAsync(newParticipant);
-            await _eventParticipantRepository.SaveChangesAsync();
+            await _eventParticipantRepository.InsertAsync(newParticipant);
+            await _eventParticipantRepository.SaveAsync();
             return true;
         }
 
@@ -102,8 +102,8 @@ namespace CHNU_Connect.BLL.Services
             if (participant == null)
                 return false; // Not joined
 
-            await _eventParticipantRepository.DeleteAsync(participant);
-            await _eventParticipantRepository.SaveChangesAsync();
+            _eventParticipantRepository.Delete(participant);
+            await _eventParticipantRepository.SaveAsync();
             return true;
         }
 

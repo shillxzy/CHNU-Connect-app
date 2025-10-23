@@ -18,7 +18,7 @@ namespace CHNU_Connect.DAL.Repositories
 
         public async Task<User?> GetByUsernameAsync(string username)
         {
-            return await _dbSet.FirstOrDefaultAsync(u => u.Username == username);
+            return await _dbSet.FirstOrDefaultAsync(u => u.FullName == username);
         }
 
         public async Task<IEnumerable<User>> GetUsersByRoleAsync(string role)
@@ -33,7 +33,7 @@ namespace CHNU_Connect.DAL.Repositories
 
         public async Task<bool> IsUsernameExistsAsync(string username)
         {
-            return await _dbSet.AnyAsync(u => u.Username == username);
+            return await _dbSet.AnyAsync(u => u.FullName == username);
         }
     }
 }

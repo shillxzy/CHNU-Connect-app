@@ -1,4 +1,4 @@
-﻿namespace KnowledgeCheck.BLL.DTOs.Auth;
+﻿namespace CHNU_Connect.BLL.DTOs.Auth;
 
 public class ForgotPasswordRequestDto
 {

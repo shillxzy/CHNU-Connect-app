@@ -9,7 +9,7 @@ namespace CHNU_Connect.BLL.DTOs.Post
     public class PostDto
     {
         public Guid Id { get; set; }
-        public Guid AuthorId { get; set; }
+        public int AuthorId { get; set; }
         public string Content { get; set; } = null!;
         public Guid? GroupId { get; set; }
         public DateTime CreatedAt { get; set; }

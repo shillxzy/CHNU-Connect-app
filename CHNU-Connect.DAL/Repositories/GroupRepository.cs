@@ -13,7 +13,7 @@ namespace CHNU_Connect.DAL.Repositories
 
         public async Task<IEnumerable<Group>> GetGroupsByUserIdAsync(int userId)
         {
-            return await _dbSet.Where(g => g.GroupMembers.Any(gm => gm.UserId == userId))
+            return await _dbSet.Where(g => g.Members.Any(gm => gm.UserId == userId))
                               .ToListAsync();
         }
 

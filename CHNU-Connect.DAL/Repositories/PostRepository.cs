@@ -20,7 +20,7 @@ namespace CHNU_Connect.DAL.Repositories
 
         public async Task<IEnumerable<Post>> GetPostsByGroupIdAsync(int groupId)
         {
-            return await _dbSet.Where(p => p.GroupId == groupId)
+            return await _dbSet.Where(p => p.Id == groupId)
                               .OrderByDescending(p => p.CreatedAt)
                               .ToListAsync();
         }

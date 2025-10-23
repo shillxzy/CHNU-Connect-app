@@ -11,5 +11,6 @@ namespace CHNU_Connect.BLL.DTOs.PostLike
         public Guid Id { get; set; }
         public Guid PostId { get; set; }
         public Guid UserId { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

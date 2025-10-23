@@ -13,5 +13,6 @@ namespace CHNU_Connect.BLL.DTOs.Group
         public string? Description { get; set; }
         public Guid CreatorId { get; set; }
         public DateTime CreatedAt { get; set; }
+        public int CreatedById { get; set; }
     }
 }

@@ -20,9 +20,9 @@ namespace CHNU_Connect.BLL.Services
         public async Task<GroupDto> CreateGroupAsync(CreateGroupDto dto)
         {
             var group = dto.Adapt<Group>();
-            var createdGroup = await _groupRepository.AddAsync(group);
-            await _groupRepository.SaveChangesAsync();
-            return createdGroup.Adapt<GroupDto>();
+            await _groupRepository.InsertAsync(group);
+            await _groupRepository.SaveAsync();
+            return group.Adapt<GroupDto>();
         }
 
         public async Task<GroupDto?> GetByIdAsync(int id)
@@ -58,8 +58,8 @@ namespace CHNU_Connect.BLL.Services
                 throw new ArgumentException("Group not found");
 
             dto.Adapt(group);
-            await _groupRepository.UpdateAsync(group);
-            await _groupRepository.SaveChangesAsync();
+            _groupRepository.Update(group);
+            await _groupRepository.SaveAsync();
             return group.Adapt<GroupDto>();
         }
 
@@ -69,8 +69,8 @@ namespace CHNU_Connect.BLL.Services
             if (group == null)
                 return false;
 
-            await _groupRepository.DeleteAsync(group);
-            await _groupRepository.SaveChangesAsync();
+            _groupRepository.Delete(group);
+            await _groupRepository.SaveAsync();
             return true;
         }
 
@@ -90,8 +90,8 @@ namespace CHNU_Connect.BLL.Services
                 JoinedAt = DateTime.UtcNow
             };
 
-            await _groupMemberRepository.AddAsync(newMember);
-            await _groupMemberRepository.SaveChangesAsync();
+            await _groupMemberRepository.InsertAsync(newMember);
+            await _groupMemberRepository.SaveAsync();
             return true;
         }
 
@@ -103,8 +103,8 @@ namespace CHNU_Connect.BLL.Services
             if (member == null)
                 return false; // Not a member
 
-            await _groupMemberRepository.DeleteAsync(member);
-            await _groupMemberRepository.SaveChangesAsync();
+            _groupMemberRepository.Delete(member);
+            await _groupMemberRepository.SaveAsync();
             return true;
         }
 

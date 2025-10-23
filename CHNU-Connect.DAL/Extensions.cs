@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
-namespace CHNU_Connect.DAL
+namespace CHNU_Connect.DAL.Extensions
 {
     public static class Extensions
     {
@@ -26,6 +27,13 @@ namespace CHNU_Connect.DAL
             services.AddScoped<Repositories.Interfaces.IEventParticipantRepository, Repositories.EventParticipantRepository>();
             services.AddScoped<Repositories.Interfaces.IGroupMemberRepository, Repositories.GroupMemberRepository>();
             services.AddScoped<Repositories.Interfaces.IPostLikeRepository, Repositories.PostLikeRepository>();
+        }
+
+        public static IServiceCollection AddDataAccessLayer(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.ConfigureEntityFramework(configuration.GetConnectionString("DefaultConnection")!);
+            services.ConfigureRepositories();
+            return services;
         }
     }
 }

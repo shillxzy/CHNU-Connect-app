@@ -13,22 +13,22 @@ namespace CHNU_Connect.DAL.Repositories
 
         public async Task<IEnumerable<Message>> GetMessagesByGroupIdAsync(int groupId)
         {
-            return await _dbSet.Where(m => m.GroupId == groupId)
-                              .OrderBy(m => m.CreatedAt)
+            return await _dbSet.Where(m => m.Id == groupId)
+                              .OrderBy(m => m.SentAt)
                               .ToListAsync();
         }
 
         public async Task<IEnumerable<Message>> GetMessagesByUserIdAsync(int userId)
         {
-            return await _dbSet.Where(m => m.UserId == userId)
-                              .OrderByDescending(m => m.CreatedAt)
+            return await _dbSet.Where(m => m.Id == userId)
+                              .OrderByDescending(m => m.SentAt)
                               .ToListAsync();
         }
 
         public async Task<IEnumerable<Message>> GetRecentMessagesAsync(int groupId, int count)
         {
-            return await _dbSet.Where(m => m.GroupId == groupId)
-                              .OrderByDescending(m => m.CreatedAt)
+            return await _dbSet.Where(m => m.Id == groupId)
+                              .OrderByDescending(m => m.SentAt)
                               .Take(count)
                               .ToListAsync();
         }
@@ -36,7 +36,7 @@ namespace CHNU_Connect.DAL.Repositories
         public async Task<int> GetUnreadMessagesCountAsync(int userId, int groupId)
         {
             // Припускаємо, що є поле IsRead або подібне для відстеження прочитаних повідомлень
-            return await _dbSet.CountAsync(m => m.GroupId == groupId && m.UserId != userId);
+            return await _dbSet.CountAsync(m => m.Id == groupId && m.Id != userId);
         }
     }
 }

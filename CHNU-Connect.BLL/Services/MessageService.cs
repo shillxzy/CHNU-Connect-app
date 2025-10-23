@@ -25,9 +25,9 @@ namespace CHNU_Connect.BLL.Services
                 SentAt = DateTime.UtcNow
             };
 
-            var createdMessage = await _messageRepository.AddAsync(message);
-            await _messageRepository.SaveChangesAsync();
-            return createdMessage;
+            await _messageRepository.InsertAsync(message);
+            await _messageRepository.SaveAsync();
+            return message;
         }
 
         public async Task<object?> GetByIdAsync(int id)
@@ -69,8 +69,8 @@ namespace CHNU_Connect.BLL.Services
                 return false;
 
             message.IsRead = true;
-            await _messageRepository.UpdateAsync(message);
-            await _messageRepository.SaveChangesAsync();
+            _messageRepository.Update(message);
+            await _messageRepository.SaveAsync();
             return true;
         }
 
@@ -80,8 +80,8 @@ namespace CHNU_Connect.BLL.Services
             if (message == null)
                 return false;
 
-            await _messageRepository.DeleteAsync(message);
-            await _messageRepository.SaveChangesAsync();
+            _messageRepository.Delete(message);
+            await _messageRepository.SaveAsync();
             return true;
         }
     }

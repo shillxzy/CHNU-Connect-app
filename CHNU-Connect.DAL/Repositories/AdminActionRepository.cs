@@ -14,28 +14,28 @@ namespace CHNU_Connect.DAL.Repositories
         public async Task<IEnumerable<AdminAction>> GetActionsByAdminIdAsync(int adminId)
         {
             return await _dbSet.Where(a => a.AdminId == adminId)
-                              .OrderByDescending(a => a.ActionDate)
+                              .OrderByDescending(a => a.CreatedAt)
                               .ToListAsync();
         }
 
         public async Task<IEnumerable<AdminAction>> GetActionsByUserIdAsync(int userId)
         {
-            return await _dbSet.Where(a => a.UserId == userId)
-                              .OrderByDescending(a => a.ActionDate)
+            return await _dbSet.Where(a => a.TargetUserId == userId)
+                              .OrderByDescending(a => a.CreatedAt)
                               .ToListAsync();
         }
 
         public async Task<IEnumerable<AdminAction>> GetRecentActionsAsync(int count)
         {
-            return await _dbSet.OrderByDescending(a => a.ActionDate)
+            return await _dbSet.OrderByDescending(a => a.CreatedAt)
                               .Take(count)
                               .ToListAsync();
         }
 
         public async Task<IEnumerable<AdminAction>> GetActionsByTypeAsync(string actionType)
         {
-            return await _dbSet.Where(a => a.ActionType == actionType)
-                              .OrderByDescending(a => a.ActionDate)
+            return await _dbSet.Where(a => a.Action == actionType)
+                              .OrderByDescending(a => a.CreatedAt)
                               .ToListAsync();
         }
     }

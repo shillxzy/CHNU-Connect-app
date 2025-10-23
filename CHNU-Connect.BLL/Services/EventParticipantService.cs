@@ -18,9 +18,9 @@ namespace CHNU_Connect.BLL.Services
         public async Task<EventParticipantDto> CreateEventParticipantAsync(CreateEventParticipantDto dto)
         {
             var participant = dto.Adapt<EventParticipant>();
-            var createdParticipant = await _eventParticipantRepository.AddAsync(participant);
-            await _eventParticipantRepository.SaveChangesAsync();
-            return createdParticipant.Adapt<EventParticipantDto>();
+            await _eventParticipantRepository.InsertAsync(participant);
+            await _eventParticipantRepository.SaveAsync();
+            return participant.Adapt<EventParticipantDto>();
         }
 
         public async Task<EventParticipantDto?> GetByIdAsync(int id)
@@ -49,8 +49,8 @@ namespace CHNU_Connect.BLL.Services
             if (participant == null)
                 return false;
 
-            await _eventParticipantRepository.DeleteAsync(participant);
-            await _eventParticipantRepository.SaveChangesAsync();
+            _eventParticipantRepository.Delete(participant);
+            await _eventParticipantRepository.SaveAsync();
             return true;
         }
 

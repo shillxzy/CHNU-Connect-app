@@ -13,7 +13,7 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.8" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
-		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
 		<PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
@@ -21,7 +21,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\CHNU-Connect.BLL\CHNU-Connect.BLL.csproj" />
-		<ProjectReference Include="..\CHNU-Connect.DAL\CHNU-Connect.DAL.csproj" />
 	</ItemGroup>
 
 </Project>

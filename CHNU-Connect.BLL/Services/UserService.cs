@@ -18,9 +18,9 @@ namespace CHNU_Connect.BLL.Services
         public async Task<UserDto> CreateUserAsync(CreateUserDto dto)
         {
             var user = dto.Adapt<User>();
-            var createdUser = await _userRepository.AddAsync(user);
-            await _userRepository.SaveChangesAsync();
-            return createdUser.Adapt<UserDto>();
+            await _userRepository.InsertAsync(user);
+            await _userRepository.SaveAsync();
+            return user.Adapt<UserDto>();
         }
 
         public async Task<UserDto?> GetByIdAsync(int id)
@@ -42,8 +42,8 @@ namespace CHNU_Connect.BLL.Services
                 throw new ArgumentException("User not found");
 
             dto.Adapt(user);
-            await _userRepository.UpdateAsync(user);
-            await _userRepository.SaveChangesAsync();
+            _userRepository.Update(user);
+            await _userRepository.SaveAsync();
             return user.Adapt<UserDto>();
         }
 
@@ -53,8 +53,8 @@ namespace CHNU_Connect.BLL.Services
             if (user == null)
                 return false;
 
-            await _userRepository.DeleteAsync(user);
-            await _userRepository.SaveChangesAsync();
+            _userRepository.Delete(user);
+            await _userRepository.SaveAsync();
             return true;
         }
 
@@ -65,8 +65,8 @@ namespace CHNU_Connect.BLL.Services
                 return false;
 
             user.IsBlocked = true;
-            await _userRepository.UpdateAsync(user);
-            await _userRepository.SaveChangesAsync();
+            _userRepository.Update(user);
+            await _userRepository.SaveAsync();
             return true;
         }
 
@@ -77,8 +77,8 @@ namespace CHNU_Connect.BLL.Services
                 return false;
 
             user.IsBlocked = false;
-            await _userRepository.UpdateAsync(user);
-            await _userRepository.SaveChangesAsync();
+            _userRepository.Update(user);
+            await _userRepository.SaveAsync();
             return true;
         }
 

@@ -14,5 +14,9 @@ namespace CHNU_Connect.BLL.DTOs.User
         public string? FullName { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool IsBlocked { get; set; }
+        public string? Faculty { get; set; }
+        public int? Course { get; set; }
+        public string? PhotoUrl { get; set; }
+        public string? Bio { get; set; }
     }
 }

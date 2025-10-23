@@ -101,7 +101,7 @@ namespace CHNU_Connect.API.Controllers
                 var action = await _adminActionService.CreateAdminActionAsync(request);
                 
                 _logger.LogInformation("Admin action created: {Action} on user: {TargetUserId} by admin: {AdminId}", 
-                    request.Action, request.TargetUserId, currentUserId);
+                    request.Action, request.TargetId, currentUserId);
                 return CreatedAtAction(nameof(GetAdminAction), new { id = action.Id }, action);
             }
             catch (Exception ex)
@@ -147,7 +147,7 @@ namespace CHNU_Connect.API.Controllers
                 var adminAction = new CreateAdminActionDto
                 {
                     AdminId = currentUserId.Value,
-                    TargetUserId = userId,
+                    TargetId = new Guid(userId.ToString()),
                     Action = "block_user",
                     Reason = request.Reason
                 };
@@ -180,7 +180,7 @@ namespace CHNU_Connect.API.Controllers
                 var adminAction = new CreateAdminActionDto
                 {
                     AdminId = currentUserId.Value,
-                    TargetUserId = userId,
+                    TargetId = new Guid(userId.ToString()),
                     Action = "unblock_user",
                     Reason = request.Reason
                 };

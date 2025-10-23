@@ -12,6 +12,7 @@ namespace CHNU_Connect.BLL.DTOs.Event
         public string? Description { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        public Guid CreatedById { get; set; }
+        public int CreatedById { get; set; }
+        public bool IsPublic { get; set; } = true;
     }
 }

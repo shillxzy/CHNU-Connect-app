@@ -20,9 +20,9 @@ namespace CHNU_Connect.BLL.Services
         public async Task<PostDto> CreatePostAsync(CreatePostDto dto)
         {
             var post = dto.Adapt<Post>();
-            var createdPost = await _postRepository.AddAsync(post);
-            await _postRepository.SaveChangesAsync();
-            return createdPost.Adapt<PostDto>();
+            await _postRepository.InsertAsync(post);
+            await _postRepository.SaveAsync();
+            return post.Adapt<PostDto>();
         }
 
         public async Task<PostDto?> GetByIdAsync(int id)
@@ -50,8 +50,8 @@ namespace CHNU_Connect.BLL.Services
                 throw new ArgumentException("Post not found");
 
             dto.Adapt(post);
-            await _postRepository.UpdateAsync(post);
-            await _postRepository.SaveChangesAsync();
+            _postRepository.Update(post);
+            await _postRepository.SaveAsync();
             return post.Adapt<PostDto>();
         }
 
@@ -61,8 +61,8 @@ namespace CHNU_Connect.BLL.Services
             if (post == null)
                 return false;
 
-            await _postRepository.DeleteAsync(post);
-            await _postRepository.SaveChangesAsync();
+            _postRepository.Delete(post);
+            await _postRepository.SaveAsync();
             return true;
         }
 
@@ -81,8 +81,8 @@ namespace CHNU_Connect.BLL.Services
                 CreatedAt = DateTime.UtcNow
             };
 
-            await _postLikeRepository.AddAsync(newLike);
-            await _postLikeRepository.SaveChangesAsync();
+            await _postLikeRepository.InsertAsync(newLike);
+            await _postLikeRepository.SaveAsync();
             return true;
         }
 
@@ -94,8 +94,8 @@ namespace CHNU_Connect.BLL.Services
             if (like == null)
                 return false; // Not liked
 
-            await _postLikeRepository.DeleteAsync(like);
-            await _postLikeRepository.SaveChangesAsync();
+            _postLikeRepository.Delete(like);
+            await _postLikeRepository.SaveAsync();
             return true;
         }
 
