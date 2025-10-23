@@ -20,6 +20,11 @@ namespace CHNU_Connect.DAL
             services.AddScoped<Repositories.Interfaces.IEventRepository, Repositories.EventRepository>();
             services.AddScoped<Repositories.Interfaces.IGroupRepository, Repositories.GroupRepository>();
             services.AddScoped<Repositories.Interfaces.IMessageRepository, Repositories.MessageRepository>();
+            services.AddScoped<Repositories.Interfaces.IAdminActionRepository, Repositories.AdminActionRepository>();
+            services.AddScoped<Repositories.Interfaces.ICommentRepository, Repositories.CommentRepository>();
+            services.AddScoped<Repositories.Interfaces.IEventParticipantRepository, Repositories.EventParticipantRepository>();
+            services.AddScoped<Repositories.Interfaces.IGroupMemberRepository, Repositories.GroupMemberRepository>();
+            services.AddScoped<Repositories.Interfaces.IPostLikeRepository, Repositories.PostLikeRepository>();
         }
     }
 }

@@ -16,6 +16,11 @@ namespace CHNU_Connect.DAL.UOW
         private IEventRepository? _eventRepository;
         private IGroupRepository? _groupRepository;
         private IMessageRepository? _messageRepository;
+        private IAdminActionRepository? _adminActionRepository;
+        private ICommentRepository? _commentRepository;
+        private IEventParticipantRepository? _eventParticipantRepository;
+        private IGroupMemberRepository? _groupMemberRepository;
+        private IPostLikeRepository? _postLikeRepository;
 
         public UnitOfWork(AppDbContext context)
         {
@@ -28,6 +33,11 @@ namespace CHNU_Connect.DAL.UOW
         public IEventRepository EventRepository => _eventRepository ??= new EventRepository(_context);
         public IGroupRepository GroupRepository => _groupRepository ??= new GroupRepository(_context);
         public IMessageRepository MessageRepository => _messageRepository ??= new MessageRepository(_context);
+        public IAdminActionRepository AdminActionRepository => _adminActionRepository ??= new AdminActionRepository(_context);
+        public ICommentRepository CommentRepository => _commentRepository ??= new CommentRepository(_context);
+        public IEventParticipantRepository EventParticipantRepository => _eventParticipantRepository ??= new EventParticipantRepository(_context);
+        public IGroupMemberRepository GroupMemberRepository => _groupMemberRepository ??= new GroupMemberRepository(_context);
+        public IPostLikeRepository PostLikeRepository => _postLikeRepository ??= new PostLikeRepository(_context);
 
         public IGenericRepository<T> Repository<T>() where T : class
         {
