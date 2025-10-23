@@ -1,5 +1,6 @@
 using CHNU_Connect.DAL.Data;
 using CHNU_Connect.DAL.Repositories;
+using CHNU_Connect.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace CHNU_Connect.DAL.UOW

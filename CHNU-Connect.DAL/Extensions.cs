@@ -15,11 +15,11 @@ namespace CHNU_Connect.DAL
             services.AddScoped<UOW.IUnitOfWork, UOW.UnitOfWork>();
             
             // Реєстрація специфічних репозиторіїв
-            services.AddScoped<Repositories.IUserRepository, Repositories.UserRepository>();
-            services.AddScoped<Repositories.IPostRepository, Repositories.PostRepository>();
-            services.AddScoped<Repositories.IEventRepository, Repositories.EventRepository>();
-            services.AddScoped<Repositories.IGroupRepository, Repositories.GroupRepository>();
-            services.AddScoped<Repositories.IMessageRepository, Repositories.MessageRepository>();
+            services.AddScoped<Repositories.Interfaces.IUserRepository, Repositories.UserRepository>();
+            services.AddScoped<Repositories.Interfaces.IPostRepository, Repositories.PostRepository>();
+            services.AddScoped<Repositories.Interfaces.IEventRepository, Repositories.EventRepository>();
+            services.AddScoped<Repositories.Interfaces.IGroupRepository, Repositories.GroupRepository>();
+            services.AddScoped<Repositories.Interfaces.IMessageRepository, Repositories.MessageRepository>();
         }
     }
 }

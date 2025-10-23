@@ -1,6 +1,6 @@
 using CHNU_Connect.DAL.Entities;
 
-namespace CHNU_Connect.DAL.Repositories
+namespace CHNU_Connect.DAL.Repositories.Interfaces
 {
     public interface IMessageRepository : IGenericRepository<Message>
     {

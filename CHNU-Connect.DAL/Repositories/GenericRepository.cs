@@ -1,4 +1,5 @@
 ﻿using CHNU_Connect.DAL.Data;
+using CHNU_Connect.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

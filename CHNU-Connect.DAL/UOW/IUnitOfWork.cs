@@ -1,4 +1,4 @@
-using CHNU_Connect.DAL.Repositories;
+using CHNU_Connect.DAL.Repositories.Interfaces;
 
 namespace CHNU_Connect.DAL.UOW
 {

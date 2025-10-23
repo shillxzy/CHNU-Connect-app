@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace CHNU_Connect.DAL.Repositories
+namespace CHNU_Connect.DAL.Repositories.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {
