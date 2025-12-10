@@ -40,14 +40,11 @@ namespace CHNU_Connect.BLL.Configuration
             // Post mappings
             TypeAdapterConfig<Post, PostDto>
                 .NewConfig()
-                .Map(dest => dest.Id, src => src.Id)
-                .Map(dest => dest.AuthorId, src => src.UserId)
                 .Map(dest => dest.Content, src => src.Content)
                 .Map(dest => dest.CreatedAt, src => src.CreatedAt);
 
             TypeAdapterConfig<CreatePostDto, Post>
                 .NewConfig()
-                .Map(dest => dest.UserId, src => src.AuthorId)
                 .Map(dest => dest.Content, src => src.Content)
                 .Map(dest => dest.ImageUrl, src => src.ImageUrl);
 
