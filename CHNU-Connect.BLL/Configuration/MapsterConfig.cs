@@ -58,7 +58,7 @@ namespace CHNU_Connect.BLL.Configuration
                 .Map(dest => dest.Title, src => src.Title)
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.StartTime, src => src.Date)
-                .Map(dest => dest.EndTime, src => src.Date.AddHours(2)) // Default 2-hour duration
+                .Map(dest => dest.EndTime, src => src.Date.AddHours(2)) 
                 .Map(dest => dest.CreatedById, src => src.CreatorId);
 
             TypeAdapterConfig<CreateEventDto, Event>

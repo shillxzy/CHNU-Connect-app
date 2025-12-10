@@ -25,47 +25,59 @@ namespace CHNU_Connect.BLL.Services
         public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
         {
             var user = await _userRepository.GetByEmailAsync(loginRequestDto.Email);
-            if (user == null || user.PasswordHash != loginRequestDto.Password) // TODO: Hash passwords in production
+
+            if (user == null || user.PasswordHash != loginRequestDto.Password) 
             {
                 throw new UnauthorizedAccessException("Invalid credentials");
             }
+
+            if (!user.IsEmailConfirmed)
+                throw new UnauthorizedAccessException("Підтвердіть email перед входом.");
 
             var token = GenerateJwtToken(user);
             var refreshToken = GenerateRefreshToken();
 
             return new LoginResponseDto
             {
-                Token = token,
-                RefreshToken = refreshToken,
-                UserId = user.Id.ToString(),
+                UserId = user.Id,
+                UserName = user.FullName ?? user.Email,
                 Email = user.Email,
-                Role = user.Role
+                Role = user.Role,
+                AccessToken = token,
+                RefreshToken = refreshToken,
+                Token = token
             };
         }
 
         public async Task<bool> RegisterAsync(string username, string email, string password)
         {
-            // User story: only @chnu.edu.ua allowed
+            if (string.IsNullOrWhiteSpace(email) ||
+                string.IsNullOrWhiteSpace(password) ||
+                string.IsNullOrWhiteSpace(username))
+                return false;
+
             if (!email.EndsWith("@chnu.edu.ua"))
                 return false;
 
             var existingUser = await _userRepository.GetByEmailAsync(email);
             if (existingUser != null)
-                return false; // User already exists
+                return false; 
 
             var user = new User
             {
                 Email = email,
-                PasswordHash = password, // TODO: Hash passwords in production
-                Role = "student",
+                PasswordHash = password,
                 FullName = username,
-                CreatedAt = DateTime.UtcNow
+                Role = "student",
+                CreatedAt = DateTime.UtcNow,
+                IsEmailConfirmed = false,
+                EmailConfirmationToken = Guid.NewGuid().ToString()
             };
 
             await _userRepository.InsertAsync(user);
             await _userRepository.SaveAsync();
 
-            // TODO: send confirmation email
+            Console.WriteLine($"[EMAIL MOCK] Confirm your email: https://chnu-connect/confirm-email?userId={user.Id}&token={user.EmailConfirmationToken}");
 
             return true;
         }
@@ -86,7 +98,6 @@ namespace CHNU_Connect.BLL.Services
 
         public async Task<RefreshTokenResponseDto> RefreshTokenAsync(string currentRefreshToken)
         {
-            // TODO: implement proper refresh token validation & storage
             return new RefreshTokenResponseDto
             {
                 Token = "new-dummy-jwt-token",
@@ -121,32 +132,70 @@ namespace CHNU_Connect.BLL.Services
 
         public async Task<bool> ConfirmEmailAsync(string userId, string token)
         {
-            // TODO: Реальна логіка підтвердження email
+            if (!Guid.TryParse(userId, out var guid))
+                return false;
+
+            var user = await _userRepository.GetByIdAsync(guid);
+            if (user == null)
+                return false;
+
+            if (user.EmailConfirmationToken != token)
+                return false;
+
+            user.IsEmailConfirmed = true;
+            user.EmailConfirmationToken = null; 
+
+            _userRepository.Update(user);
+            await _userRepository.SaveAsync();
+
             return true;
         }
 
         public async Task<bool> ForgotPasswordAsync(string email)
         {
-            // TODO: Надіслати email для відновлення пароля
             var user = await _userRepository.GetByEmailAsync(email);
-            return user != null;
+            if (user == null)
+                return false; 
+
+            user.PasswordResetToken = Guid.NewGuid().ToString();
+            user.PasswordResetTokenExpiry = DateTime.UtcNow.AddHours(1); 
+
+            _userRepository.Update(user);
+            await _userRepository.SaveAsync();
+
+            Console.WriteLine($"[EMAIL MOCK] Password reset link: https://chnu-connect/reset-password?email={email}&token={user.PasswordResetToken}");
+
+            return true;
         }
 
         public async Task<bool> ResetPasswordAsync(string email, string token, string newPassword)
         {
-            // TODO: Перевірити токен та зберегти новий пароль
             var user = await _userRepository.GetByEmailAsync(email);
-            if (user == null) return false;
+            if (user == null)
+                return false;
+
+            if (user.PasswordResetToken == null || user.PasswordResetToken != token)
+                return false;
+
+            if (user.PasswordResetTokenExpiry == null || user.PasswordResetTokenExpiry < DateTime.UtcNow)
+                return false;
+
+            if (string.IsNullOrWhiteSpace(newPassword))
+                return false;
 
             user.PasswordHash = newPassword;
+            user.PasswordResetToken = null;
+            user.PasswordResetTokenExpiry = null;
+
             _userRepository.Update(user);
             await _userRepository.SaveAsync();
+
             return true;
         }
 
+
         public async Task LogoutAsync()
         {
-            // TODO: Інактивація токенів, якщо є логіка
             await Task.CompletedTask;
         }
 

@@ -12,7 +12,7 @@ namespace CHNU_Connect.DAL.Entities
         public int Id { get; set; }
         public string Email { get; set; } = null!;
         public string PasswordHash { get; set; } = null!;
-        public string Role { get; set; } = null!; // guest, student, teacher, admin
+        public string Role { get; set; } = null!; 
         public string? FullName { get; set; }
         public string? Faculty { get; set; }
         public int? Course { get; set; }
@@ -20,6 +20,14 @@ namespace CHNU_Connect.DAL.Entities
         public string? Bio { get; set; }
         public bool IsBlocked { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public bool IsEmailConfirmed { get; set; } = false;
+
+        public string? EmailConfirmationToken { get; set; }
+
+        // Для відновлення пароля
+        public string? PasswordResetToken { get; set; }
+        public DateTime? PasswordResetTokenExpiry { get; set; }
+
 
         public ICollection<Post>? Posts { get; set; }
         public ICollection<Comment>? Comments { get; set; }

@@ -1,0 +1,396 @@
+2025-12-10 14:52:46.169 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 14:52:52.069 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 14:52:52.071 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 14:52:52.115 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 14:52:52.117 +02:00 [INF] Hosting environment: Development
+2025-12-10 14:52:52.118 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 14:53:21.774 +02:00 [ERR] Failed executing DbCommand (131ms) [Parameters=[@__email_0='?'], CommandType='"Text"', CommandTimeout='30']
+SELECT u.id, u.bio, u.course, u.created_at, u.email, u."EmailConfirmationToken", u.faculty, u.full_name, u.is_blocked, u."IsEmailConfirmed", u.password_hash, u."PasswordResetToken", u."PasswordResetTokenExpiry", u.photo_url, u.role
+FROM users AS u
+WHERE u.email = @__email_0
+LIMIT 1
+2025-12-10 14:53:21.931 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'CHNU_Connect.DAL.Data.AppDbContext'.
+Npgsql.PostgresException (0x80004005): 42703: column u.EmailConfirmationToken does not exist
+
+POSITION: 54
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column u.EmailConfirmationToken does not exist
+    Position: 54
+    File: parse_relation.c
+    Line: 3716
+    Routine: errorMissingColumn
+Npgsql.PostgresException (0x80004005): 42703: column u.EmailConfirmationToken does not exist
+
+POSITION: 54
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column u.EmailConfirmationToken does not exist
+    Position: 54
+    File: parse_relation.c
+    Line: 3716
+    Routine: errorMissingColumn
+2025-12-10 14:53:21.944 +02:00 [ERR] Error during registration for email: @chnu.edu.ua
+Npgsql.PostgresException (0x80004005): 42703: column u.EmailConfirmationToken does not exist
+
+POSITION: 54
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at CHNU_Connect.DAL.Repositories.UserRepository.GetByEmailAsync(String email) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.DAL\Repositories\UserRepository.cs:line 16
+   at CHNU_Connect.BLL.Services.UserService.GetByEmailAsync(String email) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.BLL\Services\UserService.cs:line 87
+   at CHNU_Connect.API.Controllers.AuthController.Register(RegisterRequestDto request) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Controllers\AuthController.cs:line 41
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column u.EmailConfirmationToken does not exist
+    Position: 54
+    File: parse_relation.c
+    Line: 3716
+    Routine: errorMissingColumn
+2025-12-10 14:59:03.903 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 14:59:09.085 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 14:59:09.087 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 14:59:09.129 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 14:59:09.132 +02:00 [INF] Hosting environment: Development
+2025-12-10 14:59:09.133 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 14:59:37.133 +02:00 [ERR] Failed executing DbCommand (132ms) [Parameters=[@__email_0='?'], CommandType='"Text"', CommandTimeout='30']
+SELECT u.id, u.bio, u.course, u.created_at, u.email, u."EmailConfirmationToken", u.faculty, u.full_name, u.is_blocked, u."IsEmailConfirmed", u.password_hash, u."PasswordResetToken", u."PasswordResetTokenExpiry", u.photo_url, u.role
+FROM users AS u
+WHERE u.email = @__email_0
+LIMIT 1
+2025-12-10 14:59:37.164 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'CHNU_Connect.DAL.Data.AppDbContext'.
+Npgsql.PostgresException (0x80004005): 42703: column u.IsEmailConfirmed does not exist
+
+POSITION: 120
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column u.IsEmailConfirmed does not exist
+    Position: 120
+    File: parse_relation.c
+    Line: 3716
+    Routine: errorMissingColumn
+Npgsql.PostgresException (0x80004005): 42703: column u.IsEmailConfirmed does not exist
+
+POSITION: 120
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column u.IsEmailConfirmed does not exist
+    Position: 120
+    File: parse_relation.c
+    Line: 3716
+    Routine: errorMissingColumn
+2025-12-10 14:59:37.173 +02:00 [ERR] Error during registration for email: @chnu.edu.ua
+Npgsql.PostgresException (0x80004005): 42703: column u.IsEmailConfirmed does not exist
+
+POSITION: 120
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at CHNU_Connect.DAL.Repositories.UserRepository.GetByEmailAsync(String email) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.DAL\Repositories\UserRepository.cs:line 16
+   at CHNU_Connect.BLL.Services.UserService.GetByEmailAsync(String email) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.BLL\Services\UserService.cs:line 87
+   at CHNU_Connect.API.Controllers.AuthController.Register(RegisterRequestDto request) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Controllers\AuthController.cs:line 41
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column u.IsEmailConfirmed does not exist
+    Position: 120
+    File: parse_relation.c
+    Line: 3716
+    Routine: errorMissingColumn
+2025-12-10 15:00:08.141 +02:00 [ERR] Failed executing DbCommand (244ms) [Parameters=[@__email_0='?'], CommandType='"Text"', CommandTimeout='30']
+SELECT u.id, u.bio, u.course, u.created_at, u.email, u."EmailConfirmationToken", u.faculty, u.full_name, u.is_blocked, u."IsEmailConfirmed", u.password_hash, u."PasswordResetToken", u."PasswordResetTokenExpiry", u.photo_url, u.role
+FROM users AS u
+WHERE u.email = @__email_0
+LIMIT 1
+2025-12-10 15:00:08.147 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'CHNU_Connect.DAL.Data.AppDbContext'.
+Npgsql.PostgresException (0x80004005): 42703: column u.PasswordResetToken does not exist
+
+POSITION: 159
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column u.PasswordResetToken does not exist
+    Position: 159
+    File: parse_relation.c
+    Line: 3716
+    Routine: errorMissingColumn
+Npgsql.PostgresException (0x80004005): 42703: column u.PasswordResetToken does not exist
+
+POSITION: 159
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column u.PasswordResetToken does not exist
+    Position: 159
+    File: parse_relation.c
+    Line: 3716
+    Routine: errorMissingColumn
+2025-12-10 15:00:08.167 +02:00 [ERR] Error during registration for email: @chnu.edu.ua
+Npgsql.PostgresException (0x80004005): 42703: column u.PasswordResetToken does not exist
+
+POSITION: 159
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at CHNU_Connect.DAL.Repositories.UserRepository.GetByEmailAsync(String email) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.DAL\Repositories\UserRepository.cs:line 16
+   at CHNU_Connect.BLL.Services.UserService.GetByEmailAsync(String email) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.BLL\Services\UserService.cs:line 87
+   at CHNU_Connect.API.Controllers.AuthController.Register(RegisterRequestDto request) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Controllers\AuthController.cs:line 41
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column u.PasswordResetToken does not exist
+    Position: 159
+    File: parse_relation.c
+    Line: 3716
+    Routine: errorMissingColumn
+2025-12-10 15:00:21.243 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 15:00:26.195 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 15:00:26.197 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 15:00:26.231 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 15:00:26.233 +02:00 [INF] Hosting environment: Development
+2025-12-10 15:00:26.235 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 15:01:20.034 +02:00 [ERR] Failed executing DbCommand (132ms) [Parameters=[@__email_0='?'], CommandType='"Text"', CommandTimeout='30']
+SELECT u.id, u.bio, u.course, u.created_at, u.email, u."EmailConfirmationToken", u.faculty, u.full_name, u.is_blocked, u."IsEmailConfirmed", u.password_hash, u."PasswordResetToken", u."PasswordResetTokenExpiry", u.photo_url, u.role
+FROM users AS u
+WHERE u.email = @__email_0
+LIMIT 1
+2025-12-10 15:01:20.056 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'CHNU_Connect.DAL.Data.AppDbContext'.
+Npgsql.PostgresException (0x80004005): 42703: column u.PasswordResetToken does not exist
+
+POSITION: 159
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column u.PasswordResetToken does not exist
+    Position: 159
+    File: parse_relation.c
+    Line: 3716
+    Routine: errorMissingColumn
+Npgsql.PostgresException (0x80004005): 42703: column u.PasswordResetToken does not exist
+
+POSITION: 159
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column u.PasswordResetToken does not exist
+    Position: 159
+    File: parse_relation.c
+    Line: 3716
+    Routine: errorMissingColumn
+2025-12-10 15:01:20.067 +02:00 [ERR] Error during registration for email: @chnu.edu.ua
+Npgsql.PostgresException (0x80004005): 42703: column u.PasswordResetToken does not exist
+
+POSITION: 159
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at CHNU_Connect.DAL.Repositories.UserRepository.GetByEmailAsync(String email) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.DAL\Repositories\UserRepository.cs:line 16
+   at CHNU_Connect.BLL.Services.UserService.GetByEmailAsync(String email) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.BLL\Services\UserService.cs:line 87
+   at CHNU_Connect.API.Controllers.AuthController.Register(RegisterRequestDto request) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Controllers\AuthController.cs:line 41
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: column u.PasswordResetToken does not exist
+    Position: 159
+    File: parse_relation.c
+    Line: 3716
+    Routine: errorMissingColumn
+2025-12-10 15:02:03.761 +02:00 [ERR] Error during registration for email: @chnu.edu.ua
+System.InvalidCastException: Invalid cast from 'System.Int32' to 'System.Guid'.
+   at System.Convert.DefaultToType(IConvertible value, Type targetType, IFormatProvider provider)
+   at lambda_method164(Closure, Object)
+   at Mapster.TypeAdapter.Adapt[TDestination](Object source, TypeAdapterConfig config)
+   at Mapster.TypeAdapter.Adapt[TDestination](Object source)
+   at CHNU_Connect.BLL.Services.UserService.GetByEmailAsync(String email) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.BLL\Services\UserService.cs:line 88
+   at CHNU_Connect.API.Controllers.AuthController.Register(RegisterRequestDto request) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Controllers\AuthController.cs:line 41
+2025-12-10 15:02:15.244 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 15:02:20.166 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 15:02:20.168 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 15:02:20.201 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 15:02:20.203 +02:00 [INF] Hosting environment: Development
+2025-12-10 15:02:20.205 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 15:02:32.489 +02:00 [ERR] Error during registration for email: @chnu.edu.ua
+System.InvalidCastException: Invalid cast from 'System.Int32' to 'System.Guid'.
+   at System.Convert.DefaultToType(IConvertible value, Type targetType, IFormatProvider provider)
+   at lambda_method164(Closure, Object)
+   at Mapster.TypeAdapter.Adapt[TDestination](Object source, TypeAdapterConfig config)
+   at Mapster.TypeAdapter.Adapt[TDestination](Object source)
+   at CHNU_Connect.BLL.Services.UserService.GetByEmailAsync(String email) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.BLL\Services\UserService.cs:line 88
+   at CHNU_Connect.API.Controllers.AuthController.Register(RegisterRequestDto request) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Controllers\AuthController.cs:line 41
+2025-12-10 15:05:32.701 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 15:05:37.682 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 15:05:37.685 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 15:05:37.734 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 15:05:37.737 +02:00 [INF] Hosting environment: Development
+2025-12-10 15:05:37.738 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 15:06:06.266 +02:00 [ERR] Error during registration for email: @chnu.edu.ua
+System.InvalidCastException: Invalid cast from 'System.Int32' to 'System.Guid'.
+   at System.Convert.DefaultToType(IConvertible value, Type targetType, IFormatProvider provider)
+   at lambda_method164(Closure, Object)
+   at Mapster.TypeAdapter.Adapt[TDestination](Object source, TypeAdapterConfig config)
+   at Mapster.TypeAdapter.Adapt[TDestination](Object source)
+   at CHNU_Connect.BLL.Services.UserService.GetByEmailAsync(String email) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.BLL\Services\UserService.cs:line 88
+   at CHNU_Connect.API.Controllers.AuthController.Register(RegisterRequestDto request) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Controllers\AuthController.cs:line 41
+2025-12-10 15:08:00.739 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 15:08:05.634 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 15:08:05.636 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 15:08:05.670 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 15:08:05.672 +02:00 [INF] Hosting environment: Development
+2025-12-10 15:08:05.673 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 15:14:30.679 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 15:14:37.300 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 15:14:37.302 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 15:14:37.337 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 15:14:37.339 +02:00 [INF] Hosting environment: Development
+2025-12-10 15:14:37.341 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 15:16:37.428 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 15:16:42.665 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 15:16:42.668 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 15:16:42.703 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 15:16:42.705 +02:00 [INF] Hosting environment: Development
+2025-12-10 15:16:42.706 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
