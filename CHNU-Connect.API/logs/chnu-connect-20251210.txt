@@ -394,3 +394,218 @@ System.InvalidCastException: Invalid cast from 'System.Int32' to 'System.Guid'.
 2025-12-10 15:16:42.703 +02:00 [INF] Application started. Press Ctrl+C to shut down.
 2025-12-10 15:16:42.705 +02:00 [INF] Hosting environment: Development
 2025-12-10 15:16:42.706 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 15:38:20.178 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 15:38:25.963 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 15:38:25.966 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 15:38:26.010 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 15:38:26.012 +02:00 [INF] Hosting environment: Development
+2025-12-10 15:38:26.014 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 15:46:56.777 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 15:47:01.960 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 15:47:01.962 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 15:47:01.999 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 15:47:02.001 +02:00 [INF] Hosting environment: Development
+2025-12-10 15:47:02.002 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 15:48:16.044 +02:00 [INF] New user registered: user1000@chnu.edu.ua
+2025-12-10 16:07:28.685 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 16:07:35.834 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 16:07:35.838 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 16:07:35.930 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 16:07:35.940 +02:00 [INF] Hosting environment: Development
+2025-12-10 16:07:35.943 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 16:07:46.617 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:07:46.623 +02:00 [INF] Stored password: Gabriel&$#004
+2025-12-10 16:07:46.626 +02:00 [INF] Password from request: Gabriel&$#004
+2025-12-10 16:10:08.190 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:10:08.194 +02:00 [INF] Stored password: Gabriel&$#004
+2025-12-10 16:10:08.198 +02:00 [INF] Password from request: Gabriel&$#004
+2025-12-10 16:12:45.060 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 16:12:51.598 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 16:12:51.601 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 16:12:51.659 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 16:12:51.686 +02:00 [INF] Hosting environment: Development
+2025-12-10 16:12:51.697 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 16:12:59.369 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:12:59.376 +02:00 [INF] Stored password: Gabriel&$#004
+2025-12-10 16:12:59.378 +02:00 [INF] Password from request: Gabriel&$#004
+2025-12-10 16:14:22.456 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 16:14:29.046 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 16:14:29.049 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 16:14:29.104 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 16:14:29.129 +02:00 [INF] Hosting environment: Development
+2025-12-10 16:14:29.134 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 16:14:43.346 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:14:43.352 +02:00 [INF] Stored password: Gabriel&$#004
+2025-12-10 16:14:43.355 +02:00 [INF] Password from request: Gabriel&$#004
+2025-12-10 16:14:43.361 +02:00 [ERR] Error during login for email: spelchuk.habriiel@chnu.edu.ua
+System.ArgumentNullException: Value cannot be null. (Parameter 's')
+   at System.ArgumentNullException.Throw(String paramName)
+   at System.Text.Encoding.GetBytes(String s)
+   at CHNU_Connect.BLL.Services.AuthService.GenerateJwtToken(User user) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.BLL\Services\AuthService.cs:line 128
+   at CHNU_Connect.BLL.Services.AuthService.Login(LoginRequestDto loginRequestDto) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.BLL\Services\AuthService.cs:line 53
+   at CHNU_Connect.API.Controllers.AuthController.Login(LoginRequestDto request) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Controllers\AuthController.cs:line 68
+2025-12-10 16:18:58.503 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 16:19:05.471 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 16:19:05.473 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 16:19:05.525 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 16:19:05.529 +02:00 [INF] Hosting environment: Development
+2025-12-10 16:19:05.531 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 16:19:45.452 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:19:45.457 +02:00 [INF] Stored password: Gabriel&$#004
+2025-12-10 16:19:45.460 +02:00 [INF] Password from request: Gabriel&$#004
+2025-12-10 16:19:45.463 +02:00 [INF] Generating JWT for user spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:19:45.541 +02:00 [INF] User logged in: spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:25:58.690 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:25:58.693 +02:00 [INF] Stored password: Gabriel&$#004
+2025-12-10 16:25:58.695 +02:00 [INF] Password from request: Gabriel&$#004
+2025-12-10 16:25:58.697 +02:00 [INF] Generating JWT for user spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:25:58.699 +02:00 [INF] User logged in: spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:29:41.815 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 16:29:49.673 +02:00 [FTL] Application startup exception
+System.InvalidOperationException: Scheme already exists: Bearer
+   at Microsoft.AspNetCore.Authentication.AuthenticationOptions.AddScheme(String name, Action`1 configureBuilder)
+   at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)
+   at Microsoft.Extensions.Options.UnnamedOptionsManager`1.get_Value()
+   at Microsoft.AspNetCore.Authentication.AuthenticationSchemeProvider..ctor(IOptions`1 options, IDictionary`2 schemes)
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+2025-12-10 16:29:49.715 +02:00 [ERR] Hosting failed to start
+System.InvalidOperationException: Scheme already exists: Bearer
+   at Microsoft.AspNetCore.Authentication.AuthenticationOptions.AddScheme(String name, Action`1 configureBuilder)
+   at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)
+   at Microsoft.Extensions.Options.UnnamedOptionsManager`1.get_Value()
+   at Microsoft.AspNetCore.Authentication.AuthenticationSchemeProvider..ctor(IOptions`1 options, IDictionary`2 schemes)
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__15_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+2025-12-10 16:31:33.197 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 16:31:40.657 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 16:31:40.660 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 16:31:40.720 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 16:31:40.722 +02:00 [INF] Hosting environment: Development
+2025-12-10 16:31:40.724 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 16:33:27.510 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 16:33:35.001 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 16:33:35.004 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 16:33:35.053 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 16:33:35.055 +02:00 [INF] Hosting environment: Development
+2025-12-10 16:33:35.058 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 16:33:52.415 +02:00 [ERR] Exception caught in GlobalExceptionHandlingMiddleware. HTTP 500: Value cannot be null. (Parameter 's')
+System.ArgumentNullException: Value cannot be null. (Parameter 's')
+   at System.ArgumentNullException.Throw(String paramName)
+   at System.Text.Encoding.GetBytes(String s)
+   at CHNU_Connect.API.Program.<>c__DisplayClass0_0.<Main>b__2(JwtBearerOptions options) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Program.cs:line 42
+   at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)
+   at System.Lazy`1.CreateValue()
+   at Microsoft.Extensions.Options.OptionsCache`1.GetOrAdd[TArg](String name, Func`3 createOptions, TArg factoryArgument)
+   at Microsoft.Extensions.Options.OptionsMonitor`1.Get(String name)
+   at Microsoft.AspNetCore.Authentication.AuthenticationHandler`1.InitializeAsync(AuthenticationScheme scheme, HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationHandlerProvider.GetHandlerAsync(HttpContext context, String authenticationScheme)
+   at Microsoft.AspNetCore.Authentication.AuthenticationService.AuthenticateAsync(HttpContext context, String scheme)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at CHNU_Connect.API.Middleware.GlobalExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 24
+2025-12-10 16:38:28.552 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 16:38:35.514 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 16:38:35.519 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 16:38:35.576 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 16:38:35.579 +02:00 [INF] Hosting environment: Development
+2025-12-10 16:38:35.582 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 16:38:46.057 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:38:46.063 +02:00 [INF] Stored password: Gabriel&$#004
+2025-12-10 16:38:46.065 +02:00 [INF] Password from request: Gabriel&$#004
+2025-12-10 16:38:46.068 +02:00 [INF] Generating JWT for user spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:38:46.095 +02:00 [INF] User logged in: spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:41:48.890 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 16:41:55.514 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 16:41:55.517 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 16:41:55.559 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 16:41:55.563 +02:00 [INF] Hosting environment: Development
+2025-12-10 16:41:55.565 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 16:42:09.669 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:42:09.673 +02:00 [INF] Stored password: Gabriel&$#004
+2025-12-10 16:42:09.675 +02:00 [INF] Password from request: Gabriel&$#004
+2025-12-10 16:42:09.677 +02:00 [INF] Generating JWT for user spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:42:09.695 +02:00 [INF] User logged in: spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:45:43.666 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 16:45:50.402 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 16:45:50.404 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 16:45:50.461 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 16:45:50.463 +02:00 [INF] Hosting environment: Development
+2025-12-10 16:45:50.465 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 16:45:58.571 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:45:58.577 +02:00 [INF] Stored password: Gabriel&$#004
+2025-12-10 16:45:58.580 +02:00 [INF] Password from request: Gabriel&$#004
+2025-12-10 16:45:58.582 +02:00 [INF] Generating JWT for user spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:45:58.601 +02:00 [INF] User logged in: spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:48:28.125 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 16:48:35.101 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 16:48:35.104 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 16:48:35.152 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 16:48:35.155 +02:00 [INF] Hosting environment: Development
+2025-12-10 16:48:35.157 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 16:48:44.644 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:48:44.649 +02:00 [INF] Stored password: Gabriel&$#004
+2025-12-10 16:48:44.653 +02:00 [INF] Password from request: Gabriel&$#004
+2025-12-10 16:48:44.658 +02:00 [INF] Generating JWT for user spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:48:44.686 +02:00 [INF] User logged in: spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:51:58.981 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 16:52:06.044 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 16:52:06.048 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 16:52:06.093 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 16:52:06.096 +02:00 [INF] Hosting environment: Development
+2025-12-10 16:52:06.098 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 16:52:20.932 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:52:20.936 +02:00 [INF] Stored password: Gabriel&$#004
+2025-12-10 16:52:20.938 +02:00 [INF] Password from request: Gabriel&$#004
+2025-12-10 16:52:20.941 +02:00 [INF] Generating JWT for user spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:52:20.963 +02:00 [INF] User logged in: spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:54:39.133 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-10 16:54:45.768 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-10 16:54:45.770 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-10 16:54:45.815 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-10 16:54:45.818 +02:00 [INF] Hosting environment: Development
+2025-12-10 16:54:45.819 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-10 16:54:57.271 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:54:57.276 +02:00 [INF] Stored password: Gabriel&$#004
+2025-12-10 16:54:57.278 +02:00 [INF] Password from request: Gabriel&$#004
+2025-12-10 16:54:57.280 +02:00 [INF] Generating JWT for user spelchuk.habriiel@chnu.edu.ua
+2025-12-10 16:54:57.303 +02:00 [INF] User logged in: spelchuk.habriiel@chnu.edu.ua

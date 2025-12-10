@@ -20,7 +20,7 @@ namespace CHNU_Connect.DAL.Entities
         public string? Bio { get; set; }
         public bool IsBlocked { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public bool IsEmailConfirmed { get; set; } = false;
+        public bool IsEmailConfirmed { get; set; } = true;
 
         public string? EmailConfirmationToken { get; set; }
 

@@ -3,10 +3,11 @@ using CHNU_Connect.BLL.Services.Interfaces;
 using CHNU_Connect.DAL.Entities;
 using CHNU_Connect.DAL.Repositories.Interfaces;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 namespace CHNU_Connect.BLL.Services
@@ -15,25 +16,41 @@ namespace CHNU_Connect.BLL.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<AuthService> _logger;
 
-        public AuthService(IUserRepository userRepository, IConfiguration configuration)
+        public AuthService(IUserRepository userRepository, IConfiguration configuration, ILogger<AuthService> logger)
         {
             _userRepository = userRepository;
             _configuration = configuration;
+            _logger = logger;
         }
 
         public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
         {
             var user = await _userRepository.GetByEmailAsync(loginRequestDto.Email);
 
-            if (user == null || user.PasswordHash != loginRequestDto.Password) 
+            // --- Вставляєш сюди блок з логами ---
+            if (user == null)
             {
+                _logger.LogWarning("Login failed: user with email {Email} not found", loginRequestDto.Email);
                 throw new UnauthorizedAccessException("Invalid credentials");
             }
 
-            if (!user.IsEmailConfirmed)
-                throw new UnauthorizedAccessException("Підтвердіть email перед входом.");
+            _logger.LogInformation("User found: {Email}", user.Email);
+            _logger.LogInformation("Stored password: {PasswordHash}", user.PasswordHash);
+            _logger.LogInformation("Password from request: {RequestPassword}", loginRequestDto.Password);
 
+            if (user.PasswordHash != loginRequestDto.Password)
+            {
+                _logger.LogWarning("Login failed: invalid password for {Email}", loginRequestDto.Email);
+                throw new UnauthorizedAccessException("Invalid credentials");
+            }
+            // --- Кінець блока ---
+
+            //  if (!user.IsEmailConfirmed)
+            //  throw new UnauthorizedAccessException("Підтвердіть email перед входом.");
+
+            _logger.LogInformation("Generating JWT for user {Email}", user.Email);
             var token = GenerateJwtToken(user);
             var refreshToken = GenerateRefreshToken();
 
@@ -48,6 +65,7 @@ namespace CHNU_Connect.BLL.Services
                 Token = token
             };
         }
+
 
         public async Task<bool> RegisterAsync(string username, string email, string password)
         {
@@ -118,6 +136,8 @@ namespace CHNU_Connect.BLL.Services
                     new Claim(ClaimTypes.Role, user.Role)
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["JwtConfig:TokenValidityMins"])),
+                Issuer = _configuration["JwtConfig:Issuer"],     
+                Audience = _configuration["JwtConfig:Audience"],
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
