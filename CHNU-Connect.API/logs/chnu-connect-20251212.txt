@@ -1,0 +1,145 @@
+2025-12-12 00:15:28.403 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-12 00:15:35.537 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-12 00:15:35.540 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-12 00:15:35.602 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-12 00:15:35.605 +02:00 [INF] Hosting environment: Development
+2025-12-12 00:15:35.608 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-12 00:25:15.644 +02:00 [INF] User found: skalskyi.dmytro@chnu.edu.ua
+2025-12-12 00:25:15.650 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEGYqnITpVX13VWbevhs6G2XMDyHGekPzQfDMSj67cR+DSELHKbKMvYNkfBwPS4wfDg==
+2025-12-12 00:25:15.653 +02:00 [INF] Password from request: 12345
+2025-12-12 00:25:15.746 +02:00 [INF] Generating JWT for user skalskyi.dmytro@chnu.edu.ua
+2025-12-12 00:25:15.779 +02:00 [INF] User logged in: skalskyi.dmytro@chnu.edu.ua
+2025-12-12 00:26:10.502 +02:00 [ERR] Exception caught in GlobalExceptionHandlingMiddleware. HTTP 500: Invalid cast from 'System.Int32' to 'System.Guid'.
+System.InvalidCastException: Invalid cast from 'System.Int32' to 'System.Guid'.
+   at System.Convert.DefaultToType(IConvertible value, Type targetType, IFormatProvider provider)
+   at lambda_method214(Closure, Event)
+   at System.Linq.Enumerable.SelectListIterator`2.MoveNext()
+   at System.Text.Json.Serialization.Converters.IEnumerableDefaultConverter`2.OnWriteResume(Utf8JsonWriter writer, TCollection value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.JsonCollectionConverter`2.OnTryWrite(Utf8JsonWriter writer, TCollection value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.JsonConverter`1.TryWrite(Utf8JsonWriter writer, T& value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.JsonConverter`1.WriteCore(Utf8JsonWriter writer, T& value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.SerializeAsync(Stream utf8Json, T rootValue, CancellationToken cancellationToken, Object rootValueBoxed)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.SerializeAsync(Stream utf8Json, T rootValue, CancellationToken cancellationToken, Object rootValueBoxed)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.SerializeAsync(Stream utf8Json, T rootValue, CancellationToken cancellationToken, Object rootValueBoxed)
+   at Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonOutputFormatter.WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResultFilterAsync>g__Awaited|30_0[TFilter,TFilterAsync](ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResultExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.ResultNext[TFilter,TFilterAsync](State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeResultFilters()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at CHNU_Connect.API.Program.<>c.<<Main>b__0_7>d.MoveNext() in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Program.cs:line 148
+--- End of stack trace from previous location ---
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at CHNU_Connect.API.Middleware.GlobalExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 24
+2025-12-12 00:26:17.299 +02:00 [ERR] Exception caught in GlobalExceptionHandlingMiddleware. HTTP 500: Invalid cast from 'System.Int32' to 'System.Guid'.
+System.InvalidCastException: Invalid cast from 'System.Int32' to 'System.Guid'.
+   at System.Convert.DefaultToType(IConvertible value, Type targetType, IFormatProvider provider)
+   at lambda_method260(Closure, Group)
+   at System.Linq.Enumerable.SelectListIterator`2.MoveNext()
+   at System.Text.Json.Serialization.Converters.IEnumerableDefaultConverter`2.OnWriteResume(Utf8JsonWriter writer, TCollection value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.JsonCollectionConverter`2.OnTryWrite(Utf8JsonWriter writer, TCollection value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.JsonConverter`1.TryWrite(Utf8JsonWriter writer, T& value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.JsonConverter`1.WriteCore(Utf8JsonWriter writer, T& value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.SerializeAsync(Stream utf8Json, T rootValue, CancellationToken cancellationToken, Object rootValueBoxed)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.SerializeAsync(Stream utf8Json, T rootValue, CancellationToken cancellationToken, Object rootValueBoxed)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.SerializeAsync(Stream utf8Json, T rootValue, CancellationToken cancellationToken, Object rootValueBoxed)
+   at Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonOutputFormatter.WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResultFilterAsync>g__Awaited|30_0[TFilter,TFilterAsync](ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResultExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.ResultNext[TFilter,TFilterAsync](State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeResultFilters()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at CHNU_Connect.API.Program.<>c.<<Main>b__0_7>d.MoveNext() in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Program.cs:line 148
+--- End of stack trace from previous location ---
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at CHNU_Connect.API.Middleware.GlobalExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 24
+2025-12-12 00:27:05.902 +02:00 [ERR] Exception caught in GlobalExceptionHandlingMiddleware. HTTP 500: Invalid cast from 'System.Int32' to 'System.Guid'.
+System.InvalidCastException: Invalid cast from 'System.Int32' to 'System.Guid'.
+   at System.Convert.DefaultToType(IConvertible value, Type targetType, IFormatProvider provider)
+   at lambda_method260(Closure, Group)
+   at System.Linq.Enumerable.SelectListIterator`2.MoveNext()
+   at System.Text.Json.Serialization.Converters.IEnumerableDefaultConverter`2.OnWriteResume(Utf8JsonWriter writer, TCollection value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.JsonCollectionConverter`2.OnTryWrite(Utf8JsonWriter writer, TCollection value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.JsonConverter`1.TryWrite(Utf8JsonWriter writer, T& value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.JsonConverter`1.WriteCore(Utf8JsonWriter writer, T& value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.SerializeAsync(Stream utf8Json, T rootValue, CancellationToken cancellationToken, Object rootValueBoxed)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.SerializeAsync(Stream utf8Json, T rootValue, CancellationToken cancellationToken, Object rootValueBoxed)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.SerializeAsync(Stream utf8Json, T rootValue, CancellationToken cancellationToken, Object rootValueBoxed)
+   at Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonOutputFormatter.WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResultFilterAsync>g__Awaited|30_0[TFilter,TFilterAsync](ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResultExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.ResultNext[TFilter,TFilterAsync](State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeResultFilters()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at CHNU_Connect.API.Program.<>c.<<Main>b__0_7>d.MoveNext() in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Program.cs:line 148
+--- End of stack trace from previous location ---
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at CHNU_Connect.API.Middleware.GlobalExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 24
+2025-12-12 00:30:28.910 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-12 00:30:35.852 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-12 00:30:35.855 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-12 00:30:35.911 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-12 00:30:35.914 +02:00 [INF] Hosting environment: Development
+2025-12-12 00:30:35.917 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-12 00:30:54.303 +02:00 [INF] User found: skalskyi.dmytro@chnu.edu.ua
+2025-12-12 00:30:54.309 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEGYqnITpVX13VWbevhs6G2XMDyHGekPzQfDMSj67cR+DSELHKbKMvYNkfBwPS4wfDg==
+2025-12-12 00:30:54.312 +02:00 [INF] Password from request: 12345
+2025-12-12 00:30:54.437 +02:00 [INF] Generating JWT for user skalskyi.dmytro@chnu.edu.ua
+2025-12-12 00:30:54.472 +02:00 [INF] User logged in: skalskyi.dmytro@chnu.edu.ua
+2025-12-12 00:31:10.401 +02:00 [ERR] Exception caught in GlobalExceptionHandlingMiddleware. HTTP 500: Invalid cast from 'System.Int32' to 'System.Guid'.
+System.InvalidCastException: Invalid cast from 'System.Int32' to 'System.Guid'.
+   at System.Convert.DefaultToType(IConvertible value, Type targetType, IFormatProvider provider)
+   at lambda_method209(Closure, Group)
+   at System.Linq.Enumerable.SelectListIterator`2.MoveNext()
+   at System.Text.Json.Serialization.Converters.IEnumerableDefaultConverter`2.OnWriteResume(Utf8JsonWriter writer, TCollection value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.JsonCollectionConverter`2.OnTryWrite(Utf8JsonWriter writer, TCollection value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.JsonConverter`1.TryWrite(Utf8JsonWriter writer, T& value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.JsonConverter`1.WriteCore(Utf8JsonWriter writer, T& value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.SerializeAsync(Stream utf8Json, T rootValue, CancellationToken cancellationToken, Object rootValueBoxed)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.SerializeAsync(Stream utf8Json, T rootValue, CancellationToken cancellationToken, Object rootValueBoxed)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.SerializeAsync(Stream utf8Json, T rootValue, CancellationToken cancellationToken, Object rootValueBoxed)
+   at Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonOutputFormatter.WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResultFilterAsync>g__Awaited|30_0[TFilter,TFilterAsync](ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResultExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.ResultNext[TFilter,TFilterAsync](State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeResultFilters()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at CHNU_Connect.API.Program.<>c.<<Main>b__0_7>d.MoveNext() in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Program.cs:line 148
+--- End of stack trace from previous location ---
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at CHNU_Connect.API.Middleware.GlobalExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 24
+2025-12-12 00:32:35.772 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-12 00:32:42.678 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-12 00:32:42.681 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-12 00:32:42.748 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-12 00:32:42.752 +02:00 [INF] Hosting environment: Development
+2025-12-12 00:32:42.754 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-12 00:32:58.540 +02:00 [INF] User found: skalskyi.dmytro@chnu.edu.ua
+2025-12-12 00:32:58.547 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEGYqnITpVX13VWbevhs6G2XMDyHGekPzQfDMSj67cR+DSELHKbKMvYNkfBwPS4wfDg==
+2025-12-12 00:32:58.551 +02:00 [INF] Password from request: 12345
+2025-12-12 00:32:58.683 +02:00 [INF] Generating JWT for user skalskyi.dmytro@chnu.edu.ua
+2025-12-12 00:32:58.716 +02:00 [INF] User logged in: skalskyi.dmytro@chnu.edu.ua

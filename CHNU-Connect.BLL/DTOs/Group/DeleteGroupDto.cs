@@ -8,6 +8,6 @@ namespace CHNU_Connect.BLL.DTOs.Group
 {
     public class DeleteGroupDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
     }
 }

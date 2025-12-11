@@ -8,10 +8,10 @@ namespace CHNU_Connect.BLL.DTOs.Group
 {
     public class GroupDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; } = null!;
         public string? Description { get; set; }
-        public Guid CreatorId { get; set; }
+        public int CreatorId { get; set; }
         public DateTime CreatedAt { get; set; }
         public int CreatedById { get; set; }
     }

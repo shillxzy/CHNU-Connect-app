@@ -8,6 +8,6 @@ namespace CHNU_Connect.BLL.DTOs.Event
 {
     public class DeleteEventDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
     }
 }
