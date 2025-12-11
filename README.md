@@ -67,7 +67,7 @@
 
 Багатошарова архітектура (**Layered Architecture**):
 
-![Опис скріншоту](assets/diagrams.png)
+![Опис скріншоту](assets/diagrams.jpg)
 
 ✔ REST API\
 ✔ Swagger UI\
