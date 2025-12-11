@@ -61,7 +61,7 @@ namespace CHNU_Connect.BLL.Services
             return posts.Adapt<IEnumerable<PostDto>>();
         }
 
-        public async Task<PostDto> UpdatePostAsync(int id, CreatePostDto dto)
+        public async Task<PostDto> UpdatePostAsync(int id, UpdatePostDto dto)
         {
             var post = await _postRepository.GetByIdAsync(id);
             if (post == null)
@@ -120,6 +120,14 @@ namespace CHNU_Connect.BLL.Services
         public async Task<int> GetLikeCountAsync(int postId)
         {
             return await _postRepository.GetPostLikesCountAsync(postId);
+        }
+
+        public async Task<IEnumerable<PostDto>> SearchPostsAsync(string searchTerm)
+        {
+            var posts = await _postRepository.GetAllAsync();
+            var filteredPosts = posts.Where(p => 
+                p.Content.ToLower().Contains(searchTerm.ToLower()));
+            return filteredPosts.Adapt<IEnumerable<PostDto>>();
         }
 
     }
