@@ -1,4 +1,5 @@
 using CHNU_Connect.BLL.DTOs.AdminAction;
+using CHNU_Connect.BLL.DTOs.User;
 using CHNU_Connect.BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -229,9 +230,25 @@ namespace CHNU_Connect.API.Controllers
             }
         }
 
+        [HttpPost("set-role")]
+        public async Task<IActionResult> SetRole([FromBody] ChangeRoleRequest request)
+        {
+            var allowedRoles = new[] { "student", "teacher", "admin" };
+
+            if (!allowedRoles.Contains(request.Role.ToLower()))
+                return BadRequest("There is no such role. Available roles: student, teacher, admin");
+
+            var result = await _userService.SetUserRoleAsync(request.UserId, request.Role);
+
+            if (!result)
+                return NotFound("User not found");
+
+            return Ok("Role successfully updated");
+        }
+
         private int? GetCurrentUserId()
         {
-            var userIdClaim = User.FindFirst("userId")?.Value;
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return int.TryParse(userIdClaim, out var userId) ? userId : null;
         }
     }

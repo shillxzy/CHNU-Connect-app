@@ -17,5 +17,6 @@ namespace CHNU_Connect.BLL.Services.Interfaces
         Task<bool> BlockUserAsync(int id);
         Task<bool> UnblockUserAsync(int id);
         Task<UserDto?> GetByEmailAsync(string email);
+        Task<bool> SetUserRoleAsync(int userId, string newRole);
     }
 }

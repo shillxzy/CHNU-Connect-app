@@ -10,7 +10,7 @@ namespace CHNU_Connect.API.Logging
     {
         public static void ConfigureJwt(this IServiceCollection services, IConfiguration configuration)
         {
-            var jwtSettings = configuration.GetSection("JwtSettings");
+            var jwtSettings = configuration.GetSection("JwtSettings"); //
             var secretKey = jwtSettings["SecretKey"] ?? "CHNU_Connect_Super_Secret_Key_2024_For_JWT_Token_Generation";
             var issuer = jwtSettings["Issuer"] ?? "CHNU-Connect";
             var audience = jwtSettings["Audience"] ?? "CHNU-Connect-Users";

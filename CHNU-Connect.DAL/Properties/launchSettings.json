@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "CHNU-Connect.DAL": {
+      "commandName": "Project"
+    },
+    "Profile 1": {
+      "commandName": "Executable"
+    }
+  }
+}

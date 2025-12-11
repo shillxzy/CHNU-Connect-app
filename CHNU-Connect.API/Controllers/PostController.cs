@@ -35,6 +35,22 @@ namespace CHNU_Connect.API.Controllers
             }
         }
 
+        [HttpGet("feed")]
+        public async Task<IActionResult> GetFeed([FromQuery] int? page = 1, [FromQuery] int pageSize = 10)
+        {
+            try
+            {
+                var feed = await _postService.GetFeedAsync(page, pageSize);
+                return Ok(feed);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting feed");
+                return StatusCode(500, new { message = "An error occurred while retrieving feed." });
+            }
+        }
+
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPost(int id)
         {
@@ -69,17 +85,17 @@ namespace CHNU_Connect.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePost([FromBody] CreatePostDto request, int? currentUserId)
+        [HttpPost]
+        public async Task<IActionResult> CreatePost([FromBody] CreatePostDto request)
         {
             try
             {
-                currentUserId = GetCurrentUserId();
+                var currentUserId = GetCurrentUserId();
                 if (currentUserId == null)
                     return Unauthorized();
 
-                request.AuthorId = currentUserId.Value;
-                var post = await _postService.CreatePostAsync(request);
-                
+                var post = await _postService.CreatePostAsync(request, currentUserId.Value);
+
                 _logger.LogInformation("Post created by user: {UserId}", currentUserId);
                 return CreatedAtAction(nameof(GetPost), new { id = post.Id }, post);
             }
@@ -89,6 +105,7 @@ namespace CHNU_Connect.API.Controllers
                 return StatusCode(500, new { message = "An error occurred while creating the post." });
             }
         }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdatePost(int id, [FromBody] CreatePostDto request)
@@ -103,9 +120,6 @@ namespace CHNU_Connect.API.Controllers
                 if (post == null)
                     return NotFound(new { message = "Post not found." });
 
-                // Check if user owns the post
-                if (post.AuthorId != currentUserId.Value)
-                    return Forbid("You can only edit your own posts.");
 
                 var updatedPost = await _postService.UpdatePostAsync(id, request);
                 
@@ -131,10 +145,6 @@ namespace CHNU_Connect.API.Controllers
                 var post = await _postService.GetByIdAsync(id);
                 if (post == null)
                     return NotFound(new { message = "Post not found." });
-
-                // Check if user owns the post
-                if (post.AuthorId != currentUserId.Value)
-                    return Forbid("You can only delete your own posts.");
 
                 var success = await _postService.DeletePostAsync(id);
                 if (!success)
@@ -213,7 +223,7 @@ namespace CHNU_Connect.API.Controllers
 
         private int? GetCurrentUserId()
         {
-            var userIdClaim = User.FindFirst("userId")?.Value;
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return int.TryParse(userIdClaim, out var userId) ? userId : null;
         }
     }
