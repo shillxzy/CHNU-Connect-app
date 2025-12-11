@@ -160,3 +160,9 @@ System.FormatException: The input is not a valid Base-64 string as it contains a
 2025-12-11 19:29:46.866 +02:00 [INF] Password from request: Gabriel
 2025-12-11 19:29:46.956 +02:00 [INF] Generating JWT for user spelchuk.habriiel@chnu.edu.ua
 2025-12-11 19:29:46.980 +02:00 [INF] User logged in: spelchuk.habriiel@chnu.edu.ua
+2025-12-11 22:11:48.680 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-11 22:11:55.055 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-11 22:11:55.058 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-11 22:11:55.101 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-11 22:11:55.103 +02:00 [INF] Hosting environment: Development
+2025-12-11 22:11:55.105 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
