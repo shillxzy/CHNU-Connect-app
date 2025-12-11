@@ -151,17 +151,14 @@ PostgreSQL (Neon Cloud):
 
 ## 🔗 Посилання на артефакти
 
-  -----------------------------------------------------------------------------------------------------------------------
-  Артефакт                          Посилання
-  --------------------------------- -------------------------------------------------------------------------------------
-  📦 Репозиторій                    https://github.com/shillxzy/CHNU-Connect-app
+| Артефакт                    | Посилання                                                                 |
+|-----------------------------|---------------------------------------------------------------------------|
+| 📦 Репозиторій              | https://github.com/shillxzy/CHNU-Connect-app                              |
+| 🎨 Figma                    | https://www.figma.com/design/FkKU48A7Jlwh0cU1fTRmeX/Wireframe             |
+| 📁 Google Drive             | https://drive.google.com/drive/folders/13HNGzz9qcXsP1wbAETPmq3RobQUGMeSG |
+| 📊 Органайзер документації | https://docs.google.com/spreadsheets/d/1h1JknJqW20tjLhGhkxINRSAiFgEEKy6nfvlBx_oIW64 |
+|-----------------------------|-----------------------------------------------------------------------------|
 
-  🎨 Figma                          https://www.figma.com/design/FkKU48A7Jlwh0cU1fTRmeX/Wireframe
-
-  📁 Google Drive                   https://drive.google.com/drive/folders/13HNGzz9qcXsP1wbAETPmq3RobQUGMeSG
-
-  📊 Органайзер документації        https://docs.google.com/spreadsheets/d/1h1JknJqW20tjLhGhkxINRSAiFgEEKy6nfvlBx_oIW64
-  -----------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
 
