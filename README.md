@@ -157,7 +157,7 @@ PostgreSQL (Neon Cloud):
 | 🎨 Figma                    | https://www.figma.com/design/FkKU48A7Jlwh0cU1fTRmeX/Wireframe             |
 | 📁 Google Drive             | https://drive.google.com/drive/folders/13HNGzz9qcXsP1wbAETPmq3RobQUGMeSG |
 | 📊 Органайзер документації | https://docs.google.com/spreadsheets/d/1h1JknJqW20tjLhGhkxINRSAiFgEEKy6nfvlBx_oIW64 |
-|-----------------------------|-----------------------------------------------------------------------------|
+
 
 
 ------------------------------------------------------------------------
