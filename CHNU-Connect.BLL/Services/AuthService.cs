@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 
 namespace CHNU_Connect.BLL.Services
 {
@@ -17,6 +18,7 @@ namespace CHNU_Connect.BLL.Services
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
         private readonly ILogger<AuthService> _logger;
+        private readonly PasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
 
         public AuthService(IUserRepository userRepository, IConfiguration configuration, ILogger<AuthService> logger)
         {
@@ -29,7 +31,6 @@ namespace CHNU_Connect.BLL.Services
         {
             var user = await _userRepository.GetByEmailAsync(loginRequestDto.Email);
 
-            // --- Вставляєш сюди блок з логами ---
             if (user == null)
             {
                 _logger.LogWarning("Login failed: user with email {Email} not found", loginRequestDto.Email);
@@ -40,12 +41,9 @@ namespace CHNU_Connect.BLL.Services
             _logger.LogInformation("Stored password: {PasswordHash}", user.PasswordHash);
             _logger.LogInformation("Password from request: {RequestPassword}", loginRequestDto.Password);
 
-            if (user.PasswordHash != loginRequestDto.Password)
-            {
-                _logger.LogWarning("Login failed: invalid password for {Email}", loginRequestDto.Email);
+            var verificationResult = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, loginRequestDto.Password);
+            if (verificationResult == PasswordVerificationResult.Failed)
                 throw new UnauthorizedAccessException("Invalid credentials");
-            }
-            // --- Кінець блока ---
 
             //  if (!user.IsEmailConfirmed)
             //  throw new UnauthorizedAccessException("Підтвердіть email перед входом.");
@@ -84,7 +82,7 @@ namespace CHNU_Connect.BLL.Services
             var user = new User
             {
                 Email = email,
-                PasswordHash = password,
+                PasswordHash = _passwordHasher.HashPassword(null, password),
                 FullName = username,
                 Role = "student",
                 CreatedAt = DateTime.UtcNow,
@@ -203,7 +201,7 @@ namespace CHNU_Connect.BLL.Services
             if (string.IsNullOrWhiteSpace(newPassword))
                 return false;
 
-            user.PasswordHash = newPassword;
+            user.PasswordHash = _passwordHasher.HashPassword(user, newPassword);
             user.PasswordResetToken = null;
             user.PasswordResetTokenExpiry = null;
 
