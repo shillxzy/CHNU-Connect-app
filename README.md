@@ -78,26 +78,27 @@
 
 ## 🛠 Стек технологій
 
-### Backend
+### 🖥 Backend
+- **.NET 8**
+- **C#**
+- **Entity Framework Core 8**
+- **Mapster**
+- **IdentityModel.Tokens.Jwt**
+- **Npgsql.EntityFrameworkCore.PostgreSQL**
+- **AutoMapper**
+- **FluentValidation**
+- **Swagger** (API документація)
 
--   .NET 8\
--   EF Core 8\
--   C#\
--   AutoMapper\
--   FluentValidation\
--   Swagger
+### 🌐 Frontend
+- **React 18**
+- **Vite / Create React App**
+- **Axios**
+- **Tailwind CSS / Material UI**
+- **Node v24.11.1**
 
-### Frontend
-
--   React 18\
--   Vite / CRA\
--   Axios\
--   Tailwind / Material UI
-
-### Database
-
--   PostgreSQL (Neon)\
--   pgAdmin 4
+### 🗄 Database
+- **PostgreSQL (Neon)**
+- **pgAdmin 4**
 
 ------------------------------------------------------------------------
 
