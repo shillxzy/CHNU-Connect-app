@@ -182,4 +182,4 @@ PostgreSQL (Neon Cloud):
 
 ## © Ліцензія
 
-*Буде додано пізніше (MIT / Apache 2.0)*
+Проєкт ліцензовано під ліцензією MIT. Деталі в [LICENSE.txt](LICENSE.txt)
