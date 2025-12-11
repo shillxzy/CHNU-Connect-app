@@ -67,7 +67,7 @@
 
 Багатошарова архітектура (**Layered Architecture**):
 
-![Опис скріншоту](assets/architecture.png)
+
 
 ✔ REST API\
 ✔ Swagger UI\
@@ -103,13 +103,7 @@
 
 ## 📁 Структура репозиторію
 
-    /CHNU-Connect-app
-     ├── CHNU-Connect-DAL
-     ├── CHNU-Connect-BLL
-     ├── CHNU-Connect-API
-     ├── client/
-     ├── README.md
-     └── docker-compose.yml (додамо пізніше)
+![Опис скріншоту](assets/architecture.png)
 
 ------------------------------------------------------------------------
 
