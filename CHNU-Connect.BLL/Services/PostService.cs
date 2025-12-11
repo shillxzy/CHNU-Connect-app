@@ -17,19 +17,37 @@ namespace CHNU_Connect.BLL.Services
             _postLikeRepository = postLikeRepository;
         }
 
-        public async Task<PostDto> CreatePostAsync(CreatePostDto dto)
+        public async Task<PostDto> CreatePostAsync(CreatePostDto dto, int authorId)
         {
             var post = dto.Adapt<Post>();
+            post.UserId = authorId;       
+            post.CreatedAt = DateTime.UtcNow;
+
             await _postRepository.InsertAsync(post);
             await _postRepository.SaveAsync();
             return post.Adapt<PostDto>();
         }
+
 
         public async Task<PostDto?> GetByIdAsync(int id)
         {
             var post = await _postRepository.GetByIdAsync(id);
             return post?.Adapt<PostDto>();
         }
+
+        public async Task<IEnumerable<PostDto>> GetFeedAsync(int? page = 1, int pageSize = 10)
+        {
+            var allPosts = await _postRepository.GetAllAsync();
+
+            var sortedPosts = allPosts.OrderByDescending(p => p.CreatedAt);
+
+            var pagedPosts = sortedPosts
+                .Skip(((page ?? 1) - 1) * pageSize)
+                .Take(pageSize);
+
+            return pagedPosts.Adapt<IEnumerable<PostDto>>();
+        }
+
 
         public async Task<IEnumerable<PostDto>> GetAllAsync()
         {
@@ -103,5 +121,6 @@ namespace CHNU_Connect.BLL.Services
         {
             return await _postRepository.GetPostLikesCountAsync(postId);
         }
+
     }
 }

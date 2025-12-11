@@ -82,6 +82,34 @@ namespace CHNU_Connect.BLL.Services
             return true;
         }
 
+
+        public async Task<bool> SetUserRoleAsync(int userId, string newRole)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null) return false;
+
+            var validRoles = new[] { "student", "teacher", "admin" };
+            if (!validRoles.Contains(newRole.ToLower()))
+                throw new ArgumentException("Invalid role specified");
+
+            user.Role = newRole;
+
+            if (user.CreatedAt.Kind == DateTimeKind.Unspecified)
+                user.CreatedAt = DateTime.SpecifyKind(user.CreatedAt, DateTimeKind.Utc);
+
+            if (user.PasswordResetTokenExpiry.HasValue &&
+                user.PasswordResetTokenExpiry.Value.Kind == DateTimeKind.Unspecified)
+            {
+                user.PasswordResetTokenExpiry = DateTime.SpecifyKind(user.PasswordResetTokenExpiry.Value, DateTimeKind.Utc);
+            }
+
+            _userRepository.Update(user);
+            await _userRepository.SaveAsync();
+            return true;
+        }
+
+
+
         public async Task<UserDto?> GetByEmailAsync(string email)
         {
             var user = await _userRepository.GetByEmailAsync(email);

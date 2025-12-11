@@ -2,6 +2,7 @@ using CHNU_Connect.BLL.DTOs.User;
 using CHNU_Connect.BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace CHNU_Connect.API.Controllers
@@ -233,9 +234,11 @@ namespace CHNU_Connect.API.Controllers
 
         private int? GetCurrentUserId()
         {
-            var userIdClaim = User.FindFirst("userId")?.Value;
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return int.TryParse(userIdClaim, out var userId) ? userId : null;
         }
+
+
     }
 
     public class UpdateProfileDto

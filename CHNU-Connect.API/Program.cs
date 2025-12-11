@@ -1,9 +1,12 @@
-using Microsoft.EntityFrameworkCore;
-using CHNU_Connect.DAL.Data;
-using CHNU_Connect.BLL;
 using CHNU_Connect.API.Logging;
+using CHNU_Connect.BLL;
+using CHNU_Connect.DAL.Data;
 using CHNU_Connect.DAL.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Text;
 
 namespace CHNU_Connect.API
 {
@@ -25,7 +28,31 @@ namespace CHNU_Connect.API
             builder.Services.AddDataAccessLayer(builder.Configuration);
 
             // ---------- JWT AUTHENTICATION ----------
-            builder.Services.ConfigureJwt(builder.Configuration);
+            var jwtKey = builder.Configuration["JwtConfig:Key"];
+            var jwtIssuer = builder.Configuration["JwtConfig:Issuer"];
+            var jwtAudience = builder.Configuration["JwtConfig:Audience"];
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                var key = Encoding.ASCII.GetBytes(jwtKey);
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = true,
+                    ValidIssuer = jwtIssuer,
+                    ValidateAudience = true,
+                    ValidAudience = jwtAudience,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.FromMinutes(1)
+
+                };
+            });
 
             // ---------- SWAGGER/OPENAPI ----------
             builder.Services.AddEndpointsApiExplorer();
@@ -43,7 +70,6 @@ namespace CHNU_Connect.API
                     }
                 });
 
-                // Add JWT Authorization support
                 c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
@@ -101,11 +127,21 @@ namespace CHNU_Connect.API
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "CHNU Connect API v1");
-                c.RoutePrefix = "swagger"; 
+                c.RoutePrefix = "swagger";
             });
 
             app.UseHttpsRedirection();
             app.UseCors("AllowAll");
+
+
+            app.Use(async (context, next) =>
+            {
+                var token = context.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                Console.WriteLine("Incoming token: " + token);
+                await next();
+            });
+
+
             app.UseAuthentication();
             app.UseAuthorization();
 

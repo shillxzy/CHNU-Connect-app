@@ -33,20 +33,17 @@ namespace CHNU_Connect.API.Controllers
         {
             try
             {
-                // Validate CHNU email
                 if (!IsValidChnuEmail(request.Email))
                 {
                     return BadRequest(new { message = "Only @chnu.edu.ua email addresses are allowed for registration." });
                 }
 
-                // Check if user already exists
                 var existingUser = await _userService.GetByEmailAsync(request.Email);
                 if (existingUser != null)
                 {
                     return BadRequest(new { message = "User with this email already exists." });
                 }
 
-                // Create user
                 var success = await _authService.RegisterAsync(request.Username, request.Email, request.Password);
                 if (!success)
                 {
@@ -83,6 +80,7 @@ namespace CHNU_Connect.API.Controllers
                 return StatusCode(500, new { message = "An error occurred during login." });
             }
         }
+
 
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDto request)
@@ -158,7 +156,6 @@ namespace CHNU_Connect.API.Controllers
             if (string.IsNullOrEmpty(email))
                 return false;
 
-            // Check if email ends with @chnu.edu.ua
             return email.EndsWith("@chnu.edu.ua", StringComparison.OrdinalIgnoreCase);
         }
     }
