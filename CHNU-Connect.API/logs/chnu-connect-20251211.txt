@@ -94,3 +94,44 @@ System.FormatException: The input is not a valid Base-64 string as it contains a
 2025-12-11 11:06:44.969 +02:00 [INF] Password from request: 12345
 2025-12-11 11:06:45.032 +02:00 [INF] Generating JWT for user krutoi@chnu.edu.ua
 2025-12-11 11:06:45.036 +02:00 [INF] User logged in: krutoi@chnu.edu.ua
+2025-12-11 12:02:38.382 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-11 12:02:45.447 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-11 12:02:45.449 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-11 12:02:45.506 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-11 12:02:45.508 +02:00 [INF] Hosting environment: Development
+2025-12-11 12:02:45.509 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-11 12:03:48.912 +02:00 [INF] User found: krutoi@chnu.edu.ua
+2025-12-11 12:03:48.918 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAED6hfNw1KdUGzYBQLxvOci24dpJNyEftYKC3cejTfT0cMDNow49LsHnw7xQqeUA/kw==
+2025-12-11 12:03:48.921 +02:00 [INF] Password from request: 12345
+2025-12-11 12:03:49.001 +02:00 [INF] Generating JWT for user krutoi@chnu.edu.ua
+2025-12-11 12:03:49.024 +02:00 [INF] User logged in: krutoi@chnu.edu.ua
+2025-12-11 12:04:21.055 +02:00 [INF] New user registered: skalskyi.dmytro@chnu.edu.ua
+2025-12-11 12:04:47.253 +02:00 [INF] User found: skalskyi.dmytro@chnu.edu.ua
+2025-12-11 12:04:47.261 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEGYqnITpVX13VWbevhs6G2XMDyHGekPzQfDMSj67cR+DSELHKbKMvYNkfBwPS4wfDg==
+2025-12-11 12:04:47.267 +02:00 [INF] Password from request: 12345
+2025-12-11 12:04:47.359 +02:00 [INF] Generating JWT for user skalskyi.dmytro@chnu.edu.ua
+2025-12-11 12:04:47.363 +02:00 [INF] User logged in: skalskyi.dmytro@chnu.edu.ua
+2025-12-11 12:05:22.798 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-11 12:05:29.543 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-11 12:05:29.547 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-11 12:05:29.598 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-11 12:05:29.602 +02:00 [INF] Hosting environment: Development
+2025-12-11 12:05:29.604 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-11 12:06:09.827 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2025-12-11 12:06:09.832 +02:00 [INF] Stored password: Gabriel
+2025-12-11 12:06:09.836 +02:00 [INF] Password from request: Gabriel
+2025-12-11 12:06:09.844 +02:00 [ERR] Error during login for email: spelchuk.habriiel@chnu.edu.ua
+System.FormatException: The input is not a valid Base-64 string as it contains a non-base 64 character, more than two padding characters, or an illegal character among the padding characters.
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at Microsoft.AspNetCore.Identity.PasswordHasher`1.VerifyHashedPassword(TUser user, String hashedPassword, String providedPassword)
+   at CHNU_Connect.BLL.Services.AuthService.Login(LoginRequestDto loginRequestDto) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.BLL\Services\AuthService.cs:line 44
+   at CHNU_Connect.API.Controllers.AuthController.Login(LoginRequestDto request) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Controllers\AuthController.cs:line 68
+2025-12-11 12:06:57.682 +02:00 [INF] User found: admin1@chnu.edu.ua
+2025-12-11 12:06:57.688 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEArNbFo+UsF1luoJzD5sXzN5T2ueP5kiIFmIVT8klfU65d/2a2yHAd4onJIXMKpGbQ==
+2025-12-11 12:06:57.690 +02:00 [INF] Password from request: 12345
+2025-12-11 12:07:01.588 +02:00 [INF] User found: admin1@chnu.edu.ua
+2025-12-11 12:07:01.591 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEArNbFo+UsF1luoJzD5sXzN5T2ueP5kiIFmIVT8klfU65d/2a2yHAd4onJIXMKpGbQ==
+2025-12-11 12:07:01.593 +02:00 [INF] Password from request: 123456
+2025-12-11 12:07:01.710 +02:00 [INF] Generating JWT for user admin1@chnu.edu.ua
+2025-12-11 12:07:01.750 +02:00 [INF] User logged in: admin1@chnu.edu.ua

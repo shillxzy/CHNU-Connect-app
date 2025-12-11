@@ -41,28 +41,9 @@ namespace CHNU_Connect.BLL.Services
             _logger.LogInformation("Stored password: {PasswordHash}", user.PasswordHash);
             _logger.LogInformation("Password from request: {RequestPassword}", loginRequestDto.Password);
 
-            // var verificationResult = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, loginRequestDto.Password);
-
-            if (user.PasswordHash.Length < 60) 
-            {
-                if (user.PasswordHash == loginRequestDto.Password)
-                {
-                    user.PasswordHash = _passwordHasher.HashPassword(user, loginRequestDto.Password);
-                    _userRepository.Update(user);
-                    await _userRepository.SaveAsync();
-                }
-                else
-                {
-                    throw new UnauthorizedAccessException("Invalid credentials");
-                }
-            }
-            else // новий пароль
-            {
-                var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, loginRequestDto.Password);
-                if (result == PasswordVerificationResult.Failed)
-                    throw new UnauthorizedAccessException("Invalid credentials");
-            }
-
+            var verificationResult = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, loginRequestDto.Password);
+            if (verificationResult == PasswordVerificationResult.Failed)
+                throw new UnauthorizedAccessException("Invalid credentials");
 
             //  if (!user.IsEmailConfirmed)
             //  throw new UnauthorizedAccessException("Підтвердіть email перед входом.");
