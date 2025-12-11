@@ -10,6 +10,9 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
+using CHNU_Connect.BLL.Settings;
+using System.Net;
+using System.Net.Mail;
 
 namespace CHNU_Connect.BLL.Services
 {
@@ -19,12 +22,15 @@ namespace CHNU_Connect.BLL.Services
         private readonly IConfiguration _configuration;
         private readonly ILogger<AuthService> _logger;
         private readonly PasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
+        private readonly EmailSettings _emailSettings;
 
-        public AuthService(IUserRepository userRepository, IConfiguration configuration, ILogger<AuthService> logger)
+        public AuthService(IUserRepository userRepository, IConfiguration configuration, ILogger<AuthService> logger,
+    EmailSettings emailSettings)
         {
             _userRepository = userRepository;
             _configuration = configuration;
             _logger = logger;
+            _emailSettings = emailSettings;
         }
 
         public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
@@ -181,6 +187,10 @@ namespace CHNU_Connect.BLL.Services
             _userRepository.Update(user);
             await _userRepository.SaveAsync();
 
+            var resetLink = $"https://chnu-connect/reset-password?email={email}&token={user.PasswordResetToken}";
+            await SendEmailAsync(email, "Reset your password", resetLink);
+
+
             Console.WriteLine($"[EMAIL MOCK] Password reset link: https://chnu-connect/reset-password?email={email}&token={user.PasswordResetToken}");
 
             return true;
@@ -210,6 +220,71 @@ namespace CHNU_Connect.BLL.Services
 
             return true;
         }
+
+        private async Task SendEmailAsync(string toEmail, string subject, string resetLink)
+        {
+            var body = $@"
+    <html>
+    <head>
+        <style>
+            .btn {{
+                display: inline-block;
+                padding: 10px 20px;
+                font-size: 16px;
+                color: white;
+                background-color: #0078D7;
+                text-decoration: none;
+                border-radius: 5px;
+            }}
+            .container {{
+                font-family: Arial, sans-serif;
+                max-width: 600px;
+                margin: auto;
+                padding: 20px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+            }}
+            .footer {{
+                margin-top: 20px;
+                font-size: 12px;
+                color: #666;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <h2>CHNU-Connect</h2>
+            <p>Hello,</p>
+            <p>You requested to reset your password. Click the button below to set a new password:</p>
+            <p><a href='{resetLink}' class='btn'>Reset Password</a></p>
+            <p>If you didn't request this, please ignore this email.</p>
+            <div class='footer'>
+                &copy; {DateTime.UtcNow.Year} CHNU-Connect. All rights reserved.
+            </div>
+        </div>
+    </body>
+    </html>";
+
+            using var client = new SmtpClient(_emailSettings.SmtpHost, _emailSettings.SmtpPort)
+            {
+                Credentials = new NetworkCredential(_emailSettings.SenderEmail, _emailSettings.SenderPassword),
+                EnableSsl = true
+            };
+
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(_emailSettings.SenderEmail, _emailSettings.SenderName),
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true
+            };
+
+            mailMessage.To.Add(toEmail);
+            await client.SendMailAsync(mailMessage);
+        }
+
+
+
 
 
         public async Task LogoutAsync()

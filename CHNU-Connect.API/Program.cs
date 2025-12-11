@@ -1,9 +1,11 @@
 using CHNU_Connect.API.Logging;
 using CHNU_Connect.BLL;
+using CHNU_Connect.BLL.Settings;
 using CHNU_Connect.DAL.Data;
 using CHNU_Connect.DAL.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
@@ -22,6 +24,11 @@ namespace CHNU_Connect.API
             // ---------- DB CONTEXT ----------
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            // ---------- Email Sender ----------
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+            builder.Services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<EmailSettings>>().Value);
+
 
             // ---------- BUSINESS LOGIC LAYER ----------
             builder.Services.AddBusinessLogic();
