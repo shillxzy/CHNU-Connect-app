@@ -85,7 +85,6 @@ namespace CHNU_Connect.API.Controllers
         }
 
         [HttpPost]
-        [HttpPost]
         public async Task<IActionResult> CreatePost([FromBody] CreatePostDto request)
         {
             try
@@ -108,7 +107,7 @@ namespace CHNU_Connect.API.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePost(int id, [FromBody] CreatePostDto request)
+        public async Task<IActionResult> UpdatePost(int id, [FromBody] UpdatePostDto request)
         {
             try
             {
@@ -120,6 +119,9 @@ namespace CHNU_Connect.API.Controllers
                 if (post == null)
                     return NotFound(new { message = "Post not found." });
 
+                // Check if user owns the post
+                if (post.UserId != currentUserId.Value)
+                    return Forbid("You can only edit your own posts.");
 
                 var updatedPost = await _postService.UpdatePostAsync(id, request);
                 
@@ -145,6 +147,10 @@ namespace CHNU_Connect.API.Controllers
                 var post = await _postService.GetByIdAsync(id);
                 if (post == null)
                     return NotFound(new { message = "Post not found." });
+
+                // Check if user owns the post
+                if (post.UserId != currentUserId.Value)
+                    return Forbid("You can only delete your own posts.");
 
                 var success = await _postService.DeletePostAsync(id);
                 if (!success)
@@ -218,6 +224,24 @@ namespace CHNU_Connect.API.Controllers
             {
                 _logger.LogError(ex, "Error getting likes for post: {PostId}", id);
                 return StatusCode(500, new { message = "An error occurred while retrieving post likes." });
+            }
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchPosts([FromQuery] string searchTerm)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(searchTerm))
+                    return BadRequest(new { message = "Search term is required." });
+
+                var posts = await _postService.SearchPostsAsync(searchTerm);
+                return Ok(posts);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error searching posts with term: {SearchTerm}", searchTerm);
+                return StatusCode(500, new { message = "An error occurred while searching posts." });
             }
         }
 
