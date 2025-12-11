@@ -1,0 +1,96 @@
+2025-12-11 10:38:13.765 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-11 10:38:19.635 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-11 10:38:19.637 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-11 10:38:19.678 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-11 10:38:19.680 +02:00 [INF] Hosting environment: Development
+2025-12-11 10:38:19.682 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-11 10:39:29.680 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2025-12-11 10:39:29.685 +02:00 [INF] Stored password: Gabriel
+2025-12-11 10:39:29.686 +02:00 [INF] Password from request: Gabriel&$#004
+2025-12-11 10:39:29.691 +02:00 [ERR] Error during login for email: spelchuk.habriiel@chnu.edu.ua
+System.FormatException: The input is not a valid Base-64 string as it contains a non-base 64 character, more than two padding characters, or an illegal character among the padding characters.
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at Microsoft.AspNetCore.Identity.PasswordHasher`1.VerifyHashedPassword(TUser user, String hashedPassword, String providedPassword)
+   at CHNU_Connect.BLL.Services.AuthService.Login(LoginRequestDto loginRequestDto) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.BLL\Services\AuthService.cs:line 45
+   at CHNU_Connect.API.Controllers.AuthController.Login(LoginRequestDto request) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Controllers\AuthController.cs:line 68
+2025-12-11 10:40:41.857 +02:00 [INF] New user registered: krutoi@chnu.edu.ua
+2025-12-11 10:41:01.641 +02:00 [INF] User found: krutoi@chnu.edu.ua
+2025-12-11 10:41:01.643 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEBpyJN0DzgteBY2KFk8kWOcKgZ1XgV6+mLOe/N4jKXLkHxr7E6oiFG45Tq6y8niJZw==
+2025-12-11 10:41:01.646 +02:00 [INF] Password from request: 123456
+2025-12-11 10:41:01.706 +02:00 [INF] Generating JWT for user krutoi@chnu.edu.ua
+2025-12-11 10:41:01.729 +02:00 [INF] User logged in: krutoi@chnu.edu.ua
+2025-12-11 10:45:42.068 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-11 10:45:46.979 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-11 10:45:46.981 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-11 10:45:47.017 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-11 10:45:47.020 +02:00 [INF] Hosting environment: Development
+2025-12-11 10:45:47.021 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-11 10:46:10.851 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2025-12-11 10:46:10.855 +02:00 [INF] Stored password: Gabriel
+2025-12-11 10:46:10.856 +02:00 [INF] Password from request: Gabriel&$#004
+2025-12-11 10:46:10.857 +02:00 [ERR] Error during login for email: spelchuk.habriiel@chnu.edu.ua
+System.FormatException: The input is not a valid Base-64 string as it contains a non-base 64 character, more than two padding characters, or an illegal character among the padding characters.
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at Microsoft.AspNetCore.Identity.PasswordHasher`1.VerifyHashedPassword(TUser user, String hashedPassword, String providedPassword)
+   at CHNU_Connect.BLL.Services.AuthService.Login(LoginRequestDto loginRequestDto) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.BLL\Services\AuthService.cs:line 44
+   at CHNU_Connect.API.Controllers.AuthController.Login(LoginRequestDto request) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Controllers\AuthController.cs:line 68
+2025-12-11 10:48:16.022 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-11 10:48:20.853 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-11 10:48:20.856 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-11 10:48:20.890 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-11 10:48:20.892 +02:00 [INF] Hosting environment: Development
+2025-12-11 10:48:20.893 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-11 10:49:43.342 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2025-12-11 10:49:43.347 +02:00 [INF] Stored password: Gabriel
+2025-12-11 10:49:43.348 +02:00 [INF] Password from request: Gabriel&$#004
+2025-12-11 10:49:43.350 +02:00 [ERR] Error during login for email: spelchuk.habriiel@chnu.edu.ua
+System.FormatException: The input is not a valid Base-64 string as it contains a non-base 64 character, more than two padding characters, or an illegal character among the padding characters.
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at Microsoft.AspNetCore.Identity.PasswordHasher`1.VerifyHashedPassword(TUser user, String hashedPassword, String providedPassword)
+   at CHNU_Connect.BLL.Services.AuthService.Login(LoginRequestDto loginRequestDto) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.BLL\Services\AuthService.cs:line 44
+   at CHNU_Connect.API.Controllers.AuthController.Login(LoginRequestDto request) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Controllers\AuthController.cs:line 68
+2025-12-11 10:51:05.586 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2025-12-11 10:51:05.589 +02:00 [INF] Stored password: Gabriel
+2025-12-11 10:51:05.590 +02:00 [INF] Password from request: Gabriel&$#004
+2025-12-11 10:51:05.592 +02:00 [ERR] Error during login for email: spelchuk.habriiel@chnu.edu.ua
+System.FormatException: The input is not a valid Base-64 string as it contains a non-base 64 character, more than two padding characters, or an illegal character among the padding characters.
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at Microsoft.AspNetCore.Identity.PasswordHasher`1.VerifyHashedPassword(TUser user, String hashedPassword, String providedPassword)
+   at CHNU_Connect.BLL.Services.AuthService.Login(LoginRequestDto loginRequestDto) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.BLL\Services\AuthService.cs:line 44
+   at CHNU_Connect.API.Controllers.AuthController.Login(LoginRequestDto request) in C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API\Controllers\AuthController.cs:line 68
+2025-12-11 10:51:33.776 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-11 10:51:38.714 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-11 10:51:38.716 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-11 10:51:38.749 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-11 10:51:38.751 +02:00 [INF] Hosting environment: Development
+2025-12-11 10:51:38.753 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app\CHNU-Connect.API
+2025-12-11 10:51:45.949 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2025-12-11 10:51:45.952 +02:00 [INF] Stored password: Gabriel
+2025-12-11 10:51:45.954 +02:00 [INF] Password from request: Gabriel&$#004
+2025-12-11 10:52:17.621 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2025-12-11 10:52:17.624 +02:00 [INF] Stored password: Gabriel
+2025-12-11 10:52:17.625 +02:00 [INF] Password from request: Gabriel
+2025-12-11 10:52:17.901 +02:00 [INF] Generating JWT for user spelchuk.habriiel@chnu.edu.ua
+2025-12-11 10:52:17.921 +02:00 [INF] User logged in: spelchuk.habriiel@chnu.edu.ua
+2025-12-11 10:52:54.114 +02:00 [INF] User found: admin1@chnu.edu.ua
+2025-12-11 10:52:54.117 +02:00 [INF] Stored password: 123456
+2025-12-11 10:52:54.119 +02:00 [INF] Password from request: 123456
+2025-12-11 10:52:54.372 +02:00 [INF] Generating JWT for user admin1@chnu.edu.ua
+2025-12-11 10:52:54.376 +02:00 [INF] User logged in: admin1@chnu.edu.ua
+2025-12-11 10:58:18.721 +02:00 [INF] User found: krutoi@chnu.edu.ua
+2025-12-11 10:58:18.723 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEBpyJN0DzgteBY2KFk8kWOcKgZ1XgV6+mLOe/N4jKXLkHxr7E6oiFG45Tq6y8niJZw==
+2025-12-11 10:58:18.724 +02:00 [INF] Password from request: 123456
+2025-12-11 10:58:18.785 +02:00 [INF] Generating JWT for user krutoi@chnu.edu.ua
+2025-12-11 10:58:18.787 +02:00 [INF] User logged in: krutoi@chnu.edu.ua
+2025-12-11 11:06:41.665 +02:00 [INF] User found: krutoi@chnu.edu.ua
+2025-12-11 11:06:41.668 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAED6hfNw1KdUGzYBQLxvOci24dpJNyEftYKC3cejTfT0cMDNow49LsHnw7xQqeUA/kw==
+2025-12-11 11:06:41.669 +02:00 [INF] Password from request: 123456
+2025-12-11 11:06:44.965 +02:00 [INF] User found: krutoi@chnu.edu.ua
+2025-12-11 11:06:44.968 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAED6hfNw1KdUGzYBQLxvOci24dpJNyEftYKC3cejTfT0cMDNow49LsHnw7xQqeUA/kw==
+2025-12-11 11:06:44.969 +02:00 [INF] Password from request: 12345
+2025-12-11 11:06:45.032 +02:00 [INF] Generating JWT for user krutoi@chnu.edu.ua
+2025-12-11 11:06:45.036 +02:00 [INF] User logged in: krutoi@chnu.edu.ua
