@@ -109,24 +109,13 @@
 
 ### Backend (.NET)
 
-``` bash
-cd CHNU-Connect-API
-dotnet restore
-dotnet build
-dotnet run
-```
-
-Swagger → http://localhost:5000/swagger
+![Опис скріншоту](assets/backendconnect.png)
 
 ------------------------------------------------------------------------
 
 ### Frontend (React)
 
-``` bash
-cd client
-npm install
-npm run dev
-```
+![Опис скріншоту](assets/frontendconnect.jpg)
 
 ------------------------------------------------------------------------
 
