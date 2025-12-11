@@ -132,12 +132,9 @@ npm run dev
 
 ## 🗄 Підключення до БД
 
-PostgreSQL (Neon Cloud):
+PostgreSQL (Neon Console Cloud):
 
-    Host: <додамо>
-    Database: chnu-connect-db
-    User: <додамо>
-    Password: <додамо>
+![Опис скріншоту](assets/sql-connect.png)
 
 ------------------------------------------------------------------------
 
