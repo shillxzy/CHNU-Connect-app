@@ -67,10 +67,7 @@
 
 Багатошарова архітектура (**Layered Architecture**):
 
-    CHNU-Connect-DAL   // Data Access Layer (EF Core, PostgreSQL)
-    CHNU-Connect-BLL   // Business Logic Layer (Services)
-    CHNU-Connect-API   // REST API (Controllers, Swagger)
-    CHNU-Connect-Client // React Frontend
+![Опис скріншоту](assets/screenshot.png)
 
 ✔ REST API\
 ✔ Swagger UI\
