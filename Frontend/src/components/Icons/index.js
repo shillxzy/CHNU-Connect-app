@@ -1,0 +1,10 @@
+export { default as MailIcon } from './MailIcon.svg';
+export { default as LockIcon } from './LockIcon.svg';
+export { default as EyeIcon } from './EyeIcon.svg';
+export { default as GoogleIcon } from './GoogleIcon.svg';
+export { default as EyeOffIcon } from './EyeOffIcon.svg';
+export { default as CHNUConnectIcon } from './CHNUConnectIcon.svg';
+export { default as UserIcon } from './UserIcon.svg';
+export { default as SearchIcon } from './SearchIcon.svg';
+export { default as LikeIcon } from './LikeIcon.svg';
+export { default as CommentIcon } from './CommentIcon.svg';
