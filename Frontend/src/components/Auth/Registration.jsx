@@ -37,10 +37,10 @@ export default function Registration({ onRegister, onShowLogin }) {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <div className="header">
-          <h2 className="h2">Реєстрація</h2>
+    <div className="container">
+      <div className="card">
+        <div className="header-block">
+          <h2 className="header-text">Реєстрація</h2>
           <p className="subtitle">Створи акаунт, щоб почати користуватися додатком.</p>
         </div>
 
@@ -130,11 +130,11 @@ export default function Registration({ onRegister, onShowLogin }) {
           </button>
         </form>
 
-        <p className="signup-text">
+        <p className="back-text">
           Вже маєш акаунт?
           <span
             onClick={() => navigate("/login")}
-            className="signup-link"
+            className="back-link"
             style={{ cursor: "pointer" }}
           >
             Увійти

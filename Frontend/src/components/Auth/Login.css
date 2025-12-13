@@ -2,18 +2,18 @@
 /* 1. КОНТЕЙНЕР І КАРТКА */
 /* ----------------------------------- */
 
-.login-container {
+.container {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #f0f0f0; /* Світлий сірий фон */
+    background-color: #f0f0f0;
     padding: 20px;
     box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-.login-card {
+.card {
     background-color: white;
     border-radius: 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -27,23 +27,29 @@
 /* 2. ТЕКСТ І ЗАГОЛОВКИ */
 /* ----------------------------------- */
 
-.header {
+.header-block {
     display: flex;
+    justify-content: space-between;
     flex-direction: column;
-    text-align: left;
-    margin-bottom: 20px;
-    width: 100%;
-    display: block;
+    background: #ffffff;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    margin: 0;
 }
 
-.h2 {
+.header-text {
+    display: block;
     font-size: 24px;
     font-weight: 600;
-    margin: 0 0 5px 0;
+    margin: 0 0 8px 0;
     color: #333;
 }
 
 .subtitle {
+    display: block;
     font-size: 14px;
     color: #6c757d;
     margin: 0;
@@ -204,7 +210,6 @@
 .google-button .icon,
 .google-button .google-icon-placeholder {
     margin-right: 10px;
-    /* У випадку Google іконка зазвичай кольорова, тому color: #6c757d тут не потрібен */
 }
 
 .divider {
@@ -268,14 +273,14 @@
 /* 6. РЕЄСТРАЦІЯ */
 /* ----------------------------------- */
 
-.signup-text {
+.back-text {
     text-align: center;
     font-size: 14px;
     color: #6c757d;
     margin-top: 20px;
 }
 
-.signup-link {
+.back-link {
     color: #007bff;
     text-decoration: none;
     font-weight: 500;
@@ -283,6 +288,6 @@
     margin-left: 5px;
 }
 
-.signup-link:hover {
+.back-link:hover {
     text-decoration: underline;
 }

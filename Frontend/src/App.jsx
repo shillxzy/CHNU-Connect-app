@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./components/Auth/Login";
 import Registration from "./components/Auth/Registration";
+import ForgotPassword from "./components/Auth/SendMail";
+import ResetPassword from "./components/Auth/ResetPassword";
 import HomePage from "./components/HomePage";
 import AdminPanel from "./components/AdminPanel/AdminPanel";
 
@@ -57,7 +59,9 @@ export default function App() {
           <>
             <Route path="/login" element={<Login onLogin={handleLogin} />} />
             <Route path="/register" element={<Registration onRegister={handleLogin} />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="*" element={<Navigate to="/login" replace />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
           </>
         ) : (
           <>

@@ -187,7 +187,7 @@ namespace CHNU_Connect.BLL.Services
             _userRepository.Update(user);
             await _userRepository.SaveAsync();
 
-            var resetLink = $"https://chnu-connect/reset-password?email={email}&token={user.PasswordResetToken}";
+            var resetLink = $"http://localhost:5173/reset-password?email={email}&token={user.PasswordResetToken}";
             await SendEmailAsync(email, "Reset your password", resetLink);
 
 

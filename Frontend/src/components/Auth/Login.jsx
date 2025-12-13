@@ -29,9 +29,8 @@ export default function Login({ onLogin, onShowRegister }) {
       localStorage.setItem("token", data.token);
     }
 
-    if (onLogin) onLogin(data.role); // зберігаємо роль у App
+    if (onLogin) onLogin(data.role);
 
-    // Редірект робимо тільки на HomePage
     navigate("/"); 
 
   } catch (err) {
@@ -42,10 +41,10 @@ export default function Login({ onLogin, onShowRegister }) {
 };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <div className="header">
-          <h2 className="h2">Увійти</h2>
+    <div className="container">
+      <div className="card">
+        <div className="header-block">
+          <h2 className="header-text">Увійти</h2>
           <p className="subtitle">
             Увійдіть, використовуючи своє ім'я користувача та пароль.
           </p>
@@ -95,9 +94,12 @@ export default function Login({ onLogin, onShowRegister }) {
             </button>
           </div>
 
-          <a href="#" onClick={handleForgotPassword} className="forgot-password-link">
+          <span
+            className="forgot-password-link"
+            onClick={() => navigate("/forgot-password")}
+          >
             Забули пароль?
-          </a>
+          </span>
 
           <button
             type="submit"
@@ -125,11 +127,11 @@ export default function Login({ onLogin, onShowRegister }) {
           <span>Sign in with Google</span>
         </button>
 
-        <p className="signup-text">
+        <p className="back-text">
           Не маєте акаунту? 
           <span
             onClick={() => navigate("/register")}
-            className="signup-link"
+            className="back-link"
             style={{ cursor: "pointer" }}
           >
             Зареєструйтесь
