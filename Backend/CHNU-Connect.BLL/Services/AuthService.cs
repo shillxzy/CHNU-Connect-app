@@ -191,7 +191,7 @@ namespace CHNU_Connect.BLL.Services
             await SendEmailAsync(email, "Reset your password", resetLink);
 
 
-            Console.WriteLine($"[EMAIL MOCK] Password reset link: https://chnu-connect/reset-password?email={email}&token={user.PasswordResetToken}");
+            // Console.WriteLine($"[EMAIL MOCK] Password reset link: https://chnu-connect/reset-password?email={email}&token={user.PasswordResetToken}");
 
             return true;
         }

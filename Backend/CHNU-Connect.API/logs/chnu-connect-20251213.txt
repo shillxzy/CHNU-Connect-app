@@ -15,38 +15,3 @@
 2025-12-13 11:02:05.457 +02:00 [INF] Application started. Press Ctrl+C to shut down.
 2025-12-13 11:02:05.458 +02:00 [INF] Hosting environment: Development
 2025-12-13 11:02:05.459 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app-new\Backend\CHNU-Connect.API
-2025-12-13 11:33:44.077 +02:00 [INF] Now listening on: https://localhost:7083
-2025-12-13 11:33:44.173 +02:00 [INF] Now listening on: http://localhost:5271
-2025-12-13 11:33:44.320 +02:00 [INF] Application started. Press Ctrl+C to shut down.
-2025-12-13 11:33:44.324 +02:00 [INF] Hosting environment: Development
-2025-12-13 11:33:44.327 +02:00 [INF] Content root path: D:\Study\CHNU-Connect-app\Backend\CHNU-Connect.API
-2025-12-13 11:34:44.954 +02:00 [INF] User found: admin1@chnu.edu.ua
-2025-12-13 11:34:44.960 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEArNbFo+UsF1luoJzD5sXzN5T2ueP5kiIFmIVT8klfU65d/2a2yHAd4onJIXMKpGbQ==
-2025-12-13 11:34:44.962 +02:00 [INF] Password from request: 123456
-2025-12-13 11:34:45.113 +02:00 [INF] Generating JWT for user admin1@chnu.edu.ua
-2025-12-13 11:34:45.138 +02:00 [INF] User logged in: admin1@chnu.edu.ua
-2025-12-13 20:16:06.690 +02:00 [INF] Now listening on: https://localhost:7083
-2025-12-13 20:16:06.773 +02:00 [INF] Now listening on: http://localhost:5271
-2025-12-13 20:16:06.910 +02:00 [INF] Application started. Press Ctrl+C to shut down.
-2025-12-13 20:16:06.913 +02:00 [INF] Hosting environment: Development
-2025-12-13 20:16:06.916 +02:00 [INF] Content root path: D:\Study\CHNU-Connect-app\Backend\CHNU-Connect.API
-2025-12-13 20:20:21.613 +02:00 [INF] User found: admin1@chnu.edu.ua
-2025-12-13 20:20:21.619 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEArNbFo+UsF1luoJzD5sXzN5T2ueP5kiIFmIVT8klfU65d/2a2yHAd4onJIXMKpGbQ==
-2025-12-13 20:20:21.622 +02:00 [INF] Password from request: 123456
-2025-12-13 20:20:21.805 +02:00 [INF] Generating JWT for user admin1@chnu.edu.ua
-2025-12-13 20:20:21.860 +02:00 [INF] User logged in: admin1@chnu.edu.ua
-2025-12-13 21:05:00.752 +02:00 [INF] User found: admin1@chnu.edu.ua
-2025-12-13 21:05:00.755 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEArNbFo+UsF1luoJzD5sXzN5T2ueP5kiIFmIVT8klfU65d/2a2yHAd4onJIXMKpGbQ==
-2025-12-13 21:05:00.757 +02:00 [INF] Password from request: 123456
-2025-12-13 21:05:00.937 +02:00 [INF] Generating JWT for user admin1@chnu.edu.ua
-2025-12-13 21:05:00.940 +02:00 [INF] User logged in: admin1@chnu.edu.ua
-2025-12-13 22:10:13.793 +02:00 [INF] Now listening on: https://localhost:7083
-2025-12-13 22:10:13.820 +02:00 [INF] Now listening on: http://localhost:5271
-2025-12-13 22:10:13.864 +02:00 [INF] Application started. Press Ctrl+C to shut down.
-2025-12-13 22:10:13.865 +02:00 [INF] Hosting environment: Development
-2025-12-13 22:10:13.866 +02:00 [INF] Content root path: D:\Study\CHNU-Connect-app\Backend\CHNU-Connect.API
-2025-12-13 22:24:05.613 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
-2025-12-13 22:24:05.615 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEFGxhKKxRldL+DZhy5LvLjGjdtl40c+djpXzOzxHIW1gKr2W6vK37X7IQuj+PGDrXw==
-2025-12-13 22:24:05.616 +02:00 [INF] Password from request: 123456
-2025-12-13 22:24:05.666 +02:00 [INF] Generating JWT for user spelchuk.habriiel@chnu.edu.ua
-2025-12-13 22:24:05.696 +02:00 [INF] User logged in: spelchuk.habriiel@chnu.edu.ua
