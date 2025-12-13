@@ -1,0 +1,17 @@
+2025-12-13 10:55:55.756 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-13 10:56:01.850 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-13 10:56:01.852 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-13 10:56:01.893 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-13 10:56:01.895 +02:00 [INF] Hosting environment: Development
+2025-12-13 10:56:01.897 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app-new\Backend\CHNU-Connect.API
+2025-12-13 10:57:33.067 +02:00 [INF] User found: skalskyi.dmytro@chnu.edu.ua
+2025-12-13 10:57:33.071 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEGYqnITpVX13VWbevhs6G2XMDyHGekPzQfDMSj67cR+DSELHKbKMvYNkfBwPS4wfDg==
+2025-12-13 10:57:33.073 +02:00 [INF] Password from request: 12345
+2025-12-13 10:57:33.131 +02:00 [INF] Generating JWT for user skalskyi.dmytro@chnu.edu.ua
+2025-12-13 10:57:33.140 +02:00 [INF] User logged in: skalskyi.dmytro@chnu.edu.ua
+2025-12-13 11:01:46.452 +02:00 [WRN] The foreign key property 'Comment.UserId1' was created in shadow state because a conflicting property with the simple name 'UserId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-12-13 11:02:05.397 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-13 11:02:05.424 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-13 11:02:05.457 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-13 11:02:05.458 +02:00 [INF] Hosting environment: Development
+2025-12-13 11:02:05.459 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app-new\Backend\CHNU-Connect.API

@@ -1,0 +1,288 @@
+/* ----------------------------------- */
+/* 1. КОНТЕЙНЕР І КАРТКА */
+/* ----------------------------------- */
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0; /* Світлий сірий фон */
+    padding: 20px;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.login-card {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 340px; 
+    border: 1px solid #e0e0e0;
+}
+
+/* ----------------------------------- */
+/* 2. ТЕКСТ І ЗАГОЛОВКИ */
+/* ----------------------------------- */
+
+.header {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin-bottom: 20px;
+    width: 100%;
+    display: block;
+}
+
+.h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 5px 0;
+    color: #333;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #6c757d;
+    margin: 0;
+}
+
+.label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+    margin-top: 15px;
+}
+
+.label:first-of-type {
+    margin-top: 0;
+}
+
+.error-message {
+    color: #dc3545; /* Червоний */
+    font-size: 14px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+}
+
+/* ----------------------------------- */
+/* 3. ПОЛЯ ВВЕДЕННЯ ТА ІКОНКИ */
+/* ----------------------------------- */
+
+.input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-group:focus-within {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.input-field {
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    font-size: 16px;
+    padding: 0;
+    background-color: transparent;
+    color: #333;
+}
+
+/* Спільний стиль для всіх ваших іконок у полях вводу */
+.icon {
+    margin-right: 10px;
+    max-height: 25px;
+    color: #6c757d; /* Колір сірий */
+    flex-shrink: 0; /* Щоб іконка не стискалася */
+}
+
+.eye-button {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.eye-button:focus {
+    outline: 2px solid rgba(0,123,255,0.25);
+    outline-offset: 2px;
+}
+
+/* Constrain image size for eye icon (when using <img>) */
+.eye-icon {
+    width: 25px;
+    height: 25px;
+    max-width: 25px;
+    max-height: 25px;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+
+/* ----------------------------------- */
+/* 4. КНОПКИ ТА ПОСИЛАННЯ */
+/* ----------------------------------- */
+
+.forgot-password-link {
+    display: block;
+    text-align: left;
+    font-size: 14px;
+    color: #007bff;
+    text-decoration: none;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.primary-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, opacity 0.2s;
+}
+
+.primary-button:hover:not(:disabled) {
+    background-color: #004085;
+}
+
+.primary-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.google-button {
+    width: 100%;
+    padding: 10px;
+    gap: 8px;
+    background-color: white;
+    color: #333;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+
+.google-button:hover {
+    background-color: #f8f9fa;
+}
+
+/* Стиль для іконки Google всередині кнопки */
+.google-button .icon,
+.google-button .google-icon-placeholder {
+    margin-right: 10px;
+    /* У випадку Google іконка зазвичай кольорова, тому color: #6c757d тут не потрібен */
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 25px 0 15px 0;
+}
+
+/* ----------------------------------- */
+/* 5. ЗАПАМ'ЯТАТИ МЕНЕ (TOGGLE) */
+/* ----------------------------------- */
+
+.remember-me-container {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+    margin-bottom: 25px;
+    justify-content: flex-start;
+    user-select: none;
+}
+
+.remember-me-label {
+    font-size: 14px;
+    color: #6c757d;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.toggle {
+    width: 40px;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+}
+
+.toggle.checked {
+    background-color: #007bff;
+}
+
+.toggle-circle {
+    width: 16px;
+    height: 16px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: left 0.2s;
+}
+
+.toggle.checked .toggle-circle {
+    left: 22px;
+}
+
+
+/* ----------------------------------- */
+/* 6. РЕЄСТРАЦІЯ */
+/* ----------------------------------- */
+
+.signup-text {
+    text-align: center;
+    font-size: 14px;
+    color: #6c757d;
+    margin-top: 20px;
+}
+
+.signup-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+}

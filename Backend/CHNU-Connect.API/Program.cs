@@ -108,9 +108,9 @@ namespace CHNU_Connect.API
             // ---------- CORS ----------
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll", policy =>
+                options.AddPolicy("AllowReactApp", policy =>
                 {
-                    policy.AllowAnyOrigin()
+                    policy.WithOrigins("http://localhost:5173")
                           .AllowAnyMethod()
                           .AllowAnyHeader();
                 });
@@ -138,7 +138,7 @@ namespace CHNU_Connect.API
             });
 
             app.UseHttpsRedirection();
-            app.UseCors("AllowAll");
+            app.UseCors("AllowReactApp");
 
 
             app.Use(async (context, next) =>

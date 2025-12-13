@@ -1,0 +1,84 @@
+.admin-panel {
+  display: flex;
+  font-family: Arial, sans-serif;
+  height: 100vh;
+}
+
+/* Бічне меню */
+.sidebar {
+  width: 200px;
+  background-color: #f1f1f1;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 15px 0;
+  cursor: pointer;
+}
+
+/* Основний контент */
+.content {
+  flex: 1;
+  padding: 20px;
+}
+
+.search-box {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.search-box input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px 0 0 8px;
+}
+
+.search-box button {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+  background-color: #eee;
+  cursor: pointer;
+}
+
+.user-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* вирівнювання зліва */
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  gap: 20px; /* відстань між аватаром та текстовими блоками */
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* відстань між рядками тексту */
+}
+
+
+.avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 2px solid #0d6efd;
+}
