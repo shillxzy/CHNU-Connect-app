@@ -15,6 +15,9 @@ namespace CHNU_Connect.DAL.UOW
         IEventParticipantRepository EventParticipantRepository { get; }
         IGroupMemberRepository GroupMemberRepository { get; }
         IPostLikeRepository PostLikeRepository { get; }
+        IChatRepository ChatRepository { get; }
+        IChatMemberRepository ChatMemberRepository { get; }
+        IChatMessageRepository ChatMessageRepository { get; }
         Task<int> SaveChangesAsync();
         Task BeginTransactionAsync();
         Task CommitTransactionAsync();
