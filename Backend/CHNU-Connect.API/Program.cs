@@ -140,15 +140,6 @@ namespace CHNU_Connect.API
             app.UseHttpsRedirection();
             app.UseCors("AllowReactApp");
 
-
-            app.Use(async (context, next) =>
-            {
-                var token = context.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-                Console.WriteLine("Incoming token: " + token);
-                await next();
-            });
-
-
             app.UseAuthentication();
             app.UseAuthorization();
 

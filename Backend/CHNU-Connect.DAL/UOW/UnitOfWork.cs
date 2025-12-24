@@ -21,6 +21,10 @@ namespace CHNU_Connect.DAL.UOW
         private IEventParticipantRepository? _eventParticipantRepository;
         private IGroupMemberRepository? _groupMemberRepository;
         private IPostLikeRepository? _postLikeRepository;
+        private IChatRepository? _chatRepository;
+        private IChatMemberRepository? _chatMemberRepository;
+        private IChatMessageRepository? _chatMessageRepository;
+
 
         public UnitOfWork(AppDbContext context)
         {
@@ -38,6 +42,10 @@ namespace CHNU_Connect.DAL.UOW
         public IEventParticipantRepository EventParticipantRepository => _eventParticipantRepository ??= new EventParticipantRepository(_context);
         public IGroupMemberRepository GroupMemberRepository => _groupMemberRepository ??= new GroupMemberRepository(_context);
         public IPostLikeRepository PostLikeRepository => _postLikeRepository ??= new PostLikeRepository(_context);
+        public IChatRepository ChatRepository => _chatRepository ??= new ChatRepository(_context);
+        public IChatMemberRepository ChatMemberRepository => _chatMemberRepository ??= new ChatMemberRepository(_context);
+        public IChatMessageRepository ChatMessageRepository => _chatMessageRepository ??= new ChatMessageRepository(_context);
+
 
         public IGenericRepository<T> Repository<T>() where T : class
         {
