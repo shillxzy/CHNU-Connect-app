@@ -1,66 +1,84 @@
 # 🎓 CHNU Connect
 
-**Соціальна мережа Чернівецького національного університету ім. Ю. Федьковича.**
+**Social Network of Yuriy Fedkovych Chernivtsi National University.**
 
 ------------------------------------------------------------------------
 
 ## 🚀 Проєкт **CHNU Connect**
 
-**CHNU Connect** — це університетська соціальна мережа, що поєднує функціональність **Facebook** та **Telegram**, створена спеціально для екосистеми **Чернівецького національного університету**.
+**CHNU Connect** — is a university social network that combines the core features of **Facebook** and **Telegram**, designed specifically for the ecosystem of **Yuriy Fedkovych Chernivtsi National University**..
 
-### 📌 Можливості платформи
-Платформа дозволяє:
+### 📌 Platform Capabilities
+The platform allows users to:
 
-- 📰 Переглядати стрічку новин  
-- ✍️ Створювати та читати пости  
-- ❤️ Взаємодіяти через лайки й коментарі  
-- 👥 Створювати та приєднуватися до груп і спільнот  
-- 💬 Обмінюватися приватними повідомленнями  
-- 📅 Переглядати та створювати події  
-- 🛠️ Адмініструвати контент  
-- 🔐 Авторизуватися через пошту **@chnu.edu.ua**  
+- 📰 View a news feed
+- ✍️ Create and read posts
+- ❤️ Interact via likes and comments
+- 👥 Create and join groups and communities
+- 💬 Exchange private messages
+- 📅 View and create events
+- 🛠️ Moderate and administer content
+- 🔐 Authenticate using @chnu.edu.ua email  
 
 
 ------------------------------------------------------------------------
 
-## ✨ MVP Функціонал
+## ✨ MVP Functionality
 
-### 🔥 Must-have
-- 🔐 **Реєстрація/логін через університетську пошту**  
-- 👤 **Профіль користувача** (фото, факультет, курс, контактні дані)  
-- 📰 **Стрічка новин** (пости, коментарі, лайки)  
-- 👥 **Групи та спільноти**  
-- 📅 **Події**  
-- 💬 **Приватний чат**  
-- 🛠 **Панель адміністратора**
+## 🔥 Must-have Features
 
-### ⭐ Should-have
-- 🔔 **Push-нотифікації**  
-- 🏷 **Хештеги**  
-- 📌 **Форум / дошка оголошень**  
-- 📆 **Інтеграція з Google Calendar**
+- 🔐 **University Email Authentication**  
+  User registration and login using a verified **@chnu.edu.ua** email address.
+- 👤 **User Profile**  
+  Personal user profile containing avatar, faculty, year of study, and contact details.
+- 📰 **News Feed**  
+  Centralized feed for creating, viewing, liking, and commenting on posts.
+- 👥 **Groups & Communities**  
+  Ability to create and join groups for courses, departments, or student communities.
+- 📅 **Events**  
+  Create, manage, and participate in university-related events.
+- 💬 **Private Messaging**  
+  One-to-one private chat functionality between users.
+- 🛠 **Admin Panel**  
+  Administrative dashboard for user management, content moderation, and system control.
 
-### 💎 Nice-to-have
-- 🎥 **Відеочати**  
-- 🧭 **Кар'єрний розділ**  
-- 🏆 **Гейміфікація**  
-- 🔗 **Інтеграція з Moodle**
+
+## ⭐ Should-have Features
+
+- 🔔 **Push Notifications**  
+  Real-time notifications for messages, comments, likes, and events.
+- 🏷 **Hashtags**  
+  Content categorization and improved post discoverability using hashtags.
+- 📌 **Forum / Notice Board**  
+  Dedicated space for announcements, discussions, and important information.
+- 📆 **Google Calendar Integration**  
+  Synchronization of events with Google Calendar.
+
+---
+
+## 💎 Nice-to-have Features
+
+- 🎥 **Video Calls**  
+  Built-in video communication for meetings, lectures, and group discussions.
+- 🧭 **Career Section**  
+  Career opportunities, internships, and job postings for students.
+- 🏆 **Gamification**  
+  Points, badges, and achievements to increase user engagement.
+- 🔗 **Moodle Integration**  
+  Integration with Moodle LMS for course materials and academic activities.
 
 ------------------------------------------------------------------------
 
 ## 🎯 User Stories
 
--   Як студент, я хочу реєструватися через *@chnu.edu.ua*, щоб
-    підтвердити приналежність до університету.
--   Як користувач, я хочу створювати пости з фото, щоб ділитися
-    новинами.
--   Як викладач, я хочу створювати групи курсу та ділитися матеріалами.
--   Як адміністратор, я хочу блокувати користувачів для підтримання
-    порядку.
+- As a **student**, I want to register using an *@chnu.edu.ua* email to verify my affiliation with the university.
+- As a **user**, I want to create posts with photos to share news and updates.
+- As a **lecturer**, I want to create course groups and share learning materials.
+- As an **administrator**, I want to block users to maintain order and platform rules.
 
 ------------------------------------------------------------------------
 
-## 🧱 Архітектура
+## 🧱 Architecture
 
 Багатошарова архітектура (**Layered Architecture**):
 
@@ -73,7 +91,7 @@
 
 ------------------------------------------------------------------------
 
-## 🛠 Стек технологій
+## 🛠 Technology stack
 
 ### 🖥 Backend
 - **.NET 8**
@@ -84,7 +102,7 @@
 - **Npgsql.EntityFrameworkCore.PostgreSQL**
 - **AutoMapper**
 - **FluentValidation**
-- **Swagger** (API документація)
+- **Swagger** (API documentation)
 
 ### 🌐 Frontend
 - **React 18**
@@ -97,75 +115,36 @@
 - **PostgreSQL (Neon)**
 - **pgAdmin 4**
 
-------------------------------------------------------------------------
-
-## 📁 Структура репозиторію
-
-![Опис скріншоту](assets/architecture.png)
 
 ------------------------------------------------------------------------
 
-## 🧪 Запуск проєкту
+## 👥 Project Team
 
-### Backend (.NET)
-
-![Опис скріншоту](assets/backendconnect.png)
-
-------------------------------------------------------------------------
-
-### Frontend (React)
-
-![Опис скріншоту](assets/frontendconnect.jpg)
-
-------------------------------------------------------------------------
-
-## 🗄 Підключення до БД
-
-PostgreSQL (Neon Console Cloud):
-
-![Опис скріншоту](assets/sql-connect.png)
-
-------------------------------------------------------------------------
-
-## 🔗 Посилання на артефакти
-
-| Артефакт                    | Посилання                                                                 |
-|-----------------------------|---------------------------------------------------------------------------|
-| 📦 Репозиторій              | https://github.com/shillxzy/CHNU-Connect-app                              |
-| 🎨 Figma                    | https://www.figma.com/design/FkKU48A7Jlwh0cU1fTRmeX/Wireframe             |
-| 📁 Google Drive             | https://drive.google.com/drive/folders/13HNGzz9qcXsP1wbAETPmq3RobQUGMeSG |
-| 📊 Органайзер документації | https://docs.google.com/spreadsheets/d/1h1JknJqW20tjLhGhkxINRSAiFgEEKy6nfvlBx_oIW64 |
-
+| Name                                           | Role                          |
+|------------------------------------------------|-------------------------------|
+| Stanislav Radionovych Kushnir                  | Project Manager               |
+| Dmytro Romanovych Skalskyi                     | Team Lead, Backend Developer  |
+| Oleksii Oleksandrovych Doroshenko              | Business Analyst, UX/UI       |
+| Serhii Mykolaiovych Liutyk                     | Backend Developer             |
+| Maksym Viacheslavovych Derhach                 | Backend Developer             |
+| Mykola Vasylovych Zelenivskyi                  | Quality Assurance             |
+| Volodymyr Volodymyrovych Iliuk                 | Front-end Developer           |
+| Gabriel Serhiiovych Spelchuk                   | Front-end Developer           |
+| Yaroslav Serhiiovych Sapsai                    | Business Analyst, UX/UI       |
 
 
 ------------------------------------------------------------------------
 
-## 👥 Команда розробки
-
-| Ім'я                                   | Роль                          |
-|----------------------------------------|-------------------------------|
-| Кушнір Станіслав Радіонович            | Project Manager              |
-| Скальський Дмитро Романович            | Team Lead, Backend Developer |
-| Дорошенко Олексій Олександрович         | Business Analyst, UX/UI      |
-| Лютик Сергій Миколайович               | Backend Developer            |
-| Дергач Максим В'ячеславович            | Backend Developer            |
-| Зеленівський Микола Васильович         | Quality Assurance            |
-| Ілюк Володимир Володимирович           | Front-end Developer          |
-| Спелчук Габрієл Сергійович             | Front-end Developer          |
-| Сапсай Ярослав Сергійович              | Business Analyst, UX/UI      |
-
-------------------------------------------------------------------------
-
-## 📌 Статус проєкту
+## 📌 Project status
 
 ⬜ Code Freeze\
-⬜ Тестування завершено\
-⬜ Підготовка до релізу\
-⬜ Демо\
-⬜ Реліз
+⬜ Testing completed\
+⬜ Preparing for release\
+⬜ Demo\
+⬜ Release
 
 ------------------------------------------------------------------------
 
-## © Ліцензія
+## © License
 
-Проєкт ліцензовано під ліцензією MIT. Деталі в [LICENSE.txt](LICENSE.txt)
+The project is licensed under the MIT license. Details in [LICENSE.txt](LICENSE.txt)
