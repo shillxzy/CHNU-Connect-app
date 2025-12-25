@@ -137,20 +137,6 @@ namespace CHNU_Connect.DAL.Data
             context.EventParticipants.AddRange(eventParticipants);
             context.SaveChanges();
 
-            // ---------- MESSAGES ----------
-            var messages = new List<Message>();
-            for (int i = 1; i <= 10; i++)
-            {
-                messages.Add(new Message
-                {
-                    SenderId = users[i % 10].Id,
-                    ReceiverId = users[(i + 1) % 10].Id,
-                    Content = $"Message {i} from user {users[i % 10].Id} to user {users[(i + 1) % 10].Id}"
-                });
-            }
-            context.Messages.AddRange(messages);
-            context.SaveChanges();
-
             // ---------- ADMIN ACTIONS ----------
             var adminActions = new List<AdminAction>();
             var admins = users.Where(u => u.Role == "admin").ToList();

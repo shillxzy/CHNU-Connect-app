@@ -9,7 +9,6 @@ namespace CHNU_Connect.DAL.UOW
         IPostRepository PostRepository { get; }
         IEventRepository EventRepository { get; }
         IGroupRepository GroupRepository { get; }
-        IMessageRepository MessageRepository { get; }
         IAdminActionRepository AdminActionRepository { get; }
         ICommentRepository CommentRepository { get; }
         IEventParticipantRepository EventParticipantRepository { get; }

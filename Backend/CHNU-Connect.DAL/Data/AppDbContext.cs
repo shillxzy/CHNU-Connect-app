@@ -19,7 +19,6 @@ namespace CHNU_Connect.DAL.Data
         public DbSet<GroupMember> GroupMembers { get; set; } = null!;
         public DbSet<Event> Events { get; set; } = null!;
         public DbSet<EventParticipant> EventParticipants { get; set; } = null!;
-        public DbSet<Message> Messages { get; set; } = null!;
         public DbSet<AdminAction> AdminActions { get; set; } = null!;
         public DbSet<Chat> Chats { get; set; } = null!;
         public DbSet<ChatMember> ChatMembers { get; set; } = null!;
@@ -148,21 +147,6 @@ namespace CHNU_Connect.DAL.Data
                 entity.HasOne(e => e.Event).WithMany(e => e.Participants).HasForeignKey(e => e.EventId).OnDelete(DeleteBehavior.Cascade);
                 entity.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId).OnDelete(DeleteBehavior.Cascade);
                 entity.HasIndex(e => new { e.EventId, e.UserId }).IsUnique();
-            });
-
-            // Messages
-            modelBuilder.Entity<Message>(entity =>
-            {
-                entity.ToTable("messages");
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).HasColumnName("id");
-                entity.Property(e => e.SenderId).HasColumnName("sender_id");
-                entity.Property(e => e.ReceiverId).HasColumnName("receiver_id");
-                entity.Property(e => e.Content).HasColumnName("content").IsRequired();
-                entity.Property(e => e.IsRead).HasColumnName("is_read").HasDefaultValue(false);
-                entity.Property(e => e.SentAt).HasColumnName("sent_at").HasDefaultValueSql("now()");
-                entity.HasOne(e => e.Sender).WithMany(u => u.SentMessages).HasForeignKey(e => e.SenderId).OnDelete(DeleteBehavior.Cascade);
-                entity.HasOne(e => e.Receiver).WithMany(u => u.ReceivedMessages).HasForeignKey(e => e.ReceiverId).OnDelete(DeleteBehavior.Cascade);
             });
 
             // AdminActions

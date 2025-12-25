@@ -15,7 +15,6 @@ namespace CHNU_Connect.DAL.UOW
         private IPostRepository? _postRepository;
         private IEventRepository? _eventRepository;
         private IGroupRepository? _groupRepository;
-        private IMessageRepository? _messageRepository;
         private IAdminActionRepository? _adminActionRepository;
         private ICommentRepository? _commentRepository;
         private IEventParticipantRepository? _eventParticipantRepository;
@@ -36,7 +35,6 @@ namespace CHNU_Connect.DAL.UOW
         public IPostRepository PostRepository => _postRepository ??= new PostRepository(_context);
         public IEventRepository EventRepository => _eventRepository ??= new EventRepository(_context);
         public IGroupRepository GroupRepository => _groupRepository ??= new GroupRepository(_context);
-        public IMessageRepository MessageRepository => _messageRepository ??= new MessageRepository(_context);
         public IAdminActionRepository AdminActionRepository => _adminActionRepository ??= new AdminActionRepository(_context);
         public ICommentRepository CommentRepository => _commentRepository ??= new CommentRepository(_context);
         public IEventParticipantRepository EventParticipantRepository => _eventParticipantRepository ??= new EventParticipantRepository(_context);

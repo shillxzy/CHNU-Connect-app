@@ -8,7 +8,6 @@ namespace CHNU_Connect.BLL
     {
         public static IServiceCollection AddBusinessLogic(this IServiceCollection services)
         {
-            // Register all service interfaces and implementations
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<IEventService, EventService>();
@@ -18,9 +17,8 @@ namespace CHNU_Connect.BLL
             services.AddScoped<IGroupMemberService, GroupMemberService>();
             services.AddScoped<IPostLikeService, PostLikeService>();
             services.AddScoped<IAdminActionService, AdminActionService>();
-            services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IAuthService, AuthService>();
-
+            services.AddScoped<IChatService, ChatService>();
             return services;
         }
     }
