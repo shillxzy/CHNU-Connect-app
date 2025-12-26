@@ -11,5 +11,6 @@ namespace CHNU_Connect.BLL.DTOs.Chat
         public string Type { get; set; } = null!; 
         public string? Title { get; set; }
         public int CreatedBy { get; set; }
+        public List<int>? MemberIds { get; set; }
     }
 }

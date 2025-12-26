@@ -23,6 +23,8 @@ namespace CHNU_Connect.DAL.Data
         public DbSet<Chat> Chats { get; set; } = null!;
         public DbSet<ChatMember> ChatMembers { get; set; } = null!;
         public DbSet<ChatMessage> ChatMessages { get; set; } = null!;
+        public DbSet<Notification> Notifications { get; set; } = null!;
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

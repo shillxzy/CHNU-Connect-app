@@ -11,5 +11,7 @@ namespace CHNU_Connect.DAL.Repositories.Interfaces
     {
         Task<Chat?> GetChatWithMembersAsync(int chatId);
         Task<IEnumerable<Chat>> GetUserChatsAsync(int userId);
+        Task<Chat?> GetByDirectKeyAsync(string directKey);
+
     }
 }

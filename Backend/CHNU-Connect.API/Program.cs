@@ -1,3 +1,4 @@
+using CHNU_Connect.API.Hubs;
 using CHNU_Connect.API.Logging;
 using CHNU_Connect.BLL;
 using CHNU_Connect.BLL.Settings;
@@ -47,6 +48,7 @@ namespace CHNU_Connect.API
             .AddJwtBearer(options =>
             {
                 var key = Encoding.ASCII.GetBytes(jwtKey);
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
@@ -57,9 +59,26 @@ namespace CHNU_Connect.API
                     ValidAudience = jwtAudience,
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.FromMinutes(1)
+                };
 
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            path.StartsWithSegments("/hubs/chat"))
+                        {
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    }
                 };
             });
+
 
             // ---------- SWAGGER/OPENAPI ----------
             builder.Services.AddEndpointsApiExplorer();
@@ -105,6 +124,9 @@ namespace CHNU_Connect.API
             // ---------- CONTROLLERS ----------
             builder.Services.AddControllers();
 
+            // ---------- SignalR ----------
+            builder.Services.AddSignalR();
+
             // ---------- CORS ----------
             builder.Services.AddCors(options =>
             {
@@ -144,6 +166,8 @@ namespace CHNU_Connect.API
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.MapHub<ChatHub>("/hubs/chat");
 
             app.Run();
         }

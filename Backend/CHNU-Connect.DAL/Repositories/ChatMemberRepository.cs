@@ -19,5 +19,13 @@ namespace CHNU_Connect.DAL.Repositories
             return await _dbSet
                 .FirstOrDefaultAsync(m => m.ChatId == chatId && m.UserId == userId);
         }
+
+        public async Task<List<ChatMember>> GetMembersByChatIdAsync(int chatId)
+        {
+            return await _context.ChatMembers
+                .Where(m => m.ChatId == chatId)
+                .ToListAsync();
+        }
+
     }
 }

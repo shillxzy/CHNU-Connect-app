@@ -25,6 +25,8 @@ namespace CHNU_Connect.DAL.Entities
         [ForeignKey(nameof(CreatedBy))]
         public User Creator { get; set; }
 
+        public string? DirectKey { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public ICollection<ChatMember> Members { get; set; }
