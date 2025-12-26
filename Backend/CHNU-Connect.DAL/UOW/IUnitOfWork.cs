@@ -18,6 +18,8 @@ namespace CHNU_Connect.DAL.UOW
         IChatRepository ChatRepository { get; }
         IChatMemberRepository ChatMemberRepository { get; }
         IChatMessageRepository ChatMessageRepository { get; }
+        INotificationRepository NotificationRepository { get; }
+
         Task<int> SaveChangesAsync();
         Task BeginTransactionAsync();
         Task CommitTransactionAsync();

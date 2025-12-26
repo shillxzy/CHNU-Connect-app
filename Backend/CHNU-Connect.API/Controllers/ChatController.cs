@@ -3,6 +3,9 @@ using CHNU_Connect.BLL.DTOs.ChatMember;
 using CHNU_Connect.BLL.DTOs.ChatMessage;
 using CHNU_Connect.BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using CHNU_Connect.API.Hubs;
+using Microsoft.AspNetCore.SignalR;
+
 
 namespace CHNU_Connect.API.Controllers
 {
@@ -11,10 +14,12 @@ namespace CHNU_Connect.API.Controllers
     public class ChatController : ControllerBase
     {
         private readonly IChatService _chatService;
+        private readonly IHubContext<ChatHub> _hubContext;
 
-        public ChatController(IChatService chatService)
+        public ChatController(IChatService chatService,IHubContext<ChatHub> hubContext)
         {
             _chatService = chatService;
+            _hubContext = hubContext;
         }
 
         // -------------------- Чати --------------------
@@ -63,14 +68,20 @@ namespace CHNU_Connect.API.Controllers
         }
 
         [HttpPost("{chatId}/messages")]
-        public async Task<IActionResult> SendMessage(int chatId, [FromBody] CreateChatMessageDto createMessageDto)
+        public async Task<IActionResult> SendMessage(int chatId,[FromBody] CreateChatMessageDto createMessageDto)
         {
             if (chatId != createMessageDto.ChatId)
                 return BadRequest("ChatId mismatch");
 
             var message = await _chatService.SendMessageAsync(createMessageDto);
+
+            await _hubContext.Clients
+                .Group($"chat-{chatId}")
+                .SendAsync("ReceiveMessage", message);
+
             return Ok(message);
         }
+
 
         [HttpPost("{chatId}/messages/{messageId}/read/{userId}")]
         public async Task<IActionResult> MarkMessageAsRead(int chatId, int messageId, int userId)

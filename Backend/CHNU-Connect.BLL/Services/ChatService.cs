@@ -30,13 +30,60 @@ namespace CHNU_Connect.BLL.Services
             return chats.Adapt<IEnumerable<ChatDto>>();
         }
 
-        public async Task<ChatDto> CreateChatAsync(CreateChatDto createChatDto)
+        public async Task<ChatDto> CreateChatAsync(CreateChatDto dto)
         {
-            var chat = createChatDto.Adapt<CHNU_Connect.DAL.Entities.Chat>();
-            await _unitOfWork.ChatRepository.InsertAsync(chat);
+            // PRIVATE CHAT
+            if (dto.Type == "private")
+            {
+                if (dto.MemberIds == null || dto.MemberIds.Count != 2)
+                    throw new InvalidOperationException("Private chat must have exactly 2 members");
+
+                var userA = dto.MemberIds[0];
+                var userB = dto.MemberIds[1];
+
+                var directKey = $"{Math.Min(userA, userB)}_{Math.Max(userA, userB)}";
+
+                // 1️⃣ шукаємо існуючий чат
+                var existingChat = await _unitOfWork.ChatRepository
+                    .GetByDirectKeyAsync(directKey);
+
+                if (existingChat != null)
+                    return existingChat.Adapt<ChatDto>();
+
+                // 2️⃣ створюємо новий
+                var chat = new CHNU_Connect.DAL.Entities.Chat
+                {
+                    Type = "private",
+                    DirectKey = directKey,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                await _unitOfWork.ChatRepository.InsertAsync(chat);
+                await _unitOfWork.SaveChangesAsync();
+
+                // 3️⃣ додаємо учасників
+                foreach (var userId in dto.MemberIds)
+                {
+                    await _unitOfWork.ChatMemberRepository.InsertAsync(
+                        new CHNU_Connect.DAL.Entities.ChatMember
+                        {
+                            ChatId = chat.Id,
+                            UserId = userId
+                        });
+                }
+
+                await _unitOfWork.SaveChangesAsync();
+                return chat.Adapt<ChatDto>();
+            }
+
+            // GROUP CHAT
+            var groupChat = dto.Adapt<CHNU_Connect.DAL.Entities.Chat>();
+            await _unitOfWork.ChatRepository.InsertAsync(groupChat);
             await _unitOfWork.SaveChangesAsync();
-            return chat.Adapt<ChatDto>();
+
+            return groupChat.Adapt<ChatDto>();
         }
+
 
         // -------------------- Учасники --------------------
         public async Task<ChatMemberDto> AddMemberAsync(CreateChatMemberDto createMemberDto)
@@ -60,13 +107,30 @@ namespace CHNU_Connect.BLL.Services
             return messages.Adapt<IEnumerable<ChatMessageDto>>();
         }
 
-        public async Task<ChatMessageDto> SendMessageAsync(CreateChatMessageDto createMessageDto)
+        public async Task<ChatMessageDto> SendMessageAsync(CreateChatMessageDto dto)
         {
-            var message = createMessageDto.Adapt<CHNU_Connect.DAL.Entities.ChatMessage>();
+            var message = dto.Adapt<CHNU_Connect.DAL.Entities.ChatMessage>();
             await _unitOfWork.ChatMessageRepository.InsertAsync(message);
+            await _unitOfWork.SaveChangesAsync();
+
+            var members = await _unitOfWork.ChatMemberRepository
+                .GetMembersByChatIdAsync(dto.ChatId);
+
+            foreach (var member in members.Where(m => m.UserId != dto.SenderId))
+            {
+                await _unitOfWork.NotificationRepository.InsertAsync(
+                    new CHNU_Connect.DAL.Entities.Notification
+                    {
+                        UserId = member.UserId,
+                        Type = "message",
+                        EntityId = message.Id
+                    });
+            }
+
             await _unitOfWork.SaveChangesAsync();
             return message.Adapt<ChatMessageDto>();
         }
+
 
         public async Task MarkMessageAsReadAsync(int chatId, int userId, int messageId)
         {

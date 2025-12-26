@@ -29,5 +29,13 @@ namespace CHNU_Connect.DAL.Repositories
                 .Include(c => c.Members)
                 .ToListAsync();
         }
+
+        public async Task<Chat?> GetByDirectKeyAsync(string directKey)
+        {
+            return await _context.Chats
+                .Include(c => c.Members)
+                .FirstOrDefaultAsync(c => c.DirectKey == directKey);
+        }
+
     }
 }
