@@ -15,12 +15,16 @@ namespace CHNU_Connect.DAL.UOW
         private IPostRepository? _postRepository;
         private IEventRepository? _eventRepository;
         private IGroupRepository? _groupRepository;
-        private IMessageRepository? _messageRepository;
         private IAdminActionRepository? _adminActionRepository;
         private ICommentRepository? _commentRepository;
         private IEventParticipantRepository? _eventParticipantRepository;
         private IGroupMemberRepository? _groupMemberRepository;
         private IPostLikeRepository? _postLikeRepository;
+        private IChatRepository? _chatRepository;
+        private IChatMemberRepository? _chatMemberRepository;
+        private IChatMessageRepository? _chatMessageRepository;
+        private INotificationRepository? _notificationRepository;
+
 
         public UnitOfWork(AppDbContext context)
         {
@@ -32,12 +36,17 @@ namespace CHNU_Connect.DAL.UOW
         public IPostRepository PostRepository => _postRepository ??= new PostRepository(_context);
         public IEventRepository EventRepository => _eventRepository ??= new EventRepository(_context);
         public IGroupRepository GroupRepository => _groupRepository ??= new GroupRepository(_context);
-        public IMessageRepository MessageRepository => _messageRepository ??= new MessageRepository(_context);
         public IAdminActionRepository AdminActionRepository => _adminActionRepository ??= new AdminActionRepository(_context);
         public ICommentRepository CommentRepository => _commentRepository ??= new CommentRepository(_context);
         public IEventParticipantRepository EventParticipantRepository => _eventParticipantRepository ??= new EventParticipantRepository(_context);
         public IGroupMemberRepository GroupMemberRepository => _groupMemberRepository ??= new GroupMemberRepository(_context);
         public IPostLikeRepository PostLikeRepository => _postLikeRepository ??= new PostLikeRepository(_context);
+        public IChatRepository ChatRepository => _chatRepository ??= new ChatRepository(_context);
+        public IChatMemberRepository ChatMemberRepository => _chatMemberRepository ??= new ChatMemberRepository(_context);
+        public IChatMessageRepository ChatMessageRepository => _chatMessageRepository ??= new ChatMessageRepository(_context);
+        public INotificationRepository NotificationRepository => _notificationRepository ??= new NotificationRepository(_context);
+
+
 
         public IGenericRepository<T> Repository<T>() where T : class
         {

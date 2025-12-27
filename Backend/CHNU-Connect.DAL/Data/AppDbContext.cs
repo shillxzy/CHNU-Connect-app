@@ -19,8 +19,13 @@ namespace CHNU_Connect.DAL.Data
         public DbSet<GroupMember> GroupMembers { get; set; } = null!;
         public DbSet<Event> Events { get; set; } = null!;
         public DbSet<EventParticipant> EventParticipants { get; set; } = null!;
-        public DbSet<Message> Messages { get; set; } = null!;
         public DbSet<AdminAction> AdminActions { get; set; } = null!;
+        public DbSet<Chat> Chats { get; set; } = null!;
+        public DbSet<ChatMember> ChatMembers { get; set; } = null!;
+        public DbSet<ChatMessage> ChatMessages { get; set; } = null!;
+        public DbSet<Notification> Notifications { get; set; } = null!;
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -146,21 +151,6 @@ namespace CHNU_Connect.DAL.Data
                 entity.HasIndex(e => new { e.EventId, e.UserId }).IsUnique();
             });
 
-            // Messages
-            modelBuilder.Entity<Message>(entity =>
-            {
-                entity.ToTable("messages");
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).HasColumnName("id");
-                entity.Property(e => e.SenderId).HasColumnName("sender_id");
-                entity.Property(e => e.ReceiverId).HasColumnName("receiver_id");
-                entity.Property(e => e.Content).HasColumnName("content").IsRequired();
-                entity.Property(e => e.IsRead).HasColumnName("is_read").HasDefaultValue(false);
-                entity.Property(e => e.SentAt).HasColumnName("sent_at").HasDefaultValueSql("now()");
-                entity.HasOne(e => e.Sender).WithMany(u => u.SentMessages).HasForeignKey(e => e.SenderId).OnDelete(DeleteBehavior.Cascade);
-                entity.HasOne(e => e.Receiver).WithMany(u => u.ReceivedMessages).HasForeignKey(e => e.ReceiverId).OnDelete(DeleteBehavior.Cascade);
-            });
-
             // AdminActions
             modelBuilder.Entity<AdminAction>(entity =>
             {
@@ -175,6 +165,53 @@ namespace CHNU_Connect.DAL.Data
                 entity.HasOne(e => e.Admin).WithMany().HasForeignKey(e => e.AdminId).OnDelete(DeleteBehavior.SetNull);
                 entity.HasOne(e => e.TargetUser).WithMany().HasForeignKey(e => e.TargetUserId).OnDelete(DeleteBehavior.SetNull);
             });
+
+            // Chats
+            modelBuilder.Entity<Chat>(entity =>
+            {
+                entity.ToTable("chats");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Type).HasColumnName("type").HasMaxLength(20).IsRequired();
+                entity.Property(e => e.Title).HasColumnName("title").HasMaxLength(255);
+                entity.Property(e => e.CreatedBy).HasColumnName("created_by");
+                entity.HasOne(e => e.Creator).WithMany().HasForeignKey(e => e.CreatedBy).OnDelete(DeleteBehavior.SetNull);
+                entity.Property(e => e.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("now()");
+            });
+
+            // ChatMembers
+            modelBuilder.Entity<ChatMember>(entity =>
+            {
+                entity.ToTable("chat_members");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.ChatId).HasColumnName("chat_id");
+                entity.Property(e => e.UserId).HasColumnName("user_id");
+                entity.Property(e => e.Role).HasColumnName("role").HasMaxLength(20).HasDefaultValue("member");
+                entity.Property(e => e.JoinedAt).HasColumnName("joined_at").HasDefaultValueSql("now()");
+                entity.Property(e => e.LastReadMessageId).HasColumnName("last_read_message_id");
+                entity.HasOne(e => e.Chat).WithMany(c => c.Members).HasForeignKey(e => e.ChatId).OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId).OnDelete(DeleteBehavior.Cascade);
+                entity.HasIndex(e => new { e.ChatId, e.UserId }).IsUnique();
+            });
+
+            // ChatMessages
+            modelBuilder.Entity<ChatMessage>(entity =>
+            {
+                entity.ToTable("chat_messages");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.ChatId).HasColumnName("chat_id");
+                entity.Property(e => e.SenderId).HasColumnName("sender_id");
+                entity.Property(e => e.Content).HasColumnName("content");
+                entity.Property(e => e.MessageType).HasColumnName("message_type").HasMaxLength(20).HasDefaultValue("text");
+                entity.Property(e => e.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("now()");
+                entity.Property(e => e.EditedAt).HasColumnName("edited_at");
+                entity.Property(e => e.IsDeleted).HasColumnName("is_deleted").HasDefaultValue(false);
+                entity.HasOne(e => e.Chat).WithMany(c => c.Messages).HasForeignKey(e => e.ChatId).OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.Sender).WithMany().HasForeignKey(e => e.SenderId).OnDelete(DeleteBehavior.Cascade);
+            });
+
         }
     }
 }
