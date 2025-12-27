@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAllEvents } from "../../api/getAllEventsApi"; // твій API для подій
+import { getAllEvents } from "../../api/Events/getAllEventsApi";
 import "./Events.css";
 
 export default function EventsList() {

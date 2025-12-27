@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { LockIcon, EyeIcon, EyeOffIcon } from "../Icons";
-import { resetPassword } from "../../api/resetPasswordApi";
+import { resetPassword } from "../../api/Auth/resetPasswordApi";
 import "./Login.css";
 
 export default function ResetPassword() {

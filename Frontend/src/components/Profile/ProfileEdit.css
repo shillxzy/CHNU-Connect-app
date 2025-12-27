@@ -1,0 +1,359 @@
+:root {
+  --white: #ffffff;
+  --primary-btn: #004B8D;
+  --secondary-bg: #E3F2FD;
+  --text-dark: #222;
+  --text-link: #2563eb;
+  --border-light: #cfd8dc;
+  --bg-gray: #f8f9fa;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.page {
+  background: var(--bg-gray);
+  min-height: 100vh;
+  padding: 40px 24px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--text-dark);
+}
+
+.profile-edit-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  color: var(--primary-btn);
+  letter-spacing: -0.02em;
+}
+
+/* Фото картка */
+.photo-card {
+  background: linear-gradient(135deg, var(--white) 0%, #f0f7ff 100%);
+  border-radius: 24px;
+  padding: 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 75, 141, 0.08);
+  border: 1px solid rgba(0, 75, 141, 0.1);
+  transition: all 0.3s ease;
+}
+
+.photo-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 75, 141, 0.12);
+  transform: translateY(-2px);
+}
+
+.avatar-profile-edit {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid var(--primary-btn);
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--secondary-bg);
+  box-shadow: 0 4px 12px rgba(0, 75, 141, 0.15);
+}
+
+.avatar-profile-edit img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-actions {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+}
+
+/* Картки для секцій */
+.form-card {
+  background: var(--white);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 2px 8px rgba(0, 75, 141, 0.08);
+  border: 1px solid rgba(0, 75, 141, 0.1);
+  margin-bottom: 24px;
+  transition: all 0.3s ease;
+}
+
+.form-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 75, 141, 0.12);
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--primary-btn);
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--secondary-bg);
+}
+
+/* Grid для полів форми */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.label-profile-edit {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-dark);
+  letter-spacing: 0.01em;
+}
+
+.input-profile-edit,
+.textarea-profile-edit {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 2px solid var(--border-light);
+  background: var(--white);
+  color: var(--text-dark);
+  font-size: 15px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.input-profile-edit:focus,
+.textarea-profile-edit:focus {
+  outline: none;
+  border-color: var(--primary-btn);
+  background: var(--secondary-bg);
+  box-shadow: 0 0 0 4px rgba(0, 75, 141, 0.1);
+}
+
+.textarea-profile-edit {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.6;
+}
+
+/* Сучасні кнопки */
+.btn-profile-edit {
+  padding: 12px 28px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background: var(--primary-btn);
+  color: var(--white);
+  box-shadow: 0 2px 8px rgba(0, 75, 141, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-profile-edit::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn-profile-edit:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn-profile-edit:hover {
+  background: #00376B;
+  box-shadow: 0 4px 16px rgba(0, 75, 141, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-profile-edit:active {
+  transform: translateY(0);
+}
+
+.btn-outline {
+  background: var(--white);
+  color: var(--primary-btn);
+  border: 2px solid var(--primary-btn);
+  box-shadow: 0 2px 8px rgba(0, 75, 141, 0.1);
+}
+
+.btn-outline:hover {
+  background: var(--secondary-bg);
+  box-shadow: 0 4px 16px rgba(0, 75, 141, 0.2);
+}
+
+.btn-disabled {
+  background: var(--border-light);
+  color: #999;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-disabled:hover {
+  background: var(--border-light);
+  transform: none;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 2px solid var(--secondary-bg);
+}
+
+/* Chips для конфіденційності */
+.privacy-section {
+  margin-top: 8px;
+}
+
+.privacy-label {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.privacy {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: 2px solid var(--primary-btn);
+  background: var(--white);
+  color: var(--primary-btn);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  font-size: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.chip::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 75, 141, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.chip:hover::before {
+  left: 100%;
+}
+
+.chip:hover {
+  background: var(--secondary-bg);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 75, 141, 0.15);
+}
+
+.chip.active {
+  background: var(--text-link);
+  color: var(--white);
+  border-color: var(--text-link);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.chip.active:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page {
+    padding: 24px 12px;
+  }
+
+  .title {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+
+  .photo-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .photo-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .form-card {
+    padding: 24px 20px;
+  }
+
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .btn-profile-edit {
+    width: 100%;
+  }
+
+  .privacy {
+    flex-direction: column;
+  }
+
+  .chip {
+    text-align: center;
+  }
+}
+
+/* Анімація завантаження */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.loading {
+  animation: pulse 1.5s ease-in-out infinite;
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+  color: var(--primary-btn);
+}

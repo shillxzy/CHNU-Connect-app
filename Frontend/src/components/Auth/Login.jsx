@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import { MailIcon, LockIcon, EyeIcon, GoogleIcon, EyeOffIcon } from "../Icons";
-import { loginUser } from "../../api/loginApi";
+import { loginUser } from "../../api/Auth/loginApi";
 
 const handleForgotPassword = () => alert("Link 'Forgot Password' clicked!");
 const handleGoogleSignIn = () => alert("Button 'Sign in with Google' clicked!");

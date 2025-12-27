@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MailIcon } from "../Icons";
-import { sendResetLink } from "../../api/sendResetMailApi";
+import { sendResetLink } from "../../api/Auth/sendResetMailApi";
 import "./Login.css";
 
 export default function ForgotPassword() {

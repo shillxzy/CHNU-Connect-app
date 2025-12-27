@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAllGroups } from "../../api/getAllGroupsApi";
+import { getAllGroups } from "../../api/Groups/getAllGroupsApi";
 import "./Groups.css";
 
 export default function GroupsList() {

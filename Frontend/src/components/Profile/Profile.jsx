@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Profile.css';
-import { getUserProfile } from '../../api/getUserProfile';
-import { getPostUserById } from '../../api/getPostUserById';
+import { getUserProfile } from '../../api/Profile/getUserProfileApi';
+import { getPostUserById } from '../../api/Posts/getPostUserByIdApi';
 
 const Profile = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -62,13 +64,15 @@ const Profile = () => {
           </div>
 
           <div className="profile-actions">
-            <button className="btn btn-edit">Редагувати профіль</button>
+            <button
+            onClick={() => navigate('/profile/edit')}
+            className="btn btn-edit">Редагувати профіль</button>
             <button className="btn btn-messages">
               Повідомлення <span className="notification-badge">{user.unreadMessages || 0}</span>
             </button>
             <button className="btn btn-logout" onClick={() => {
               localStorage.removeItem("token");
-              window.location.href = "/login";
+              navigate('/login');
             }}>Вихід</button>
           </div>
         </div>

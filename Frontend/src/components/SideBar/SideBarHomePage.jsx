@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../HomePage.css';
-import { getAllGroups } from '../../api/getAllGroupsApi';
-import { getAllEvents } from '../../api/getAllEventsApi';
+import { getAllGroups } from '../../api/Groups/getAllGroupsApi';
+import { getAllEvents } from '../../api/Events/getAllEventsApi';
 
 const SidebarSection = ({ title, items }) => (
     <div className="sidebar-section">

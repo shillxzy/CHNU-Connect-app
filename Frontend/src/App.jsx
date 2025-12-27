@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./components/Auth/Login";
 import Registration from "./components/Auth/Registration";
 import ForgotPassword from "./components/Auth/SendMail";
@@ -12,24 +12,21 @@ export default function App() {
   const [role, setRole] = useState(localStorage.getItem("role"));
 
   function isJwtValid(token) {
-  if (!token) return false;
+    if (!token) return false;
+    try {
+      const parts = token.split(".");
+      if (parts.length !== 3) return false;
 
-  try {
-    const parts = token.split(".");
-    if (parts.length !== 3) return false;
-
-    const payload = JSON.parse(atob(parts[1]));
-
-    if (payload.exp) {
-      const now = Date.now() / 1000;
-      if (payload.exp < now) return false;
+      const payload = JSON.parse(atob(parts[1]));
+      if (payload.exp) {
+        const now = Date.now() / 1000;
+        if (payload.exp < now) return false;
+      }
+      return true;
+    } catch (err) {
+      return false;
     }
-
-    return true;
-  } catch (err) {
-    return false;
   }
-}
 
   const handleLogin = (userRole) => {
     setLoggedIn(true);
@@ -46,42 +43,40 @@ export default function App() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     if (!isJwtValid(token)) {
       handleLogout();
     }
   }, []);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        {!loggedIn ? (
-          <>
-            <Route path="/login" element={<Login onLogin={handleLogin} />} />
-            <Route path="/register" element={<Registration onRegister={handleLogin} />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="*" element={<Navigate to="/login" replace />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-          </>
-        ) : (
-          <>
-            {/* HomePage з nested routes */}
-            <Route path="/" element={<HomePage onLogout={handleLogout} />}>
-              <Route index element={<HomePage.NewsFeed />} />
-              <Route path="groups" element={<HomePage.GroupsList />} />
-              <Route path="events" element={<HomePage.EventsList />} />
-              <Route path="profile" element={<HomePage.Profile />} />
-            </Route>
+    <Routes>
+      {!loggedIn ? (
+        <>
+          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route path="/register" element={<Registration onRegister={handleLogin} />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </>
+      ) : (
+        <>
+          {/* HomePage з nested routes */}
+          <Route path="/" element={<HomePage onLogout={handleLogout} />}>
+            <Route index element={<HomePage.NewsFeed />} />
+            <Route path="groups" element={<HomePage.GroupsList />} />
+            <Route path="events" element={<HomePage.EventsList />} />
+            <Route path="profile" element={<HomePage.Profile />} />
+            <Route path="profile/edit" element={<HomePage.ProfileEdit />} />
+          </Route>
 
-            {/* Admin доступ тільки якщо роль admin */}
-            {role === "admin" && (
-              <Route path="/admin" element={<AdminPanel onLogout={handleLogout} />} />
-            )}
+          {/* Admin доступ тільки якщо роль admin */}
+          {role === "admin" && (
+            <Route path="/admin" element={<AdminPanel onLogout={handleLogout} />} />
+          )}
 
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </>
-        )}
-      </Routes>
-    </BrowserRouter>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </>
+      )}
+    </Routes>
   );
 }

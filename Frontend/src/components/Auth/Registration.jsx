@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import { MailIcon, LockIcon, EyeIcon, EyeOffIcon, GoogleIcon } from "../Icons";
-import { registerUser } from "../../api/registrationApi";
+import { registerUser } from "../../api/Auth/registrationApi";
 
 const handleGoogleSignUp = () => alert("Button 'Sign up with Google' clicked!");
 
