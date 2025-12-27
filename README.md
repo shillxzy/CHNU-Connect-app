@@ -25,7 +25,7 @@ The platform allows users to:
 
 ## ✨ MVP Functionality
 
-## 🔥 Must-have Features
+### 🔥 Must-have Features
 
 - 🔐 **University Email Authentication**  
   User registration and login using a verified **@chnu.edu.ua** email address.
@@ -43,7 +43,7 @@ The platform allows users to:
   Administrative dashboard for user management, content moderation, and system control.
 
 
-## ⭐ Should-have Features
+### ⭐ Should-have Features
 
 - 🔔 **Push Notifications**  
   Real-time notifications for messages, comments, likes, and events.
@@ -54,9 +54,8 @@ The platform allows users to:
 - 📆 **Google Calendar Integration**  
   Synchronization of events with Google Calendar.
 
----
 
-## 💎 Nice-to-have Features
+### 💎 Nice-to-have Features
 
 - 🎥 **Video Calls**  
   Built-in video communication for meetings, lectures, and group discussions.
@@ -75,19 +74,6 @@ The platform allows users to:
 - As a **user**, I want to create posts with photos to share news and updates.
 - As a **lecturer**, I want to create course groups and share learning materials.
 - As an **administrator**, I want to block users to maintain order and platform rules.
-
-------------------------------------------------------------------------
-
-## 🧱 Architecture
-
-Багатошарова архітектура (**Layered Architecture**):
-
-![Опис скріншоту](assets/diagrams.jpg)
-
-✔ REST API\
-✔ Swagger UI\
-✔ JWT Authentication\
-✔ Modular Services
 
 ------------------------------------------------------------------------
 
@@ -137,11 +123,7 @@ The platform allows users to:
 
 ## 📌 Project status
 
-⬜ Code Freeze\
-⬜ Testing completed\
-⬜ Preparing for release\
 ⬜ Demo\
-⬜ Release
 
 ------------------------------------------------------------------------
 
