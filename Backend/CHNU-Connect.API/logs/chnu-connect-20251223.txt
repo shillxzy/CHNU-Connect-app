@@ -1,0 +1,15 @@
+2025-12-23 15:26:55.783 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-23 15:26:55.846 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-23 15:26:55.930 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-23 15:26:55.936 +02:00 [INF] Hosting environment: Development
+2025-12-23 15:26:55.939 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app-new\Backend\CHNU-Connect.API
+2025-12-23 15:31:31.009 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-23 15:31:31.043 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-23 15:31:31.089 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-23 15:31:31.091 +02:00 [INF] Hosting environment: Development
+2025-12-23 15:31:31.093 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app-new\Backend\CHNU-Connect.API
+2025-12-23 16:15:56.191 +02:00 [INF] Now listening on: https://localhost:7083
+2025-12-23 16:15:56.236 +02:00 [INF] Now listening on: http://localhost:5271
+2025-12-23 16:15:56.320 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-12-23 16:15:56.322 +02:00 [INF] Hosting environment: Development
+2025-12-23 16:15:56.325 +02:00 [INF] Content root path: C:\Users\Shillxzy\source\repos\CHNU-Connect-app-new\Backend\CHNU-Connect.API

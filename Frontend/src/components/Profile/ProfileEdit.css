@@ -1,0 +1,126 @@
+.profile-edit-container {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 25px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  font-family: sans-serif;
+}
+
+.profile-edit-section {
+  display: flex;
+  gap: 30px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 6px;
+}
+
+.profile-photo-area {
+  flex-shrink: 0;
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-photo-area img,
+.profile-photo-placeholder {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.profile-photo-placeholder {
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+}
+
+/* кнопки під аватаркою */
+.profile-photo-button {
+  width: 100%;
+  margin-top: 5px;
+  text-align: center;
+}
+
+.profile-form {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.profile-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  color: #333;
+}
+
+.profile-form input,
+.profile-form textarea {
+  margin-top: 5px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.profile-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.profile-form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn {
+  padding: 8px 15px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  background-color: #f0f0f0;
+}
+
+.btn-save {
+  background-color: #4caf50;
+  color: #fff;
+  border-color: #4caf50;
+}
+
+.btn-save:hover {
+  background-color: #45a049;
+}
+
+.btn-upload {
+  background-color: #2196f3;
+  color: #fff;
+  border-color: #2196f3;
+}
+
+.btn-upload:hover {
+  background-color: #1e88e5;
+}
+
+.btn-delete {
+  background-color: #f44336;
+  color: #fff;
+  border-color: #f44336;
+}
+
+.btn-delete:hover {
+  background-color: #e53935;
+}
