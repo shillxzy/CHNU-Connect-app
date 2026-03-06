@@ -27,7 +27,7 @@
 /* 2. ТЕКСТ І ЗАГОЛОВКИ */
 /* ----------------------------------- */
 
-.header {
+.login-header {
     display: flex;
     flex-direction: column;
     text-align: left;

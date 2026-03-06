@@ -66,7 +66,7 @@ export default function RefreshPassword() {
   return (
     <div className="login-container">
       <div className="login-card">
-        <div className="header">
+        <div className="login-header">
           <h2 className="h2">Відновлення паролю</h2>
           <p className="subtitle">
             {step === "email" && "Введіть ваш email, щоб отримати код"}
@@ -79,7 +79,7 @@ export default function RefreshPassword() {
 
         {step === "email" && (
           <>
-            <label className="label">Email</label>
+            <label className="label">Емайл</label>
             <div className="input-group">
               <input
                 type="email"

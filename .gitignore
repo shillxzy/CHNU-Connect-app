@@ -5,3 +5,4 @@ obj/
 appsettings.Development.json
 /logs
 /wwwroot
+.env.local

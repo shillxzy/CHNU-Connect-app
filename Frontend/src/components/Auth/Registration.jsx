@@ -43,7 +43,7 @@ export default function Registration() {
   return (
     <div className="login-container">
       <div className="login-card">
-        <div className="header">
+        <div className="login-header">
           <h2 className="h2">Реєстрація</h2>
           <p className="subtitle">Створи акаунт, щоб почати користуватися додатком.</p>
         </div>
@@ -56,7 +56,7 @@ export default function Registration() {
           style={{ marginBottom: 16 }}
         >
           <img src={GoogleIcon} alt="google" className="google-icon" />
-          <span>Sign up with Google</span>
+          <span>Увійти за допомогою Google</span>
         </button>
 
         <form onSubmit={handleSubmit}>

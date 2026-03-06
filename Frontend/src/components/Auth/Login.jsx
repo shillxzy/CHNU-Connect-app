@@ -64,7 +64,7 @@ export default function Login() {
   return (
     <div className="login-container">
       <div className="login-card">
-        <div className="header">
+        <div className="login-header">
           <h2 className="h2">Увійти</h2>
           <p className="subtitle">
             Увійдіть, використовуючи своє ім'я користувача та пароль.
@@ -142,7 +142,7 @@ export default function Login() {
 
         <button onClick={handleGoogleSignIn} className="google-button">
           <img src={GoogleIcon} alt="google" className="google-icon" />
-          <span>Sign in with Google</span>
+          <span>Увійти за допомогою Google</span>
         </button>
 
         <p className="signup-text">

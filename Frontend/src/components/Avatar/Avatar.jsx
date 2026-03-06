@@ -1,9 +1,10 @@
 import React from "react";
-import defaultAvatar from "../Icons/default-avatar-profile-icon.png";
+import defaultAvatar from "../../Icons/user.png";
+
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Avatar = ({ photoUrl, size = 150, alt = "Фото профілю", className = "", style = {} }) => {
-  const BASE_URL = "http://localhost:5000"; 
-const src = photoUrl ? `${BASE_URL}${photoUrl}` : defaultAvatar;
+  const src = photoUrl ? `${API_URL}${photoUrl}` : defaultAvatar;
 
   const combinedStyle = {
     width: size,

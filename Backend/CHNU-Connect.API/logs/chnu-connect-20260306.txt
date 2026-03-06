@@ -221,3 +221,30 @@ System.FormatException: The input is not a valid Base-64 string as it contains a
 2026-03-06 15:14:42.153 +02:00 [INF] Hosting environment: Development
 2026-03-06 15:14:42.154 +02:00 [INF] Content root path: D:\CHNU-Connect-App\Backend\CHNU-Connect.API
 2026-03-06 15:14:44.945 +02:00 [WRN] Failed to determine the https port for redirect.
+2026-03-06 20:30:20.182 +02:00 [INF] Now listening on: https://localhost:7083
+2026-03-06 20:30:20.258 +02:00 [INF] Now listening on: http://localhost:5271
+2026-03-06 20:30:20.378 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-03-06 20:30:20.379 +02:00 [INF] Hosting environment: Development
+2026-03-06 20:30:20.381 +02:00 [INF] Content root path: D:\Study\CHNU-Connect-app\Backend\CHNU-Connect.API
+2026-03-06 20:51:38.546 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2026-03-06 20:51:38.551 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEPPDhTGCJ2Vzq3Ya3fnhBgziIjOyIcdHOfwq4bEWqHPQXZcltIutcsKCUGOC+W+j1A==
+2026-03-06 20:51:38.552 +02:00 [INF] Password from request: 12345
+2026-03-06 20:51:38.664 +02:00 [INF] Generating JWT for user spelchuk.habriiel@chnu.edu.ua
+2026-03-06 20:51:38.680 +02:00 [INF] User logged in: spelchuk.habriiel@chnu.edu.ua
+2026-03-06 20:51:38.872 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2026-03-06 20:51:38.873 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEPPDhTGCJ2Vzq3Ya3fnhBgziIjOyIcdHOfwq4bEWqHPQXZcltIutcsKCUGOC+W+j1A==
+2026-03-06 20:51:38.875 +02:00 [INF] Password from request: 12345
+2026-03-06 20:51:39.027 +02:00 [INF] Generating JWT for user spelchuk.habriiel@chnu.edu.ua
+2026-03-06 20:51:39.029 +02:00 [INF] User logged in: spelchuk.habriiel@chnu.edu.ua
+2026-03-06 21:24:44.643 +02:00 [INF] Photo uploaded for user: 23
+2026-03-06 21:41:06.768 +02:00 [INF] Photo uploaded for user: 23
+2026-03-06 22:30:32.122 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2026-03-06 22:30:32.124 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEPPDhTGCJ2Vzq3Ya3fnhBgziIjOyIcdHOfwq4bEWqHPQXZcltIutcsKCUGOC+W+j1A==
+2026-03-06 22:30:32.124 +02:00 [INF] Password from request: 12345
+2026-03-06 22:30:32.179 +02:00 [INF] Generating JWT for user spelchuk.habriiel@chnu.edu.ua
+2026-03-06 22:30:32.180 +02:00 [INF] User logged in: spelchuk.habriiel@chnu.edu.ua
+2026-03-06 22:30:32.311 +02:00 [INF] User found: spelchuk.habriiel@chnu.edu.ua
+2026-03-06 22:30:32.312 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEPPDhTGCJ2Vzq3Ya3fnhBgziIjOyIcdHOfwq4bEWqHPQXZcltIutcsKCUGOC+W+j1A==
+2026-03-06 22:30:32.312 +02:00 [INF] Password from request: 12345
+2026-03-06 22:30:32.375 +02:00 [INF] Generating JWT for user spelchuk.habriiel@chnu.edu.ua
+2026-03-06 22:30:32.376 +02:00 [INF] User logged in: spelchuk.habriiel@chnu.edu.ua
