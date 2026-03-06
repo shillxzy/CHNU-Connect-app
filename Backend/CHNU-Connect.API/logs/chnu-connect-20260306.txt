@@ -184,3 +184,40 @@ System.FormatException: The input is not a valid Base-64 string as it contains a
 2026-03-06 13:23:35.433 +02:00 [INF] Password from request: 1234567890
 2026-03-06 13:23:35.607 +02:00 [INF] Generating JWT for user skalskyi.dmytro@chnu.edu.ua
 2026-03-06 13:23:35.610 +02:00 [INF] User logged in: skalskyi.dmytro@chnu.edu.ua
+2026-03-06 13:42:31.090 +02:00 [INF] User found: skalskyi.dmytro@chnu.edu.ua
+2026-03-06 13:42:31.092 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEBeaV08iOPnuaSr2S/pM/pEeeRHxVuY7XVyvPTiK3ISp2veUqz1Lvm/MQ6X3l3u43Q==
+2026-03-06 13:42:31.093 +02:00 [INF] Password from request: 1234567890
+2026-03-06 13:42:31.153 +02:00 [INF] Generating JWT for user skalskyi.dmytro@chnu.edu.ua
+2026-03-06 13:42:31.155 +02:00 [INF] User logged in: skalskyi.dmytro@chnu.edu.ua
+2026-03-06 13:42:31.330 +02:00 [INF] User found: skalskyi.dmytro@chnu.edu.ua
+2026-03-06 13:42:31.332 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEBeaV08iOPnuaSr2S/pM/pEeeRHxVuY7XVyvPTiK3ISp2veUqz1Lvm/MQ6X3l3u43Q==
+2026-03-06 13:42:31.334 +02:00 [INF] Password from request: 1234567890
+2026-03-06 13:42:31.401 +02:00 [INF] Generating JWT for user skalskyi.dmytro@chnu.edu.ua
+2026-03-06 13:42:31.404 +02:00 [INF] User logged in: skalskyi.dmytro@chnu.edu.ua
+2026-03-06 13:48:10.010 +02:00 [INF] User found: skalskyi.dmytro@chnu.edu.ua
+2026-03-06 13:48:10.012 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEBeaV08iOPnuaSr2S/pM/pEeeRHxVuY7XVyvPTiK3ISp2veUqz1Lvm/MQ6X3l3u43Q==
+2026-03-06 13:48:10.013 +02:00 [INF] Password from request: 1234567890
+2026-03-06 13:48:10.073 +02:00 [INF] Generating JWT for user skalskyi.dmytro@chnu.edu.ua
+2026-03-06 13:48:10.075 +02:00 [INF] User logged in: skalskyi.dmytro@chnu.edu.ua
+2026-03-06 13:48:10.241 +02:00 [INF] User found: skalskyi.dmytro@chnu.edu.ua
+2026-03-06 13:48:10.245 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEBeaV08iOPnuaSr2S/pM/pEeeRHxVuY7XVyvPTiK3ISp2veUqz1Lvm/MQ6X3l3u43Q==
+2026-03-06 13:48:10.246 +02:00 [INF] Password from request: 1234567890
+2026-03-06 13:48:10.304 +02:00 [INF] Generating JWT for user skalskyi.dmytro@chnu.edu.ua
+2026-03-06 13:48:10.307 +02:00 [INF] User logged in: skalskyi.dmytro@chnu.edu.ua
+2026-03-06 14:46:27.666 +02:00 [INF] Photo uploaded for user: 20
+2026-03-06 14:50:22.636 +02:00 [INF] User found: skalskyi.dmytro@chnu.edu.ua
+2026-03-06 14:50:22.637 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEBeaV08iOPnuaSr2S/pM/pEeeRHxVuY7XVyvPTiK3ISp2veUqz1Lvm/MQ6X3l3u43Q==
+2026-03-06 14:50:22.638 +02:00 [INF] Password from request: 1234567890
+2026-03-06 14:50:22.698 +02:00 [INF] Generating JWT for user skalskyi.dmytro@chnu.edu.ua
+2026-03-06 14:50:22.703 +02:00 [INF] User logged in: skalskyi.dmytro@chnu.edu.ua
+2026-03-06 14:50:22.873 +02:00 [INF] User found: skalskyi.dmytro@chnu.edu.ua
+2026-03-06 14:50:22.879 +02:00 [INF] Stored password: AQAAAAIAAYagAAAAEBeaV08iOPnuaSr2S/pM/pEeeRHxVuY7XVyvPTiK3ISp2veUqz1Lvm/MQ6X3l3u43Q==
+2026-03-06 14:50:22.883 +02:00 [INF] Password from request: 1234567890
+2026-03-06 14:50:22.944 +02:00 [INF] Generating JWT for user skalskyi.dmytro@chnu.edu.ua
+2026-03-06 14:50:22.946 +02:00 [INF] User logged in: skalskyi.dmytro@chnu.edu.ua
+2026-03-06 14:51:09.886 +02:00 [INF] Photo uploaded for user: 20
+2026-03-06 15:14:42.121 +02:00 [INF] Now listening on: http://localhost:5000
+2026-03-06 15:14:42.152 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-03-06 15:14:42.153 +02:00 [INF] Hosting environment: Development
+2026-03-06 15:14:42.154 +02:00 [INF] Content root path: D:\CHNU-Connect-App\Backend\CHNU-Connect.API
+2026-03-06 15:14:44.945 +02:00 [WRN] Failed to determine the https port for redirect.

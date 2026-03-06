@@ -5,6 +5,7 @@ using CHNU_Connect.DAL.Data;
 using CHNU_Connect.DAL.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -136,6 +137,15 @@ namespace CHNU_Connect.API
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "CHNU Connect API v1");
                 c.RoutePrefix = "swagger";
             });
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+         Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads")
+     ),
+                RequestPath = "/uploads"
+            });
+
 
             app.UseHttpsRedirection();
             app.UseCors("AllowReactApp");

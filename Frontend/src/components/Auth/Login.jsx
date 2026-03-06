@@ -22,7 +22,7 @@ export default function Login() {
 
   const handleForgotPassword = (e) => {
     e.preventDefault();
-    navigate("/forgot-password");
+    navigate("/refresh-password");
   };
 
   const handleSubmit = async (e) => {

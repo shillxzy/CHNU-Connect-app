@@ -11,6 +11,8 @@ import EventsList from "./components/Events/EventsList";
 import Profile from "./components/Profile/Profile";
 import ProfileEdit from "./components/Profile/ProfileEdit";
 import AboutUs from "./components/AboutUs/AboutUs";
+import RefreshPassword from "./components/Auth/RefreshPassword";
+import Registration from "./components/Auth/Registration";
 
 // Публічний маршрут
 function PublicRoute({ children }) {
@@ -37,6 +39,24 @@ function AppRoutes() {
       />
 
       <Route
+        path="/registration"
+        element={
+          <PublicRoute>
+            <Registration />
+          </PublicRoute>
+        }
+      />
+
+      <Route
+        path="/refresh-password"
+        element={
+          <PublicRoute>
+            <RefreshPassword />
+          </PublicRoute>
+        }
+      />
+
+      <Route
         path="/"
         element={
           <ProtectedRoute>
@@ -48,7 +68,7 @@ function AppRoutes() {
         <Route path="groups" element={<GroupsList />} />
         <Route path="events" element={<EventsList />} />
         <Route path="profile" element={<Profile />} />
-        <Route path="profile/:fullname" element={<ProfileEdit />} />
+        <Route path="profile/edit/:fullname" element={<ProfileEdit />} />
         <Route path="about" element={<AboutUs />} />
       </Route>
 

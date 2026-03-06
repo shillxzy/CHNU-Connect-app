@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 import { getProfile } from "../../api/userAPI";
 import { getPostsByUser } from "../../api/postAPI";
+import Avatar from "../Avatar/Avatar.jsx";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -18,13 +19,13 @@ const handleEditProfile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("accessToken");
-
-        const profileResponse = await getProfile(token);
+        const profileResponse = await getProfile();
         const userData = profileResponse.data;
         setUser(userData);
 
-        const postsResponse = await getPostsByUser(userData.id, token);
+        console.log("user.photoUrl:", userData.photoUrl);
+
+        const postsResponse = await getPostsByUser(userData.id);
         const userPosts = Array.isArray(postsResponse.data) ? postsResponse.data : [];
         setPosts(userPosts);
 
@@ -55,11 +56,7 @@ const handleEditProfile = () => {
     <div className="profile-page-container">
       <div className="profile-header">
         <div className="profile-photo-area">
-          {user.photoUrl ? (
-            <img src={user.photoUrl} alt="Фото профілю" className="profile-photo" />
-          ) : (
-            <span className="profile-photo-placeholder">Фото профілю</span>
-          )}
+          <Avatar photoUrl={user.photoUrl} size={150} />
         </div>
 
         <div className="profile-info-actions">

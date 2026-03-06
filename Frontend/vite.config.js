@@ -8,8 +8,12 @@ export default defineConfig({
       '/api': {
         target: 'https://localhost:7083',
         changeOrigin: true,
-        secure: false
+        secure: false 
       }
+      
+
+      
+      
     }
   }
 })

@@ -1,7 +1,26 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getProfile, updateProfile, uploadPhoto, deletePhoto } from "../../api/userAPI";
+import { getProfile, updateProfile, uploadPhoto } from "../../api/userAPI";
 import "./ProfileEdit.css";
+import Avatar from "../Avatar/Avatar.jsx";
+
+const faculties = [
+  "Навчально-науковий інститут біології, хімії та біоресурсів",
+  "Навчально-науковий інститут фізико-технічних та комп’ютерних наук",
+  "Факультет архітектури, будівництва та декоративно-прикладного мистецтва",
+  "Географічний факультет",
+  "Економічний факультет",
+  "Факультет іноземних мов",
+  "Факультет історії, політології та міжнародних відносин",
+  "Факультет математики та інформатики",
+  "Факультет педагогіки, психології та соціальної роботи",
+  "Факультет фізичної культури, спорту та реабілітації",
+  "Філологічний факультет",
+  "Юридичний факультет",
+  "Відокремлений структурний підрозділ «Фаховий коледж Чернівецького національного університету імені Юрія Федьковича»"
+];
+
+const courses = [1, 2, 3, 4, 5];
 
 const ProfileEdit = () => {
   const { fullname } = useParams();
@@ -17,7 +36,7 @@ const ProfileEdit = () => {
   const [formData, setFormData] = useState({
     fullName: "",
     faculty: "",
-    course: "",
+    course: 1,
     bio: "",
   });
 
@@ -29,8 +48,8 @@ const ProfileEdit = () => {
         setUser(data);
         setFormData({
           fullName: data.fullName || "",
-          faculty: data.faculty || "",
-          course: data.course || "",
+          faculty: data.faculty || faculties[0],
+          course: data.course || 1,
           bio: data.bio || "",
         });
       } catch (err) {
@@ -39,12 +58,12 @@ const ProfileEdit = () => {
         setLoading(false);
       }
     };
-
     fetchProfile();
   }, [fullname]);
 
   const handleChange = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handlePhotoChange = (e) => {
@@ -52,35 +71,21 @@ const ProfileEdit = () => {
     if (file) setPhotoFile(file);
   };
 
-  const handlePhotoUpload = async () => {
-    if (!photoFile) return;
-    try {
-      const form = new FormData();
-      form.append("photo", photoFile);
-
-      const res = await updateProfile(formData);
-      setUser((prev) => ({ ...prev, photoUrl: res.data.photoUrl }));
-      setPhotoFile(null);
-    } catch (err) {
-      alert(err.response?.data?.message || err.message || "Помилка завантаження фото");
-    }
-  };
-
-  const handlePhotoDelete = async () => {
-    try {
-      const token = localStorage.getItem("accessToken");
-      await deletePhoto(token);
-      setUser((prev) => ({ ...prev, photoUrl: null }));
-      setPhotoFile(null);
-    } catch (err) {
-      alert(err.response?.data?.message || err.message || "Помилка видалення фото");
-    }
-  };
-
   const handleSave = async () => {
     setSaving(true);
     try {
-      await uploadPhoto(formData);
+      await updateProfile({
+      fullName: formData.fullName,
+      faculty: formData.faculty,
+      course: formData.course,
+      bio: formData.bio,
+    });
+
+    if (photoFile) {
+      const photoData = new FormData();
+      photoData.append("photo", photoFile);
+      await uploadPhoto(photoData);
+    }
       alert("Профіль оновлено!");
       navigate(`/profile/${formData.fullName}`);
     } catch (err) {
@@ -97,92 +102,76 @@ const ProfileEdit = () => {
   return (
     <div className="profile-edit-container">
       <h2>Редагування профілю</h2>
+      <div className="profile-form">
+        <label>
+          <div className="photo-upload-wrapper">
 
-      <div className="profile-edit-section">
-        <div className="profile-photo-area">
-          {user.photoUrl ? (
-            <img src={user.photoUrl} alt="Фото профілю" className="profile-photo" />
-          ) : (
-            <span className="profile-photo-placeholder">Фото профілю</span>
-          )}
+  <Avatar
+    photoUrl={photoFile ? URL.createObjectURL(photoFile) : user.photoUrl}
+    size={150}
+  />
 
-          {/* Окрема кнопка для відкриття провідника */}
-          <button
-            className="btn btn-upload profile-photo-button"
-            onClick={() => fileInputRef.current.click()}
-          >
-            {photoFile ? "Змінити фото" : "Вибрати фото"}
-          </button>
+  <button
+    type="button"
+    className="btn btn-upload"
+    onClick={() => fileInputRef.current.click()}
+  >
+    {photoFile ? "Змінити фото" : "Вибрати фото"}
+  </button>
 
+  <input
+    type="file"
+    accept="image/*"
+    ref={fileInputRef}
+    style={{ display: "none" }}
+    onChange={handlePhotoChange}
+  />
+
+</div>
+
+        </label>
+
+        <label>
+          Повне ім’я:
           <input
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            style={{ display: "none" }}
-            onChange={handlePhotoChange}
+            type="text"
+            name="fullName"
+            value={formData.fullName}
+            onChange={handleChange}
           />
+        </label>
 
-          {user.photoUrl && !photoFile && (
-            <button
-              className="btn btn-delete profile-photo-button"
-              onClick={handlePhotoDelete}
-            >
-              Видалити фото
-            </button>
-          )}
+        <label>
+          Факультет:
+          <select name="faculty" value={formData.faculty} onChange={handleChange}>
+            {faculties.map((f, i) => (
+              <option key={i} value={f}>
+                {f}
+              </option>
+            ))}
+          </select>
+        </label>
 
-          {photoFile && (
-            <button
-              className="btn btn-save profile-photo-button"
-              onClick={handlePhotoUpload}
-            >
-              Зберегти аватарку
-            </button>
-          )}
-        </div>
+        <label>
+          Курс:
+          <select name="course" value={formData.course} onChange={handleChange}>
+            {courses.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </label>
 
-        <div className="profile-form">
-          <label>
-            Повне ім’я:
-            <input
-              type="text"
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleChange}
-            />
-          </label>
-          <label>
-            Факультет:
-            <input
-              type="text"
-              name="faculty"
-              value={formData.faculty}
-              onChange={handleChange}
-            />
-          </label>
-          <label>
-            Курс:
-            <input
-              type="text"
-              name="course"
-              value={formData.course}
-              onChange={handleChange}
-            />
-          </label>
-          <label>
-            Біо:
-            <textarea
-              name="bio"
-              value={formData.bio}
-              onChange={handleChange}
-            />
-          </label>
+        <label>
+          Біо:
+          <textarea name="bio" value={formData.bio} onChange={handleChange} />
+        </label>
 
-          <div className="profile-form-actions">
-            <button className="btn btn-save" onClick={handleSave} disabled={saving}>
-              {saving ? "Збереження..." : "Зберегти"}
-            </button>
-          </div>
+        <div className="profile-form-actions">
+          <button className="btn btn-save" onClick={handleSave} disabled={saving}>
+            {saving ? "Збереження..." : "Зберегти"}
+          </button>
         </div>
       </div>
     </div>
