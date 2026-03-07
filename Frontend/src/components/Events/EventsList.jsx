@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getEvents } from "../../api/eventAPI"; 
+import { Event } from "./Event";
 import "./Events.css";
 
 export default function EventsList() {
@@ -11,7 +12,7 @@ export default function EventsList() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-         const response = await getEvents();
+        const response = await getEvents();
 
         const eventsData = Array.isArray(response.data) ? response.data : [];
         setEvents(eventsData);
@@ -45,29 +46,7 @@ export default function EventsList() {
           <h2 className="section-subtitle">Список подій</h2>
           
           <div className="events-list">
-            {Array.isArray(events) && events.length > 0 ? (
-              events.map((event) => (
-                <div className="event-card" key={event.id}>
-                  <div className="event-info">
-                    <div className="event-field">
-                      <strong>Назва:</strong> {event.title}
-                    </div>
-                    <div className="event-field">
-                      <strong>Дата:</strong> {event.startTime}
-                    </div>
-                    <div className="event-field">
-                      <strong>Опис:</strong> {event.description}
-                    </div>
-                  </div>
-                  <div className="event-actions">
-                    <button className="btn-participate">Взяти участь</button>
-                    <button className="btn-details">Детальніше</button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p>Немає подій</p>
-            )}
+            <Event events={events} />
           </div>
         </div>
       </div>

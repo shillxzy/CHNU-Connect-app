@@ -1,10 +1,18 @@
-import React from "react";
-import defaultAvatar from "../../Icons/user.png";
+import React, { useState } from "react";
+import defaultAvatar from "../../Icons/default_user_icon.png";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 
+const BASE_SERVER_URL = API_URL.endsWith('/api') 
+  ? API_URL.slice(0, -4) 
+  : API_URL;
+
 const Avatar = ({ photoUrl, size = 150, alt = "Фото профілю", className = "", style = {} }) => {
-  const src = photoUrl ? `${API_URL}${photoUrl}` : defaultAvatar;
+  const [imgError, setImgError] = useState(false);
+
+  const src = !photoUrl || imgError 
+    ? defaultAvatar 
+    : `${BASE_SERVER_URL}${photoUrl}`;
 
   const combinedStyle = {
     width: size,
@@ -14,7 +22,7 @@ const Avatar = ({ photoUrl, size = 150, alt = "Фото профілю", classNa
     ...style,
   };
 
-  return <img src={src} alt={alt} className={className} style={combinedStyle} />;
+  return <img src={src} alt={alt} className={className} style={combinedStyle} onError={() => setImgError(true)} />;
 };
 
 export default Avatar;
