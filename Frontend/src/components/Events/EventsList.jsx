@@ -46,7 +46,6 @@ export default function EventsList() {
           <h2 className="section-subtitle">Список подій</h2>
           
           <div className="events-list">
-<<<<<<< HEAD
             {Array.isArray(events) && events.length > 0 ? (
               events.map((event) => (
                 <div className="event-card" key={event.id}>
@@ -72,9 +71,6 @@ export default function EventsList() {
             ) : (
               <p>Немає подій</p>
             )}
-=======
-            <Event events={events} />
->>>>>>> 0e4775d29bd4491b9b45d492c39d7a397af1dcb2
           </div>
         </div>
       </div>

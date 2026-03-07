@@ -1,0 +1,73 @@
+/* --- Post Creator (новий) --- */
+
+.post-creator {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.post-creator-top {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.creator-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #d0d7de;
+  flex-shrink: 0;
+}
+
+.creator-input {
+  width: 100%;
+  border: none;
+  resize: none;
+  font-size: 15px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f4f6f8;
+  min-height: 60px;
+  font-family: inherit;
+}
+
+.creator-input:focus {
+  outline: none;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.post-creator-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.creator-add-btn {
+  border: none;
+  background: #eef2ff;
+  color: #2563eb;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.creator-add-btn:hover {
+  background: #e0e7ff;
+}
+
+.creator-post-btn {
+  border: none;
+  background: #2563eb;
+  color: white;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.creator-post-btn:hover {
+  background: #1d4ed8;
+}
