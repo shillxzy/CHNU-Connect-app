@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 2026-03-07 09:18:11.390 +02:00 [INF] Now listening on: http://localhost:5000
 2026-03-07 09:18:11.424 +02:00 [INF] Application started. Press Ctrl+C to shut down.
 2026-03-07 09:18:11.425 +02:00 [INF] Hosting environment: Development
@@ -971,3 +972,10 @@ DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error
    at CHNU_Connect.DAL.Repositories.GenericRepository`1.SaveAsync() in D:\CHNU-Connect-App\Backend\CHNU-Connect.DAL\Repositories\GenericRepository.cs:line 81
    at CHNU_Connect.BLL.Services.EventService.CreateEventAsync(CreateEventDto dto) in D:\CHNU-Connect-App\Backend\CHNU-Connect.BLL\Services\EventService.cs:line 33
    at CHNU_Connect.API.Controllers.EventController.CreateEvent(CreateEventDto request) in D:\CHNU-Connect-App\Backend\CHNU-Connect.API\Controllers\EventController.cs:line 116
+=======
+2026-03-07 09:50:58.299 +02:00 [INF] Now listening on: https://localhost:7083
+2026-03-07 09:50:58.357 +02:00 [INF] Now listening on: http://localhost:5271
+2026-03-07 09:50:58.438 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-03-07 09:50:58.440 +02:00 [INF] Hosting environment: Development
+2026-03-07 09:50:58.442 +02:00 [INF] Content root path: D:\Study\CHNU-Connect-app\Backend\CHNU-Connect.API
+>>>>>>> 0e4775d29bd4491b9b45d492c39d7a397af1dcb2

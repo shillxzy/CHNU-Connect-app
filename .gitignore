@@ -3,7 +3,7 @@
 bin/
 obj/
 appsettings.Development.json
-/logs
+Backend/CHNU-Connect.API/logs/
 /wwwroot
 .env.local
 AppDbContextFactory.cs
