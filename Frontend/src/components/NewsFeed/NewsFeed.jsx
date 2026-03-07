@@ -14,9 +14,9 @@ const NewsFeed = () => {
                 const postsData = await getPosts();
 
                 if (Array.isArray(postsData)) {
-                    setPosts(postsData);
+                    setPosts(postsData.slice(0, 5));
                 } else if (postsData && Array.isArray(postsData.posts)) {
-                    setPosts(postsData.posts);
+                    setPosts(postsData.posts.slice(0, 5));
                 } else {
                     setPosts([]);
                 }
@@ -73,13 +73,12 @@ const NewsFeed = () => {
             </div>
 
             {/* Список постів */}
-            {posts.map(post => (
-                <Post
-                    key={post.id}
-                    data={post}
-                    onLikeToggle={() => handleLikeToggle(post.id)}
-                />
-            ))}
+            <Post
+                posts={posts}
+                onLikeToggle={() => handleLikeToggle}
+            />
+            
+            <button className='news-feed-more-button'>Побачити ще</button>
         </div>
     );
 };

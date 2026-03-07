@@ -4,7 +4,10 @@ import api from "./axiosInstance";
    Post
 ========================= */
 
-export const getPosts = () => api.get("/Post");
+export const getPosts = async () => {
+    const response = await api.get("/Post");
+    return response.data; 
+};
 export const createPost = (data) => api.post("/Post", data);
 export const getFeed = () => api.get("/Post/feed");
 export const getPostById = (id) => api.get(`/Post/${id}`);

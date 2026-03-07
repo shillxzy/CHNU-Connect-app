@@ -11,7 +11,7 @@ const SidebarSection = ({ title, items }) => (
                 <li key={index}>{item.name || item.title || item}</li>
             ))}
         </ul>
-        <button className="see-more-button">See more</button>
+        <button className="see-more-button">Побачити ще</button>
     </div>
 );
 

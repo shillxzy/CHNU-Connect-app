@@ -18,24 +18,31 @@ const PostActions = ({ likes, comments, liked, onLikeToggle }) => (
     </div>
 );
 
-const Post = ({ data, onLikeToggle }) => (
-    <div className="post-card">
-        <div className="post-header">
-            <Avatar 
-                photoUrl={data.authorAvatar} 
-                size={35} 
-                className="avatar" 
-            />
-            <strong className="author-name">{data.authorName}</strong>
-        </div>
-        <p className="post-content">{data.content}</p>
-        <PostActions
-            likes={data.likeCount}
-            comments={data.comments?.length || 0}
-            liked={data.liked || false}
-            onLikeToggle={onLikeToggle}
-        />
-    </div>
-);
+const Post = ({ posts, onLikeToggle }) => {
+
+    return (
+        <>
+            {posts.map(post => (
+                <div className="post-card" key={post.id}>
+                    <div className="post-header">
+                        <Avatar 
+                            photoUrl={post.authorAvatar} 
+                            size={35} 
+                            className="avatar" 
+                        />
+                        <strong className="author-name">{post.authorName}</strong>
+                    </div>
+                    <p className="post-content">{post.content}</p>
+                    <PostActions
+                        likes={post.likeCount}
+                        comments={post.comments?.length || 0}
+                        liked={post.liked || false}
+                        onLikeToggle={() => onLikeToggle(post.id)}
+                    />
+                </div>
+            ))}
+        </>
+    );
+};
 
 export default Post;
