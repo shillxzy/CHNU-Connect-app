@@ -125,7 +125,6 @@ namespace CHNU_Connect.API
             {
                 var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 db.Database.Migrate();
-                SeedData.Initialize(db);
             }
 
             // ---------- MIDDLEWARE PIPELINE ----------

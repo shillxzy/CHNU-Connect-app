@@ -61,7 +61,9 @@ export default function EventsList() {
                   </div>
                   <div className="event-actions">
                     <button className="btn-participate">Взяти участь</button>
-                    <button className="btn-details">Детальніше</button>
+                    <Link to={`/events/${event.id}`} className="btn-details">
+  Детальніше
+</Link>
                   </div>
                 </div>
               ))

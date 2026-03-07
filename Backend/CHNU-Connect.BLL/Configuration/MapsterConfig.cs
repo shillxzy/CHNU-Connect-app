@@ -58,15 +58,15 @@ namespace CHNU_Connect.BLL.Configuration
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.Title, src => src.Title)
                 .Map(dest => dest.Description, src => src.Description)
-                .Map(dest => dest.StartTime, src => src.Date)
-                .Map(dest => dest.EndTime, src => src.Date.AddHours(2)) 
+                .Map(dest => dest.StartTime, src => src.StartTime)
+                .Map(dest => dest.EndTime, src => src.EndTime)
                 .Map(dest => dest.CreatedById, src => src.CreatorId);
 
             TypeAdapterConfig<CreateEventDto, Event>
                 .NewConfig()
                 .Map(dest => dest.Title, src => src.Title)
                 .Map(dest => dest.Description, src => src.Description)
-                .Map(dest => dest.Date, src => src.StartTime)
+                .Map(dest => dest.StartTime, src => src.StartTime)
                 .Map(dest => dest.CreatorId, src => src.CreatedById)
                 .Map(dest => dest.IsPublic, src => src.IsPublic);
 

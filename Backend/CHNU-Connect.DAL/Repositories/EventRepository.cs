@@ -21,16 +21,16 @@ namespace CHNU_Connect.DAL.Repositories
         public async Task<IEnumerable<Event>> GetUpcomingEventsAsync()
         {
             var now = DateTime.UtcNow;
-            return await _dbSet.Where(e => e.Date > now)
-                              .OrderBy(e => e.Date)
-                              .ToListAsync();
+            return await _dbSet.Where(e => e.StartTime > now)   // замість e.Date
+                               .OrderBy(e => e.StartTime)      // замість e.Date
+                               .ToListAsync();
         }
 
         public async Task<IEnumerable<Event>> GetEventsByDateRangeAsync(DateTime startDate, DateTime endDate)
         {
-            return await _dbSet.Where(e => e.Date >= startDate && e.Date <= endDate)
-                              .OrderBy(e => e.Date)
-                              .ToListAsync();
+            return await _dbSet.Where(e => e.StartTime >= startDate && e.EndTime <= endDate) // використовуємо StartTime і EndTime
+                               .OrderBy(e => e.StartTime)  // замість e.Date
+                               .ToListAsync();
         }
 
         public async Task<int> GetEventParticipantsCountAsync(int eventId)

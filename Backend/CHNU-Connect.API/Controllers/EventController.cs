@@ -112,9 +112,8 @@ namespace CHNU_Connect.API.Controllers
                     return Unauthorized();
 
                 request.CreatedById = currentUserId.Value;
+
                 var eventEntity = await _eventService.CreateEventAsync(request);
-                
-                _logger.LogInformation("Event created by user: {UserId}", currentUserId);
                 return CreatedAtAction(nameof(GetEvent), new { id = eventEntity.Id }, eventEntity);
             }
             catch (Exception ex)
@@ -123,6 +122,7 @@ namespace CHNU_Connect.API.Controllers
                 return StatusCode(500, new { message = "An error occurred while creating the event." });
             }
         }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEvent(int id, [FromBody] CreateEventDto request)

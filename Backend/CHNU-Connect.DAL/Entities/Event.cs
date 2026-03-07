@@ -11,9 +11,13 @@ namespace CHNU_Connect.DAL.Entities
         public int Id { get; set; }
         public string Title { get; set; } = null!;
         public string? Description { get; set; }
-        public DateTime Date { get; set; }
+
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+
         public int CreatorId { get; set; }
         public User? Creator { get; set; }
+
         public bool IsPublic { get; set; } = true;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

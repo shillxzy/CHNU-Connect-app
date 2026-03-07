@@ -129,12 +129,30 @@ namespace CHNU_Connect.DAL.Data
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.Title).HasColumnName("title").HasMaxLength(255).IsRequired();
                 entity.Property(e => e.Description).HasColumnName("description");
-                entity.Property(e => e.Date).HasColumnName("date").IsRequired();
+
+                entity.Property(e => e.StartTime)
+                    .HasColumnName("start_time")
+                    .IsRequired();
+
+                entity.Property(e => e.EndTime)
+                    .HasColumnName("end_time")
+                    .IsRequired();
+
                 entity.Property(e => e.CreatorId).HasColumnName("creator_id");
-                entity.HasOne(e => e.Creator).WithMany().HasForeignKey(e => e.CreatorId).OnDelete(DeleteBehavior.SetNull);
-                entity.Property(e => e.IsPublic).HasColumnName("is_public").HasDefaultValue(true);
-                entity.Property(e => e.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("now()");
+                entity.HasOne(e => e.Creator)
+                    .WithMany()
+                    .HasForeignKey(e => e.CreatorId)
+                    .OnDelete(DeleteBehavior.SetNull);
+
+                entity.Property(e => e.IsPublic)
+                    .HasColumnName("is_public")
+                    .HasDefaultValue(true);
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnName("created_at")
+                    .HasDefaultValueSql("now()");
             });
+
 
             // EventParticipants
             modelBuilder.Entity<EventParticipant>(entity =>

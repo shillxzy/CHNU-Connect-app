@@ -19,11 +19,33 @@ namespace CHNU_Connect.BLL.Services
 
         public async Task<EventDto> CreateEventAsync(CreateEventDto dto)
         {
-            var eventEntity = dto.Adapt<Event>();
-            await _eventRepository.InsertAsync(eventEntity);
+            var entity = new Event
+            {
+                Title = dto.Title,
+                Description = dto.Description,
+                StartTime = dto.StartTime,
+                EndTime = dto.EndTime,
+                IsPublic = dto.IsPublic,
+                CreatorId = dto.CreatedById
+            };
+
+            await _eventRepository.InsertAsync(entity);
             await _eventRepository.SaveAsync();
-            return eventEntity.Adapt<EventDto>();
+
+            return new EventDto
+            {
+                Id = entity.Id,
+                Title = entity.Title,
+                Description = entity.Description,
+                StartTime = entity.StartTime,
+                EndTime = entity.EndTime,
+                CreatedById = entity.CreatorId,
+                IsPublic = entity.IsPublic,
+                CreatedAt = entity.CreatedAt
+            };
+        
         }
+
 
         public async Task<EventDto?> GetByIdAsync(int id)
         {

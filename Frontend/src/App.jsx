@@ -13,6 +13,8 @@ import ProfileEdit from "./components/Profile/ProfileEdit";
 import AboutUs from "./components/AboutUs/AboutUs";
 import RefreshPassword from "./components/Auth/RefreshPassword";
 import Registration from "./components/Auth/Registration";
+import CreateEvent from "./components/Events/CreateEvent";
+import EventDetails from "./components/Events/EventDetails";
 
 // Публічний маршрут
 function PublicRoute({ children }) {
@@ -70,6 +72,8 @@ function AppRoutes() {
         <Route path="profile" element={<Profile />} />
         <Route path="profile/edit/:fullname" element={<ProfileEdit />} />
         <Route path="about" element={<AboutUs />} />
+        <Route path="events/create" element={<CreateEvent />} />
+        <Route path="events/:id" element={<EventDetails />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />
