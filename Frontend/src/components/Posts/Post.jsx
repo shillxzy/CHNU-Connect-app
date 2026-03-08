@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { LikeIcon, CommentIcon } from '../Icons';
-import Avatar from '../Avatar/Avatar';
-import './Post.css';
+import { LikeIcon, CommentIcon } from "../Icons";
+import Avatar from "../Avatar/Avatar";
+import "../HomePage.css";
 import {
   getCommentsByPost,
   createComment,
@@ -21,7 +21,7 @@ const PostActions = ({ likes, comments, liked, onLikeToggle, onCommentToggle }) 
     <button
       type="button"
       className="action-button"
-      onClick={onCommentToggle} // керування відкриттям коментарів
+      onClick={onCommentToggle} // відкриття/закриття коментарів
     >
       <img src={CommentIcon} alt="Comment" className="action-icon" /> {comments || 0}
     </button>
@@ -33,7 +33,7 @@ const PostActions = ({ likes, comments, liked, onLikeToggle, onCommentToggle }) 
 );
 
 /* ---------------- Comments Section ---------------- */
-const CommentsSection = ({ postId, currentUser, open }) => {
+const CommentsSection = ({ postId, currentUser, open, onCommentAdded }) => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newComment, setNewComment] = useState("");
@@ -55,24 +55,26 @@ const CommentsSection = ({ postId, currentUser, open }) => {
   };
 
   const handleAddComment = async () => {
-  if (!newComment.trim()) return;
-  if (!currentUser?.id) {
-    console.error("currentUser undefined, cannot add comment");
-    return;
-  }
-  try {
-    const res = await createComment({
-      postId,
-      userId: currentUser.id,
-      content: newComment.trim(),
-    });
-    setComments((prev) => [...prev, res.data]);
-    setNewComment("");
-  } catch (err) {
-    console.error("Failed to add comment:", err);
-  }
-};
+    if (!newComment.trim()) return;
+    if (!currentUser?.id) {
+      console.error("currentUser undefined, cannot add comment");
+      return;
+    }
+    try {
+      const res = await createComment({
+        postId,
+        userId: currentUser.id,
+        content: newComment.trim(),
+      });
+      setComments((prev) => [...prev, res.data]);
+      setNewComment("");
 
+      // Оновлюємо лічильник коментарів у Post
+      if (onCommentAdded) onCommentAdded();
+    } catch (err) {
+      console.error("Failed to add comment:", err);
+    }
+  };
 
   if (!open) return null;
 
@@ -94,7 +96,6 @@ const CommentsSection = ({ postId, currentUser, open }) => {
         ))
       )}
 
-      {/* Форма додавання коментаря */}
       <div className="comment-form">
         <input
           type="text"
@@ -115,13 +116,29 @@ const CommentsSection = ({ postId, currentUser, open }) => {
 
 /* ---------------- Post Component ---------------- */
 const Post = ({ posts, onLikeToggle, currentUser }) => {
-  const API_BASE = import.meta.env.VITE_API_BASE_URL;
-  const [openComments, setOpenComments] = useState({}); // ключ: postId, значення: true/false
+  const API_BASE = "http://localhost:5000";
+  const [openComments, setOpenComments] = useState({});
+  const [commentsCount, setCommentsCount] = useState({}); // ключ: postId, значення: true/false
+
+    useEffect(() => {
+    const counts = {};
+    posts.forEach((post) => {
+      counts[post.id] = post.comments?.length || 0;
+    });
+    setCommentsCount(counts);
+  }, [posts]);
 
   const toggleComments = (postId) => {
     setOpenComments((prev) => ({
       ...prev,
       [postId]: !prev[postId],
+    }));
+  };
+
+  const handleCommentAdded = (postId) => {
+    setCommentsCount((prev) => ({
+      ...prev,
+      [postId]: (prev[postId] || 0) + 1,
     }));
   };
 
@@ -151,17 +168,17 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
 
             <PostActions
               likes={post.likeCount || 0}
-              comments={post.comments?.length || 0}
+              comments={commentsCount[post.id] || 0} 
               liked={post.liked || false}
               onLikeToggle={() => onLikeToggle(post.id)}
               onCommentToggle={() => toggleComments(post.id)}
             />
 
-            {/* Коментарі */}
             <CommentsSection
               postId={post.id}
               currentUser={currentUser}
               open={isOpen}
+              onCommentAdded={() => handleCommentAdded(post.id)}
             />
           </div>
         );
