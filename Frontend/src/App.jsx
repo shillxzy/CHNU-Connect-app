@@ -4,7 +4,7 @@ import { AuthProvider } from "./context/AuthProvider";
 import AuthContext from "./context/AuthContext";
 
 import Login from "./components/Auth/Login";
-import HomePage from "./components/HomePage";
+import HomePage from "./components/HomePage/HomePage";
 import HomePageNewsFeed from "./components/NewsFeed/NewsFeed";
 import GroupsList from "./components/Groups/GroupsList";
 import EventsList from "./components/Events/EventsList";
@@ -15,6 +15,7 @@ import RefreshPassword from "./components/Auth/RefreshPassword";
 import Registration from "./components/Auth/Registration";
 import CreateEvent from "./components/Events/CreateEvent";
 import EventDetails from "./components/Events/EventDetails";
+import PostsList from "./components/Posts/PostsList";
 
 // Публічний маршрут
 function PublicRoute({ children }) {
@@ -69,6 +70,7 @@ function AppRoutes() {
         <Route index element={<HomePageNewsFeed />} />
         <Route path="groups" element={<GroupsList />} />
         <Route path="events" element={<EventsList />} />
+        <Route path="posts" element={<PostsList />} />
         <Route path="profile" element={<Profile />} />
         <Route path="profile/edit/:fullname" element={<ProfileEdit />} />
         <Route path="about" element={<AboutUs />} />

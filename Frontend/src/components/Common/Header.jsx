@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CHNUConnectIcon, UserIcon, SearchIcon } from '../Icons';
+import './Header.css';
 
 const Header = () => {
     const location = useLocation();

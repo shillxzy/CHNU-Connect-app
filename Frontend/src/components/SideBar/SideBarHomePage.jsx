@@ -1,19 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import '../HomePage.css';
+import './SideBar.css';
 import { getGroups } from "../../api/groupAPI";
 import { getEvents } from "../../api/eventAPI";
-
-const SidebarSection = ({ title, items }) => (
-    <div className="sidebar-section">
-        <h3 className="sidebar-title">{title}</h3>
-        <ul className="sidebar-list">
-            {items.map((item, index) => (
-                <li key={index}>{item.name || item.title || item}</li>
-            ))}
-        </ul>
-        <button className="see-more-button">Побачити ще</button>
-    </div>
-);
+import SideBarEvents from './SideBarEvents';
+import SideBarGroups from './SideBarGroups';
 
 const SidebarHomePage = () => {
     const [groups, setGroups] = useState([]);
@@ -46,12 +36,10 @@ const SidebarHomePage = () => {
 
     return (
         <div className="sidebar-container">
-            <SidebarSection
-                title="Популярні групи"
+            <SideBarGroups
                 items={Array.isArray(groups) ? groups.slice(0, 5) : []}
             />
-            <SidebarSection
-                title="Події"
+            <SideBarEvents
                 items={Array.isArray(events) ? events.slice(0, 5) : []}
             />
         </div>

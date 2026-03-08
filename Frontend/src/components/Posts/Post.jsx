@@ -1,7 +1,7 @@
 import React from 'react';
 import { LikeIcon, CommentIcon } from '../Icons';
 import Avatar from '../Avatar/Avatar';
-import '../HomePage.css';
+import './Post.css';
 
 const PostActions = ({ likes, comments, liked, onLikeToggle }) => (
     <div className="post-actions">

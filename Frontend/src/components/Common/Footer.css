@@ -1,0 +1,29 @@
+.footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 40px;
+  padding: 20px 0;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+.footer-column {
+  display: inline-block;
+  margin: 0 20px;
+}
+
+.footer-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.footer-placeholder {
+  height: 40px;
+  background: #f1f1f1;
+  border-radius: 8px;
+  display: inline-block;
+  width: 100%;
+}

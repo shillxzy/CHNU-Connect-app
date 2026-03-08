@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import defaultAvatar from "../../Icons/default_user_icon.png";
+import defaultAvatar from "../Icons/default-avatar-profile-icon.png";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 

@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export const Event = ({ events } ) => {
   return (
     <>
@@ -17,7 +19,9 @@ export const Event = ({ events } ) => {
             </div>
             <div className="event-actions">
               <button className="btn-participate">Взяти участь</button>
-              <button className="btn-details">Детальніше</button>
+              <Link to={`/events/${event.id}`} className="btn-details">
+                Детальніше
+              </Link>
             </div>
           </div>
         ))

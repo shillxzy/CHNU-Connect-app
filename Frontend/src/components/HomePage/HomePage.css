@@ -1,0 +1,39 @@
+/* RESET */
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial;
+  background: #f4f6f8;
+  color: #222;
+}
+
+/* --- Головний Контейнер --- */
+.app-container {
+  min-height: 100vh;
+}
+
+/* --- Основний Контент (Layout) --- */
+.main-content-area.with-sidebar {
+  display: grid;
+  grid-template-columns: 1fr 300px; /* контент + Sidebar */
+  gap: 24px;
+}
+
+.main-content-area.full-width {
+  display: block; /* або 1 колонка */
+}
+
+/* --- Адаптивність (Медіазапити) --- */
+@media (max-width: 880px) {
+  .main-content-area {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Post from './Post';
+import { Link } from 'react-router-dom';
+import Post from '../Posts/Post';
 import { getPosts } from '../../api/postAPI';
-import '../HomePage.css';
 import './NewsFeed.css';
 
 const NewsFeed = () => {
@@ -78,7 +78,7 @@ const NewsFeed = () => {
                 onLikeToggle={() => handleLikeToggle}
             />
             
-            <button className='news-feed-more-button'>Побачити ще</button>
+            <Link to="/posts" className='news-feed-more-button'>Побачити ще</Link>
         </div>
     );
 };

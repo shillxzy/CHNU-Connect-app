@@ -1,0 +1,155 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+  background: #ffffff;
+  padding: 14px 28px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  margin: 0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 20px;
+  color: #2563eb; /* синій акцент */
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+  margin-left: 50px;
+}
+
+.header-nav {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  margin-right: 28px;
+}
+
+.user-icon,
+.search-icon {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+
+.nav-link {
+  color: #444;
+  text-decoration: none;
+  font-size: 15px;
+  padding: 6px 4px;
+  transition: color .2s ease;
+}
+
+.nav-link:hover {
+  color: #2563eb;
+}
+
+.header-right {
+  margin-left: auto;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.user-icon,
+.search-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.search-icon {
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.search-input {
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 14px;
+  width: 140px;
+  outline: none;
+  transition: border .2s ease;
+}
+
+.search-input:focus {
+  border-color: #2563eb;
+}
+
+.profile-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 40px; /* трохи нижче іконки */
+  right: 0;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  min-width: 160px;
+  z-index: 100;
+  display: none;
+  flex-direction: column;
+  padding: 8px 0;
+}
+
+.profile-dropdown.active {
+  display: flex;
+}
+
+.profile-dropdown a,
+.profile-dropdown button {
+  padding: 10px 16px;
+  text-align: left;
+  text-decoration: none;
+  font-size: 14px;
+  color: #333;
+  background: none;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  transition: background .2s ease;
+}
+
+.profile-dropdown a:hover,
+.profile-dropdown button:hover {
+  background: #f1f1f1;
+}
+
+.profile-dropdown button {
+  text-align: left;
+}
+
+@media (max-width: 880px) {
+  .header {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .header-nav {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+}
