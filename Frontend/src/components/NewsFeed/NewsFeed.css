@@ -89,3 +89,20 @@
 .news-feed-more-button:hover {
   background: #aaa;
 }
+
+.post-image {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-start; /* фото зліва */
+}
+
+.post-image img {
+    width: 70%;           
+    max-width: 420px;     
+    max-height: 350px;    
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+
+

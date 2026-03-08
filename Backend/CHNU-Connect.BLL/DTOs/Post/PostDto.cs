@@ -14,5 +14,8 @@ namespace CHNU_Connect.BLL.DTOs.Post
         public Guid? GroupId { get; set; }
         public DateTime CreatedAt { get; set; }
         public string? ImageUrl { get; set; }
+
+        public string AuthorName { get; set; } = null!;
+        public string? AuthorAvatar { get; set; }
     }
 }

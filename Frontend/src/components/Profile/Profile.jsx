@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Profile.css";
+import "../NewsFeed/NewsFeed.css"; 
 import { getProfile } from "../../api/userAPI";
 import { getPostsByUser } from "../../api/postAPI";
 import Avatar from "../Avatar/Avatar.jsx";
+import Post from "../NewsFeed/Post.jsx"; 
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -12,9 +14,26 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-const handleEditProfile = () => {
-  navigate(`/profile/edit/${encodeURIComponent(user.fullName)}`);
-};
+  const handleEditProfile = () => {
+    navigate(`/profile/edit/${encodeURIComponent(user.fullName)}`);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("role");
+    window.location.href = "/login";
+  };
+
+  const handleLikeToggle = (postId) => {
+    setPosts(prevPosts =>
+      prevPosts.map(post =>
+        post.id === postId
+          ? { ...post, liked: !post.liked, likeCount: post.liked ? post.likeCount - 1 : post.likeCount + 1 }
+          : post
+      )
+    );
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,12 +42,9 @@ const handleEditProfile = () => {
         const userData = profileResponse.data;
         setUser(userData);
 
-        console.log("user.photoUrl:", userData.photoUrl);
-
         const postsResponse = await getPostsByUser(userData.id);
         const userPosts = Array.isArray(postsResponse.data) ? postsResponse.data : [];
         setPosts(userPosts);
-
       } catch (err) {
         console.error("Error fetching profile:", err);
         setError(err.response?.data?.message || err.message || "Помилка при завантаженні профілю");
@@ -40,13 +56,6 @@ const handleEditProfile = () => {
 
     fetchData();
   }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("role");
-    window.location.href = "/login";
-  };
 
   if (loading) return <p>Завантаження профілю...</p>;
   if (error) return <p>Помилка: {error}</p>;
@@ -78,8 +87,8 @@ const handleEditProfile = () => {
 
           <div className="profile-actions">
             <button className="btn btn-edit" onClick={handleEditProfile}>
-    Редагувати профіль
-  </button>
+              Редагувати профіль
+            </button>
             <button className="btn btn-messages">
               Повідомлення <span className="notification-badge">{user.unreadMessages || 0}</span>
             </button>
@@ -93,11 +102,7 @@ const handleEditProfile = () => {
       <div className="recent-posts-section">
         <h3 className="section-title">Останні пости</h3>
         {Array.isArray(posts) && posts.length > 0 ? (
-          posts.map(post => (
-            <div key={post.id} className="post-placeholder">
-              {post.content}
-            </div>
-          ))
+          <Post posts={posts} onLikeToggle={handleLikeToggle} />
         ) : (
           <p>Немає постів</p>
         )}
