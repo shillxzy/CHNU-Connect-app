@@ -71,7 +71,7 @@ function AppRoutes() {
         <Route path="groups" element={<GroupsList />} />
         <Route path="events" element={<EventsList />} />
         <Route path="posts" element={<PostsList />} />
-        <Route path="profile" element={<Profile />} />
+        <Route path="profile/:fullname" element={<Profile />} />
         <Route path="profile/edit/:fullname" element={<ProfileEdit />} />
         <Route path="about" element={<AboutUs />} />
         <Route path="events/create" element={<CreateEvent />} />
