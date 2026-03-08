@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { LikeIcon, CommentIcon } from "../Icons";
 import Avatar from "../Avatar/Avatar";
-import "../HomePage.css";
-import {
-  getCommentsByPost,
-  createComment,
-} from "../../api/commentAPI"; 
-
+import './Post.css';
+import { getCommentsByPost, createComment } from "../../api/commentAPI";
 
 const PostActions = ({ likes, comments, liked, onLikeToggle, onCommentToggle }) => (
   <div className="post-actions">
@@ -116,7 +112,7 @@ const CommentsSection = ({ postId, currentUser, open, onCommentAdded }) => {
 
 /* ---------------- Post Component ---------------- */
 const Post = ({ posts, onLikeToggle, currentUser }) => {
-  const API_BASE = "http://localhost:5000";
+  const API_BASE = import.meta.env.VITE_API_BASE_URL;
   const [openComments, setOpenComments] = useState({});
   const [commentsCount, setCommentsCount] = useState({}); // ключ: postId, значення: true/false
 
