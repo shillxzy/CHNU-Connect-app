@@ -163,12 +163,12 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
             )}
 
             <PostActions
-              likes={post.likeCount || 0}
-              comments={commentsCount[post.id] || 0} 
-              liked={post.liked || false}
-              onLikeToggle={() => onLikeToggle(post.id)}
-              onCommentToggle={() => toggleComments(post.id)}
-            />
+  likes={post.likeCount || 0}
+  comments={commentsCount[post.id] || 0} 
+  liked={post.hasCurrentUserLiked || false} // <-- використати hasCurrentUserLiked
+  onLikeToggle={() => onLikeToggle(post.id, post.hasCurrentUserLiked)} // <-- передати стан лайку
+  onCommentToggle={() => toggleComments(post.id)}
+/>
 
             <CommentsSection
               postId={post.id}

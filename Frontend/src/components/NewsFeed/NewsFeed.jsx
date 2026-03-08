@@ -42,31 +42,39 @@ const NewsFeed = () => {
         fetchData();
     }, []);
 
-    const handleLikeToggle = async (postId, currentlyLiked) => {
-        if (!currentUser) return;
+   const handleLikeToggle = async (postId, currentlyLiked) => {
+    if (!currentUser) return;
 
-        try {
-            if (currentlyLiked) {
-                await unlikePost(postId);
-            } else {
-                await likePost(postId);
-            }
+    console.log("Toggling like for post:", postId, "currentlyLiked:", currentlyLiked);
 
-            setPosts((prevPosts) =>
-                prevPosts.map((post) =>
-                    post.id === postId
-                        ? {
-                              ...post,
-                              hasCurrentUserLiked: !currentlyLiked,
-                              likeCount: currentlyLiked ? post.likeCount - 1 : post.likeCount + 1,
-                          }
-                        : post
-                )
-            );
-        } catch (error) {
-            console.error("Error toggling like:", error);
+    try {
+        if (currentlyLiked) {
+            console.log("Calling unlikePost API for post:", postId);
+            await unlikePost(postId);
+        } else {
+            console.log("Calling likePost API for post:", postId);
+            await likePost(postId);
         }
-    };
+
+        setPosts((prevPosts) => {
+            const updatedPosts = prevPosts.map((post) =>
+                post.id === postId
+                    ? {
+                          ...post,
+                          hasCurrentUserLiked: !currentlyLiked,
+                          likeCount: currentlyLiked ? post.likeCount - 1 : post.likeCount + 1,
+                      }
+                    : post
+            );
+
+            console.log("Updated posts state after toggle:", updatedPosts);
+            return updatedPosts;
+        });
+    } catch (error) {
+        console.error("Error toggling like:", error);
+    }
+};
+
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];

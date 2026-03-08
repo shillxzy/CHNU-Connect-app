@@ -8,6 +8,6 @@ namespace CHNU_Connect.BLL.DTOs.PostLike
 {
     public class DeletePostLikeDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
     }
 }

@@ -25,7 +25,9 @@ namespace CHNU_Connect.API.Controllers
         {
             try
             {
-                var posts = await _postService.GetAllAsync();
+                var currentUserId = GetCurrentUserId();
+                var posts = await _postService.GetAllAsync(currentUserId);
+
                 return Ok(posts);
             }
             catch (Exception ex)
@@ -40,7 +42,9 @@ namespace CHNU_Connect.API.Controllers
         {
             try
             {
-                var feed = await _postService.GetFeedAsync(page, pageSize);
+                var currentUserId = GetCurrentUserId();
+                var feed = await _postService.GetFeedAsync(currentUserId, page, pageSize);
+
                 return Ok(feed);
             }
             catch (Exception ex)
@@ -50,13 +54,14 @@ namespace CHNU_Connect.API.Controllers
             }
         }
 
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPost(int id)
         {
             try
             {
-                var post = await _postService.GetByIdAsync(id);
+                var currentUserId = GetCurrentUserId();
+                var post = await _postService.GetByIdAsync(id, currentUserId);
+
                 if (post == null)
                     return NotFound(new { message = "Post not found." });
 
@@ -74,7 +79,9 @@ namespace CHNU_Connect.API.Controllers
         {
             try
             {
-                var posts = await _postService.GetByUserIdAsync(userId);
+                var currentUserId = GetCurrentUserId();
+                var posts = await _postService.GetByUserIdAsync(userId, currentUserId);
+
                 return Ok(posts);
             }
             catch (Exception ex)
@@ -96,6 +103,7 @@ namespace CHNU_Connect.API.Controllers
                 var post = await _postService.CreatePostAsync(request, currentUserId.Value);
 
                 _logger.LogInformation("Post created by user: {UserId}", currentUserId);
+
                 return CreatedAtAction(nameof(GetPost), new { id = post.Id }, post);
             }
             catch (Exception ex)
@@ -104,7 +112,6 @@ namespace CHNU_Connect.API.Controllers
                 return StatusCode(500, new { message = "An error occurred while creating the post." });
             }
         }
-
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdatePost(int id, [FromBody] UpdatePostDto request)
@@ -115,17 +122,18 @@ namespace CHNU_Connect.API.Controllers
                 if (currentUserId == null)
                     return Unauthorized();
 
-                var post = await _postService.GetByIdAsync(id);
+                var post = await _postService.GetByIdAsync(id, currentUserId);
+
                 if (post == null)
                     return NotFound(new { message = "Post not found." });
 
-                // Check if user owns the post
                 if (post.UserId != currentUserId.Value)
                     return Forbid("You can only edit your own posts.");
 
-                var updatedPost = await _postService.UpdatePostAsync(id, request);
-                
+                var updatedPost = await _postService.UpdatePostAsync(id, request, currentUserId);
+
                 _logger.LogInformation("Post updated: {PostId} by user: {UserId}", id, currentUserId);
+
                 return Ok(updatedPost);
             }
             catch (Exception ex)
@@ -144,19 +152,21 @@ namespace CHNU_Connect.API.Controllers
                 if (currentUserId == null)
                     return Unauthorized();
 
-                var post = await _postService.GetByIdAsync(id);
+                var post = await _postService.GetByIdAsync(id, currentUserId);
+
                 if (post == null)
                     return NotFound(new { message = "Post not found." });
 
-                // Check if user owns the post
                 if (post.UserId != currentUserId.Value)
                     return Forbid("You can only delete your own posts.");
 
                 var success = await _postService.DeletePostAsync(id);
+
                 if (!success)
                     return BadRequest(new { message = "Failed to delete post." });
 
                 _logger.LogInformation("Post deleted: {PostId} by user: {UserId}", id, currentUserId);
+
                 return Ok(new { message = "Post deleted successfully." });
             }
             catch (Exception ex)
@@ -176,10 +186,12 @@ namespace CHNU_Connect.API.Controllers
                     return Unauthorized();
 
                 var success = await _postService.LikePostAsync(id, currentUserId.Value);
+
                 if (!success)
                     return BadRequest(new { message = "Post already liked or post not found." });
 
                 _logger.LogInformation("Post liked: {PostId} by user: {UserId}", id, currentUserId);
+
                 return Ok(new { message = "Post liked successfully." });
             }
             catch (Exception ex)
@@ -199,10 +211,12 @@ namespace CHNU_Connect.API.Controllers
                     return Unauthorized();
 
                 var success = await _postService.UnlikePostAsync(id, currentUserId.Value);
+
                 if (!success)
                     return BadRequest(new { message = "Post not liked or post not found." });
 
                 _logger.LogInformation("Post unliked: {PostId} by user: {UserId}", id, currentUserId);
+
                 return Ok(new { message = "Post unliked successfully." });
             }
             catch (Exception ex)
@@ -218,6 +232,7 @@ namespace CHNU_Connect.API.Controllers
             try
             {
                 var likeCount = await _postService.GetLikeCountAsync(id);
+
                 return Ok(new { postId = id, likeCount });
             }
             catch (Exception ex)
@@ -235,7 +250,9 @@ namespace CHNU_Connect.API.Controllers
                 if (string.IsNullOrWhiteSpace(searchTerm))
                     return BadRequest(new { message = "Search term is required." });
 
-                var posts = await _postService.SearchPostsAsync(searchTerm);
+                var currentUserId = GetCurrentUserId();
+                var posts = await _postService.SearchPostsAsync(searchTerm, currentUserId);
+
                 return Ok(posts);
             }
             catch (Exception ex)
@@ -288,13 +305,10 @@ namespace CHNU_Connect.API.Controllers
             return CreatedAtAction(nameof(GetPost), new { id = post.Id }, post);
         }
 
-
-        // DTO
         public class CreatePostWithImageDto
         {
             public string Content { get; set; } = "";
             public IFormFile? Image { get; set; }
         }
-
     }
 }
