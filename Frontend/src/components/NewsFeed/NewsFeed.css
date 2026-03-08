@@ -115,3 +115,57 @@
 .news-feed-more-button:hover {
   background: #aaa;
 }
+
+.post-image {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-start; /* фото зліва */
+}
+
+.post-image img {
+    width: 70%;           
+    max-width: 420px;     
+    max-height: 350px;    
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.comments-section {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.comment-form {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.comment-form input {
+    flex: 1;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.comment-form button {
+    padding: 6px 12px;
+    border: none;
+    background: #2563eb;
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.comment-item {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.comment-content p {
+    margin: 0;
+}
+
+

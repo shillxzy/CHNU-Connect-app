@@ -8,7 +8,7 @@ namespace CHNU_Connect.BLL.DTOs.PostLike
 {
     public class CreatePostLikeDto
     {
-        public Guid PostId { get; set; }
-        public Guid UserId { get; set; }
+        public int PostId { get; set; }
+
     }
 }

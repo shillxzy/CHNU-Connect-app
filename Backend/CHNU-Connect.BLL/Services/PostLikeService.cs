@@ -15,11 +15,22 @@ namespace CHNU_Connect.BLL.Services
             _postLikeRepository = postLikeRepository;
         }
 
-        public async Task<PostLikeDto> CreatePostLikeAsync(CreatePostLikeDto dto)
+        public async Task<PostLikeDto> CreatePostLikeAsync(CreatePostLikeDto dto, int userId)
         {
-            var like = dto.Adapt<PostLike>();
+            bool alreadyLiked = await _postLikeRepository.IsPostLikedByUserAsync(userId, dto.PostId);
+            if (alreadyLiked)
+                throw new InvalidOperationException("Post already liked");
+
+            var like = new PostLike
+            {
+                PostId = dto.PostId,
+                UserId = userId,
+                CreatedAt = DateTime.UtcNow
+            };
+
             await _postLikeRepository.InsertAsync(like);
             await _postLikeRepository.SaveAsync();
+
             return like.Adapt<PostLikeDto>();
         }
 
@@ -43,11 +54,10 @@ namespace CHNU_Connect.BLL.Services
             return userLikes.Adapt<IEnumerable<PostLikeDto>>();
         }
 
-        public async Task<bool> DeletePostLikeAsync(int id)
+        public async Task<bool> DeletePostLikeAsync(int postId, int userId)
         {
-            var like = await _postLikeRepository.GetByIdAsync(id);
-            if (like == null)
-                return false;
+            var like = await _postLikeRepository.GetPostLikeAsync(userId, postId);
+            if (like == null) return false;
 
             _postLikeRepository.Delete(like);
             await _postLikeRepository.SaveAsync();
@@ -56,8 +66,8 @@ namespace CHNU_Connect.BLL.Services
 
         public async Task<bool> HasUserLikedPostAsync(int postId, int userId)
         {
-            var likes = await _postLikeRepository.GetAllAsync();
-            return likes.Any(l => l.PostId == postId && l.UserId == userId);
+            return await _postLikeRepository.IsPostLikedByUserAsync(userId, postId);
         }
+
     }
 }

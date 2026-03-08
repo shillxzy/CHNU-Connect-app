@@ -10,55 +10,61 @@ namespace CHNU_Connect.BLL.Services
     {
         private readonly IPostRepository _postRepository;
         private readonly IPostLikeRepository _postLikeRepository;
+        private readonly IUserRepository _userRepository;
 
-        public PostService(IPostRepository postRepository, IPostLikeRepository postLikeRepository)
+        public PostService(IPostRepository postRepository, IPostLikeRepository postLikeRepository, IUserRepository userRepository)
         {
             _postRepository = postRepository;
             _postLikeRepository = postLikeRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<PostDto> CreatePostAsync(CreatePostDto dto, int authorId)
         {
             var post = dto.Adapt<Post>();
-            post.UserId = authorId;       
+            post.UserId = authorId;
             post.CreatedAt = DateTime.UtcNow;
 
             await _postRepository.InsertAsync(post);
             await _postRepository.SaveAsync();
-            return post.Adapt<PostDto>();
-        }
 
+            return await BuildPostDtoAsync(post, authorId);
+        }
 
         public async Task<PostDto?> GetByIdAsync(int id)
         {
             var post = await _postRepository.GetByIdAsync(id);
-            return post?.Adapt<PostDto>();
+            if (post == null) return null;
+
+            return await BuildPostDtoAsync(post, null);
         }
-
-        public async Task<IEnumerable<PostDto>> GetFeedAsync(int? page = 1, int pageSize = 10)
-        {
-            var allPosts = await _postRepository.GetAllAsync();
-
-            var sortedPosts = allPosts.OrderByDescending(p => p.CreatedAt);
-
-            var pagedPosts = sortedPosts
-                .Skip(((page ?? 1) - 1) * pageSize)
-                .Take(pageSize);
-
-            return pagedPosts.Adapt<IEnumerable<PostDto>>();
-        }
-
 
         public async Task<IEnumerable<PostDto>> GetAllAsync()
         {
             var posts = await _postRepository.GetAllAsync();
-            return posts.Adapt<IEnumerable<PostDto>>();
+            var postDtos = new List<PostDto>();
+
+            foreach (var post in posts.OrderByDescending(p => p.CreatedAt))
+            {
+                var dto = await BuildPostDtoAsync(post, null);
+                postDtos.Add(dto);
+            }
+
+            return postDtos;
         }
 
         public async Task<IEnumerable<PostDto>> GetByUserIdAsync(int userId)
         {
             var posts = await _postRepository.GetPostsByUserIdAsync(userId);
-            return posts.Adapt<IEnumerable<PostDto>>();
+            var postDtos = new List<PostDto>();
+
+            foreach (var post in posts.OrderByDescending(p => p.CreatedAt))
+            {
+                var dto = await BuildPostDtoAsync(post, null);
+                postDtos.Add(dto);
+            }
+
+            return postDtos;
         }
 
         public async Task<PostDto> UpdatePostAsync(int id, UpdatePostDto dto)
@@ -70,14 +76,14 @@ namespace CHNU_Connect.BLL.Services
             dto.Adapt(post);
             _postRepository.Update(post);
             await _postRepository.SaveAsync();
-            return post.Adapt<PostDto>();
+
+            return await BuildPostDtoAsync(post, null);
         }
 
         public async Task<bool> DeletePostAsync(int id)
         {
             var post = await _postRepository.GetByIdAsync(id);
-            if (post == null)
-                return false;
+            if (post == null) return false;
 
             _postRepository.Delete(post);
             await _postRepository.SaveAsync();
@@ -86,31 +92,25 @@ namespace CHNU_Connect.BLL.Services
 
         public async Task<bool> LikePostAsync(int postId, int userId)
         {
-            var existingLike = await _postLikeRepository.GetAllAsync();
-            var like = existingLike.FirstOrDefault(l => l.PostId == postId && l.UserId == userId);
-            
-            if (like != null)
-                return false; // Already liked
+            bool alreadyLiked = await _postLikeRepository.IsPostLikedByUserAsync(userId, postId);
+            if (alreadyLiked) return false;
 
-            var newLike = new PostLike
+            var like = new PostLike
             {
                 PostId = postId,
                 UserId = userId,
                 CreatedAt = DateTime.UtcNow
             };
 
-            await _postLikeRepository.InsertAsync(newLike);
+            await _postLikeRepository.InsertAsync(like);
             await _postLikeRepository.SaveAsync();
             return true;
         }
 
         public async Task<bool> UnlikePostAsync(int postId, int userId)
         {
-            var existingLike = await _postLikeRepository.GetAllAsync();
-            var like = existingLike.FirstOrDefault(l => l.PostId == postId && l.UserId == userId);
-            
-            if (like == null)
-                return false; // Not liked
+            var like = await _postLikeRepository.GetPostLikeAsync(userId, postId);
+            if (like == null) return false;
 
             _postLikeRepository.Delete(like);
             await _postLikeRepository.SaveAsync();
@@ -119,16 +119,58 @@ namespace CHNU_Connect.BLL.Services
 
         public async Task<int> GetLikeCountAsync(int postId)
         {
-            return await _postRepository.GetPostLikesCountAsync(postId);
+            return await _postLikeRepository.GetLikesCountByPostIdAsync(postId);
+        }
+
+        public async Task<IEnumerable<PostDto>> GetFeedAsync(int? page = 1, int pageSize = 10)
+        {
+            var allPosts = await _postRepository.GetAllAsync();
+            var pagedPosts = allPosts.OrderByDescending(p => p.CreatedAt)
+                                     .Skip(((page ?? 1) - 1) * pageSize)
+                                     .Take(pageSize);
+
+            var postDtos = new List<PostDto>();
+            foreach (var post in pagedPosts)
+            {
+                var dto = await BuildPostDtoAsync(post, null);
+                postDtos.Add(dto);
+            }
+
+            return postDtos;
         }
 
         public async Task<IEnumerable<PostDto>> SearchPostsAsync(string searchTerm)
         {
             var posts = await _postRepository.GetAllAsync();
-            var filteredPosts = posts.Where(p => 
-                p.Content.ToLower().Contains(searchTerm.ToLower()));
-            return filteredPosts.Adapt<IEnumerable<PostDto>>();
+            var filtered = posts.Where(p => p.Content.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+
+            var postDtos = new List<PostDto>();
+            foreach (var post in filtered.OrderByDescending(p => p.CreatedAt))
+            {
+                var dto = await BuildPostDtoAsync(post, null);
+                postDtos.Add(dto);
+            }
+
+            return postDtos;
         }
 
+        // --- HELPER ---
+        private async Task<PostDto> BuildPostDtoAsync(Post post, int? currentUserId)
+        {
+            var dto = post.Adapt<PostDto>();
+
+            // Author info
+            var user = await _userRepository.GetByIdAsync(post.UserId);
+            dto.AuthorName = user?.FullName ?? "Unknown";
+            dto.AuthorAvatar = user?.PhotoUrl ?? "/images/default-avatar-icon.png";
+
+            // Likes
+            dto.LikeCount = await _postLikeRepository.GetLikesCountByPostIdAsync(post.Id);
+            dto.HasCurrentUserLiked = currentUserId != null
+                ? await _postLikeRepository.IsPostLikedByUserAsync(currentUserId.Value, post.Id)
+                : false;
+
+            return dto;
+        }
     }
 }

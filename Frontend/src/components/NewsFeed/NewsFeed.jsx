@@ -1,47 +1,109 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+
 import Post from '../Posts/Post';
-import { getPosts } from '../../api/postAPI';
+import { getPosts, createPostWithImage, likePost, unlikePost } from "../../api/postAPI";
+import { getProfile } from "../../api/userAPI";
+import Avatar from '../Avatar/Avatar';
 import './NewsFeed.css';
 
 const NewsFeed = () => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [currentUser, setCurrentUser] = useState(null);
+    const [newPostContent, setNewPostContent] = useState("");
+    const [newPostImage, setNewPostImage] = useState(null);
+    const [previewImage, setPreviewImage] = useState(null);
 
     useEffect(() => {
-        const fetchPosts = async () => {
+        const fetchData = async () => {
             try {
+                const resUser = await getProfile();
+                setCurrentUser(resUser.data);
+
                 const postsData = await getPosts();
 
-                if (Array.isArray(postsData)) {
-                    setPosts(postsData.slice(0, 5));
-                } else if (postsData && Array.isArray(postsData.posts)) {
-                    setPosts(postsData.posts.slice(0, 5));
-                } else {
-                    setPosts([]);
-                }
+                // Використовуємо поле hasCurrentUserLiked для позначки лайку
+                const postsWithUser = postsData.map((post) => ({
+                    ...post,
+                    hasCurrentUserLiked: post.hasCurrentUserLiked ?? false,
+                    authorName: post.authorName || "Unknown",
+                    authorAvatar: post.authorAvatar || "../Icons/default-avatar-profile-icon.png",
+                }));
 
+                setPosts(postsWithUser.slice(0, 5));
             } catch (error) {
                 console.error("Error fetching posts:", error);
-                setPosts([]);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchPosts();
+        fetchData();
     }, []);
 
-    // Функція для оновлення лайків у локальному стані
-    const handleLikeToggle = (postId) => {
-        setPosts(prevPosts => prevPosts.map(post => {
-            if (post.id === postId) {
-                const liked = post.liked ? false : true;
-                const likeCount = liked ? post.likeCount + 1 : post.likeCount - 1;
-                return { ...post, liked, likeCount };
+    const handleLikeToggle = async (postId, currentlyLiked) => {
+        if (!currentUser) return;
+
+        try {
+            if (currentlyLiked) {
+                await unlikePost(postId);
+            } else {
+                await likePost(postId);
             }
-            return post;
-        }));
+
+            setPosts((prevPosts) =>
+                prevPosts.map((post) =>
+                    post.id === postId
+                        ? {
+                              ...post,
+                              hasCurrentUserLiked: !currentlyLiked,
+                              likeCount: currentlyLiked ? post.likeCount - 1 : post.likeCount + 1,
+                          }
+                        : post
+                )
+            );
+        } catch (error) {
+            console.error("Error toggling like:", error);
+        }
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setNewPostImage(file);
+            setPreviewImage(URL.createObjectURL(file));
+        }
+    };
+
+    const handleCreatePost = async () => {
+        if (!newPostContent.trim() && !newPostImage) return;
+
+        try {
+            const formData = new FormData();
+            formData.append("content", newPostContent);
+
+            if (newPostImage) {
+                formData.append("image", newPostImage);
+            }
+
+            const res = await createPostWithImage(formData);
+
+            const newPost = {
+                ...res.data,
+                authorName: currentUser.fullName,
+                authorAvatar: currentUser.photoUrl || "../Icons/default-avatar-icon.png",
+                hasCurrentUserLiked: false,
+                likeCount: 0,
+            };
+
+            setPosts((prev) => [newPost, ...prev]);
+            setNewPostContent("");
+            setNewPostImage(null);
+            setPreviewImage(null);
+        } catch (error) {
+            console.error("Помилка створення поста:", error);
+        }
     };
 
     if (loading) {
@@ -56,26 +118,47 @@ const NewsFeed = () => {
     return (
         <div className="news-feed-container">
             <h2 className="section-title">Стрічка новин</h2>
-            
-            {/* Поле створення посту */}
+
             <div className="post-creator card">
                 <div className="post-creator-top">
-                    <div className="creator-avatar"></div>
+                    {currentUser && (
+                        <Avatar
+                            photoUrl={currentUser.photoUrl || "/images/default-avatar-icon.png"}
+                            size={38}
+                            className="creator-avatar"
+                        />
+                    )}
                     <textarea
                         className="creator-input"
                         placeholder="Що нового?"
+                        value={newPostContent}
+                        onChange={(e) => setNewPostContent(e.target.value)}
                     />
                 </div>
+
+                {previewImage && (
+                    <div className="post-image-preview">
+                        <img src={previewImage} alt="preview" />
+                    </div>
+                )}
+
                 <div className="post-creator-actions">
-                    <button className="creator-add-btn">📷 Фото</button>
-                    <button className="creator-post-btn">Опублікувати</button>
+                    <label className="creator-add-btn">
+                        📷 Фото
+                        <input type="file" accept="image/*" onChange={handleImageChange} style={{ display: "none" }} />
+                    </label>
+
+                    <button className="creator-post-btn" onClick={handleCreatePost}>
+                        Опублікувати
+                    </button>
                 </div>
             </div>
 
             {/* Список постів */}
             <Post
                 posts={posts}
-                onLikeToggle={() => handleLikeToggle}
+                onLikeToggle={handleLikeToggle}
+                currentUser={currentUser}
             />
             
             <Link to="/posts" className='news-feed-more-button'>Побачити ще</Link>

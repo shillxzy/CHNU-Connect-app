@@ -250,5 +250,51 @@ namespace CHNU_Connect.API.Controllers
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return int.TryParse(userIdClaim, out var userId) ? userId : null;
         }
+
+        [HttpPost("with-image")]
+        public async Task<IActionResult> CreatePostWithImage([FromForm] CreatePostWithImageDto request)
+        {
+            var currentUserId = GetCurrentUserId();
+            if (currentUserId == null) return Unauthorized();
+
+            string? imageUrl = null;
+
+            if (request.Image != null && request.Image.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+
+                if (!Directory.Exists(uploadsFolder))
+                    Directory.CreateDirectory(uploadsFolder);
+
+                var fileName = $"{Guid.NewGuid()}_{request.Image.FileName}";
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await request.Image.CopyToAsync(stream);
+                }
+
+                imageUrl = $"/uploads/{fileName}";
+            }
+
+            var postDto = new CreatePostDto
+            {
+                Content = request.Content,
+                ImageUrl = imageUrl
+            };
+
+            var post = await _postService.CreatePostAsync(postDto, currentUserId.Value);
+
+            return CreatedAtAction(nameof(GetPost), new { id = post.Id }, post);
+        }
+
+
+        // DTO
+        public class CreatePostWithImageDto
+        {
+            public string Content { get; set; } = "";
+            public IFormFile? Image { get; set; }
+        }
+
     }
 }

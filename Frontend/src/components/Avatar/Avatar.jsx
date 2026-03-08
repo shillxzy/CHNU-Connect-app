@@ -3,16 +3,12 @@ import defaultAvatar from "../Icons/default-avatar-profile-icon.png";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 
-const BASE_SERVER_URL = API_URL.endsWith('/api') 
-  ? API_URL.slice(0, -4) 
-  : API_URL;
-
 const Avatar = ({ photoUrl, size = 150, alt = "Фото профілю", className = "", style = {} }) => {
   const [imgError, setImgError] = useState(false);
 
   const src = !photoUrl || imgError 
     ? defaultAvatar 
-    : `${BASE_SERVER_URL}${photoUrl}`;
+    : `${API_URL}${photoUrl}`;
 
   const combinedStyle = {
     width: size,

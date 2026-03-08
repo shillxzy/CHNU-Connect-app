@@ -18,3 +18,5 @@ export const likePost = (id) => api.post(`/Post/${id}/like`);
 export const unlikePost = (id) => api.delete(`/Post/${id}/like`);
 export const getPostLikes = (id) => api.get(`/Post/${id}/likes`);
 export const searchPosts = (query) => api.get(`/Post/search`, { params: { q: query } });
+export const createPostWithImage = (formData) =>api.post("/Post/with-image", formData, {headers: {"Content-Type": "multipart/form-data",},
+    });
