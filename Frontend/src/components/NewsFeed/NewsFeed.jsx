@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Post from "./Post";
-import { getPosts, createPostWithImage } from "../../api/postAPI";
+import { getPosts, createPostWithImage, likePost, unlikePost } from "../../api/postAPI";
 import { getProfile } from "../../api/userAPI";
 import "../HomePage.css";
 import "./NewsFeed.css";
 import Avatar from "../Avatar/Avatar.jsx";
-import api from "../../api/axiosInstance";
 
 const NewsFeed = () => {
     const [posts, setPosts] = useState([]);
@@ -23,28 +22,13 @@ const NewsFeed = () => {
 
                 const postsData = await getPosts();
 
-                const postsWithUser = await Promise.all(
-                    postsData.map(async (post) => {
-                        if (!post.authorName || !post.authorAvatar) {
-                            try {
-                                const res = await api.get(`/User/${post.userId}`);
-                                return {
-                                    ...post,
-                                    authorName: res.data.fullName,
-                                    authorAvatar:
-                                        res.data.photoUrl || "/images/default-avatar-icon.png",
-                                };
-                            } catch {
-                                return {
-                                    ...post,
-                                    authorName: "Unknown",
-                                    authorAvatar: "/images/default-avatar-icon.png",
-                                };
-                            }
-                        }
-                        return post;
-                    })
-                );
+                // Використовуємо поле hasCurrentUserLiked для позначки лайку
+                const postsWithUser = postsData.map((post) => ({
+                    ...post,
+                    hasCurrentUserLiked: post.hasCurrentUserLiked ?? false,
+                    authorName: post.authorName || "Unknown",
+                    authorAvatar: post.authorAvatar || "/images/default-avatar-icon.png",
+                }));
 
                 setPosts(postsWithUser.slice(0, 5));
             } catch (error) {
@@ -57,24 +41,34 @@ const NewsFeed = () => {
         fetchData();
     }, []);
 
-    const handleLikeToggle = (postId) => {
-        setPosts((prevPosts) =>
-            prevPosts.map((post) => {
-                if (post.id === postId) {
-                    const liked = !post.liked;
-                    const likeCount = liked
-                        ? post.likeCount + 1
-                        : post.likeCount - 1;
-                    return { ...post, liked, likeCount };
-                }
-                return post;
-            })
-        );
+    const handleLikeToggle = async (postId, currentlyLiked) => {
+        if (!currentUser) return;
+
+        try {
+            if (currentlyLiked) {
+                await unlikePost(postId);
+            } else {
+                await likePost(postId);
+            }
+
+            setPosts((prevPosts) =>
+                prevPosts.map((post) =>
+                    post.id === postId
+                        ? {
+                              ...post,
+                              hasCurrentUserLiked: !currentlyLiked,
+                              likeCount: currentlyLiked ? post.likeCount - 1 : post.likeCount + 1,
+                          }
+                        : post
+                )
+            );
+        } catch (error) {
+            console.error("Error toggling like:", error);
+        }
     };
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-
         if (file) {
             setNewPostImage(file);
             setPreviewImage(URL.createObjectURL(file));
@@ -86,7 +80,6 @@ const NewsFeed = () => {
 
         try {
             const formData = new FormData();
-
             formData.append("content", newPostContent);
 
             if (newPostImage) {
@@ -98,12 +91,12 @@ const NewsFeed = () => {
             const newPost = {
                 ...res.data,
                 authorName: currentUser.fullName,
-                authorAvatar:
-                    currentUser.photoUrl || "/images/default-avatar-icon.png",
+                authorAvatar: currentUser.photoUrl || "/images/default-avatar-icon.png",
+                hasCurrentUserLiked: false,
+                likeCount: 0,
             };
 
             setPosts((prev) => [newPost, ...prev]);
-
             setNewPostContent("");
             setNewPostImage(null);
             setPreviewImage(null);
@@ -129,15 +122,11 @@ const NewsFeed = () => {
                 <div className="post-creator-top">
                     {currentUser && (
                         <Avatar
-                            photoUrl={
-                                currentUser.photoUrl ||
-                                "/images/default-avatar-icon.png"
-                            }
+                            photoUrl={currentUser.photoUrl || "/images/default-avatar-icon.png"}
                             size={38}
                             className="creator-avatar"
                         />
                     )}
-
                     <textarea
                         className="creator-input"
                         placeholder="Що нового?"
@@ -155,18 +144,10 @@ const NewsFeed = () => {
                 <div className="post-creator-actions">
                     <label className="creator-add-btn">
                         📷 Фото
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageChange}
-                            style={{ display: "none" }}
-                        />
+                        <input type="file" accept="image/*" onChange={handleImageChange} style={{ display: "none" }} />
                     </label>
 
-                    <button
-                        className="creator-post-btn"
-                        onClick={handleCreatePost}
-                    >
+                    <button className="creator-post-btn" onClick={handleCreatePost}>
                         Опублікувати
                     </button>
                 </div>
@@ -174,9 +155,7 @@ const NewsFeed = () => {
 
             <Post posts={posts} onLikeToggle={handleLikeToggle} />
 
-            <button className="news-feed-more-button">
-                Побачити ще
-            </button>
+            <button className="news-feed-more-button">Побачити ще</button>
         </div>
     );
 };

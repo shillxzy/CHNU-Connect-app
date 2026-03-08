@@ -135,8 +135,7 @@ namespace CHNU_Connect.BLL.Configuration
 
             TypeAdapterConfig<CreatePostLikeDto, PostLike>
                 .NewConfig()
-                .Map(dest => dest.PostId, src => src.PostId)
-                .Map(dest => dest.UserId, src => src.UserId);
+                .Map(dest => dest.PostId, src => src.PostId);
 
             // AdminAction mappings
             TypeAdapterConfig<AdminAction, AdminActionDto>

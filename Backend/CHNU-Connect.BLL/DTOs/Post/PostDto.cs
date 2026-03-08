@@ -17,5 +17,8 @@ namespace CHNU_Connect.BLL.DTOs.Post
 
         public string AuthorName { get; set; } = null!;
         public string? AuthorAvatar { get; set; }
+
+        public int LikeCount { get; set; }
+        public bool HasCurrentUserLiked { get; set; }
     }
 }
