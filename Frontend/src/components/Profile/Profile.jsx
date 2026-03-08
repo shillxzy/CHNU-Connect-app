@@ -18,6 +18,11 @@ const Profile = () => {
     navigate(`/profile/edit/${encodeURIComponent(user.fullName)}`);
   };
 
+  const handleChatsProfile = () => {
+    navigate(`/chats/${encodeURIComponent(user.fullName)}`);
+  };
+
+
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
@@ -89,7 +94,7 @@ const Profile = () => {
             <button className="btn btn-edit" onClick={handleEditProfile}>
               Редагувати профіль
             </button>
-            <button className="btn btn-messages">
+            <button className="btn btn-messages" onClick={handleChatsProfile}>
               Повідомлення <span className="notification-badge">{user.unreadMessages || 0}</span>
             </button>
             <button className="btn btn-logout" onClick={handleLogout}>

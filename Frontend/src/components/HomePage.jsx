@@ -1,18 +1,17 @@
 import React from 'react';
 import { Routes, Route, useLocation, Outlet } from "react-router-dom";
-import Header from '../Common/Header.jsx';
-import GroupsList from '../Groups/GroupsList.jsx';
-import EventsList from '../Events/EventsList.jsx';
-import PostsList from '../Posts/PostsList.jsx';
-import HeroBanner from '../Common/HeroBanner.jsx';
-import NewsFeed from '../NewsFeed/NewsFeed.jsx';
-import Sidebar from '../SideBar/SideBarHomePage.jsx';
-import Footer from '../Common/Footer.jsx';
+import Header from './Common/Header.jsx';
+import GroupsList from './Groups/GroupsList.jsx';
+import EventsList from './Events/EventsList.jsx';
+import HeroBanner from './Common/HeroBanner.jsx';
+import NewsFeed from './NewsFeed/NewsFeed.jsx';
+import Sidebar from './SideBar/SideBarHomePage.jsx';
+import Footer from './Common/Footer.jsx';
 import './HomePage.css';
-import Profile from '../Profile/Profile.jsx';
-import AboutUs from '../AboutUs/AboutUs.jsx';
-import ProfileEdit from '../Profile/ProfileEdit.jsx';
-import Chats from '../Chats/Chats.jsx';
+import Profile from './Profile/Profile.jsx';
+import AboutUs from './AboutUs/AboutUs.jsx';
+import ProfileEdit from './Profile/ProfileEdit.jsx';
+import CreateEvent from './Events/CreateEvent.jsx';
 
 function HomePage({ onLogout }) {
   const location = useLocation();
@@ -36,10 +35,9 @@ function HomePage({ onLogout }) {
 HomePage.NewsFeed = NewsFeed;
 HomePage.GroupsList = GroupsList;
 HomePage.EventsList = EventsList;
-HomePage.PostsList = PostsList;
 HomePage.Profile = Profile;
 HomePage.AboutUs = AboutUs;
 HomePage.ProfileEdit = ProfileEdit;
-HomePage.Chats = Chats;
+HomePage.CreateEvent = CreateEvent;
 
 export default HomePage;

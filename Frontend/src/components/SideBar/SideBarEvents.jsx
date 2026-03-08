@@ -5,11 +5,16 @@ const SideBarEvents = ({ items }) => (
     <div className="sidebar-section">
         <h3 className="sidebar-title">Події</h3>
         <ul className="sidebar-list">
-            {items.map((item, index) => (
-                <li key={index}>{item.name || item.title || item}</li>
-            ))}
-        </ul>
-        <Link to="/groups" className="see-more-button">Побачити ще</Link>
+  {items.map((item, index) => (
+    <li key={index}>
+      <Link to={`/events/${item.id}`}>
+        {item.name || item.title || item}
+      </Link>
+    </li>
+  ))}
+</ul>
+
+        <Link to="/events" className="see-more-button">Побачити ще</Link>
     </div>
 );
 
