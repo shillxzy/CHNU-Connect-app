@@ -153,7 +153,7 @@ const NewsFeed = () => {
                 </div>
             </div>
 
-            <Post posts={posts} onLikeToggle={handleLikeToggle} />
+            <Post posts={posts} onLikeToggle={handleLikeToggle} currentUser={currentUser} />
 
             <button className="news-feed-more-button">Побачити ще</button>
         </div>

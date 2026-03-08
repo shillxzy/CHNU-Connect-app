@@ -9,38 +9,77 @@ namespace CHNU_Connect.BLL.Services
     public class CommentService : ICommentService
     {
         private readonly ICommentRepository _commentRepository;
+        private readonly IUserRepository _userRepository;
 
-        public CommentService(ICommentRepository commentRepository)
+        public CommentService(ICommentRepository commentRepository, IUserRepository userRepository)
         {
             _commentRepository = commentRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<CommentDto> CreateCommentAsync(CreateCommentDto dto)
         {
             var comment = dto.Adapt<Comment>();
+            comment.CreatedAt = DateTime.UtcNow;
+
             await _commentRepository.InsertAsync(comment);
             await _commentRepository.SaveAsync();
-            return comment.Adapt<CommentDto>();
+
+            var user = await _userRepository.GetByIdAsync(comment.UserId);
+
+            var commentDto = comment.Adapt<CommentDto>();
+            commentDto.AuthorName = user?.FullName ?? "Unknown";
+            commentDto.AuthorAvatar = user?.PhotoUrl;
+
+            return commentDto;
         }
 
         public async Task<CommentDto?> GetByIdAsync(int id)
         {
             var comment = await _commentRepository.GetByIdAsync(id);
-            return comment?.Adapt<CommentDto>();
+            if (comment == null) return null;
+
+            var user = await _userRepository.GetByIdAsync(comment.UserId);
+            var commentDto = comment.Adapt<CommentDto>();
+            commentDto.AuthorName = user?.FullName ?? "Unknown";
+            commentDto.AuthorAvatar = user?.PhotoUrl;
+
+            return commentDto;
         }
 
         public async Task<IEnumerable<CommentDto>> GetByPostIdAsync(int postId)
         {
             var comments = await _commentRepository.GetAllAsync();
             var postComments = comments.Where(c => c.PostId == postId);
-            return postComments.Adapt<IEnumerable<CommentDto>>();
+
+            var result = new List<CommentDto>();
+            foreach (var comment in postComments)
+            {
+                var user = await _userRepository.GetByIdAsync(comment.UserId);
+                var dto = comment.Adapt<CommentDto>();
+                dto.AuthorName = user?.FullName ?? "Unknown";
+                dto.AuthorAvatar = user?.PhotoUrl;
+                result.Add(dto);
+            }
+
+            return result;
         }
 
         public async Task<IEnumerable<CommentDto>> GetByUserIdAsync(int userId)
         {
             var comments = await _commentRepository.GetAllAsync();
             var userComments = comments.Where(c => c.UserId == userId);
-            return userComments.Adapt<IEnumerable<CommentDto>>();
+
+            var user = await _userRepository.GetByIdAsync(userId);
+            var result = userComments.Select(c =>
+            {
+                var dto = c.Adapt<CommentDto>();
+                dto.AuthorName = user?.FullName ?? "Unknown";
+                dto.AuthorAvatar = user?.PhotoUrl;
+                return dto;
+            });
+
+            return result;
         }
 
         public async Task<CommentDto> UpdateCommentAsync(int id, CreateCommentDto dto)
@@ -52,7 +91,13 @@ namespace CHNU_Connect.BLL.Services
             dto.Adapt(comment);
             _commentRepository.Update(comment);
             await _commentRepository.SaveAsync();
-            return comment.Adapt<CommentDto>();
+
+            var user = await _userRepository.GetByIdAsync(comment.UserId);
+            var commentDto = comment.Adapt<CommentDto>();
+            commentDto.AuthorName = user?.FullName ?? "Unknown";
+            commentDto.AuthorAvatar = user?.PhotoUrl;
+
+            return commentDto;
         }
 
         public async Task<bool> DeleteCommentAsync(int id)

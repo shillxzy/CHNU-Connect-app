@@ -79,7 +79,7 @@ namespace CHNU_Connect.API.Controllers
 
                 request.UserId = currentUserId.Value;
                 var comment = await _commentService.CreateCommentAsync(request);
-                
+
                 _logger.LogInformation("Comment created by user: {UserId} on post: {PostId}", currentUserId, request.PostId);
                 return CreatedAtAction(nameof(GetComment), new { id = comment.Id }, comment);
             }
@@ -103,12 +103,11 @@ namespace CHNU_Connect.API.Controllers
                 if (comment == null)
                     return NotFound(new { message = "Comment not found." });
 
-                // Check if user owns the comment
                 if (comment.UserId != currentUserId.Value)
                     return Forbid("You can only edit your own comments.");
 
                 var updatedComment = await _commentService.UpdateCommentAsync(id, request);
-                
+
                 _logger.LogInformation("Comment updated: {CommentId} by user: {UserId}", id, currentUserId);
                 return Ok(updatedComment);
             }
@@ -132,7 +131,6 @@ namespace CHNU_Connect.API.Controllers
                 if (comment == null)
                     return NotFound(new { message = "Comment not found." });
 
-                // Check if user owns the comment
                 if (comment.UserId != currentUserId.Value)
                     return Forbid("You can only delete your own comments.");
 
