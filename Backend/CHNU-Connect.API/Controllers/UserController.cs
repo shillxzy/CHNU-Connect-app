@@ -123,5 +123,27 @@ namespace CHNU_Connect.API.Controllers
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return int.TryParse(userIdClaim, out var userId) ? userId : null;
         }
+
+        [HttpGet("{id}")]
+        [Authorize] 
+        public async Task<IActionResult> GetUserById(int id)
+        {
+            var user = await _userService.GetByIdAsync(id);
+            if (user == null) return NotFound();
+
+            var publicProfile = new PublicUserProfileDto
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Faculty = user.Faculty,
+                Course = user.Course,
+                Bio = user.Bio,
+                PhotoUrl = user.PhotoUrl
+            };
+
+            return Ok(publicProfile);
+        }
+
+
     }
 }

@@ -3,6 +3,7 @@ import { LikeIcon, CommentIcon } from "../Icons";
 import Avatar from "../Avatar/Avatar";
 import './Post.css';
 import { getCommentsByPost, createComment } from "../../api/commentAPI";
+import UserTooltip from "../ToolTip/UserTooltip";
 
 const PostActions = ({ likes, comments, liked, onLikeToggle, onCommentToggle }) => (
   <div className="post-actions">
@@ -17,7 +18,7 @@ const PostActions = ({ likes, comments, liked, onLikeToggle, onCommentToggle }) 
     <button
       type="button"
       className="action-button"
-      onClick={onCommentToggle} // відкриття/закриття коментарів
+      onClick={onCommentToggle} 
     >
       <img src={CommentIcon} alt="Comment" className="action-icon" /> {comments || 0}
     </button>
@@ -147,12 +148,16 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
         return (
           <div className="post-card" key={post.id}>
             <div className="post-header">
-              <Avatar
-                photoUrl={post.authorAvatar || "/images/default-avatar-icon.png"}
-                size={35}
-              />
-              <strong>{post.authorName || "Unknown"}</strong>
-            </div>
+  <UserTooltip
+    userId={post.authorId}
+    currentUserId={currentUser?.id}
+    size={35}
+    fallbackAvatar={post.authorAvatar}
+    fallbackName={post.authorName}
+  />
+  <strong>{post.authorName || "Unknown"}</strong>
+</div>
+
 
             <p className="post-content">{post.content}</p>
 

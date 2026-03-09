@@ -16,6 +16,7 @@ import Registration from "./components/Auth/Registration";
 import CreateEvent from "./components/Events/CreateEvent";
 import EventDetails from "./components/Events/EventDetails";
 import PostsList from "./components/Posts/PostsList";
+import ProfileView from "./components/Profile/ProfileView";
 
 // Публічний маршрут
 function PublicRoute({ children }) {
@@ -72,6 +73,7 @@ function AppRoutes() {
         <Route path="events" element={<EventsList />} />
         <Route path="posts" element={<PostsList />} />
         <Route path="profile/:fullname" element={<Profile />} />
+        <Route path="/profile/view/:id" element={<ProfileView />} />
         <Route path="profile/edit/:fullname" element={<ProfileEdit />} />
         <Route path="about" element={<AboutUs />} />
         <Route path="events/create" element={<CreateEvent />} />

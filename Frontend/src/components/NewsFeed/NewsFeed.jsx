@@ -6,6 +6,7 @@ import { getPosts, createPostWithImage, likePost, unlikePost } from "../../api/p
 import { getProfile } from "../../api/userAPI";
 import Avatar from '../Avatar/Avatar';
 import './NewsFeed.css';
+import UserTooltip from '../ToolTip/UserTooltip';
 
 const NewsFeed = () => {
     const [posts, setPosts] = useState([]);
@@ -23,12 +24,12 @@ const NewsFeed = () => {
 
                 const postsData = await getPosts();
 
-                // Використовуємо поле hasCurrentUserLiked для позначки лайку
                 const postsWithUser = postsData.map((post) => ({
                     ...post,
                     hasCurrentUserLiked: post.hasCurrentUserLiked ?? false,
                     authorName: post.authorName || "Unknown",
                     authorAvatar: post.authorAvatar || "../Icons/default-avatar-profile-icon.png",
+                    authorId: post.authorId || post.userId,
                 }));
 
                 setPosts(postsWithUser.slice(0, 5));
@@ -130,12 +131,12 @@ const NewsFeed = () => {
             <div className="post-creator card">
                 <div className="post-creator-top">
                     {currentUser && (
-                        <Avatar
-                            photoUrl={currentUser.photoUrl || "/images/default-avatar-icon.png"}
-                            size={38}
-                            className="creator-avatar"
-                        />
-                    )}
+  <UserTooltip
+    userId={currentUser.id}
+    currentUserId={currentUser?.id}
+    size={38}
+  />
+)}
                     <textarea
                         className="creator-input"
                         placeholder="Що нового?"
@@ -162,7 +163,6 @@ const NewsFeed = () => {
                 </div>
             </div>
 
-            {/* Список постів */}
             <Post
                 posts={posts}
                 onLikeToggle={handleLikeToggle}

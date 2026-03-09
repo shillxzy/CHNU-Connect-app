@@ -1,0 +1,37 @@
+.user-tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.user-tooltip-popup {
+  position: absolute;
+  top: 110%;
+  left: 50%;
+  transform: translateX(-40%); /* зміщення вправо на 10% */
+  z-index: 100;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 200px;
+  font-size: 14px;
+  transition: transform 0.2s ease, opacity 0.2s ease; /* плавне переміщення */
+  opacity: 0;
+}
+
+.user-tooltip-wrapper:hover .user-tooltip-popup {
+  transform: translateX(-40%) translateY(0); /* при ховері можна трохи додатково рухати */
+  opacity: 1;
+}
+
+.tooltip-avatar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.tooltip-info p {
+  margin: 0;
+}
