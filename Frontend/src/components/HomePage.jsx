@@ -12,6 +12,8 @@ import Profile from './Profile/Profile.jsx';
 import AboutUs from './AboutUs/AboutUs.jsx';
 import ProfileEdit from './Profile/ProfileEdit.jsx';
 import CreateEvent from './Events/CreateEvent.jsx';
+import ProfileView from './Profile/ProfileView.jsx';
+import Chats from './Chats/Chats.jsx';
 
 function HomePage({ onLogout }) {
   const location = useLocation();
@@ -39,5 +41,7 @@ HomePage.Profile = Profile;
 HomePage.AboutUs = AboutUs;
 HomePage.ProfileEdit = ProfileEdit;
 HomePage.CreateEvent = CreateEvent;
+HomePage.ProfileView = ProfileView;
+HomePage.Chats = Chats;
 
 export default HomePage;

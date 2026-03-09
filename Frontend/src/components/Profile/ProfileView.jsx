@@ -1,13 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { getUserById } from "../../api/userAPI";
 import { getPostsByUser } from "../../api/postAPI";
+import { getOrCreateDirectChat } from "../../api/chatAPI";
 import Avatar from "../Avatar/Avatar.jsx";
 import Post from "../Posts/Post.jsx";
+import AuthContext from "../../context/AuthContext";
 import "./Profile.css";
 
-const ProfileView = ({ currentUser }) => {
-  const { id } = useParams(); // id користувача з URL
+const ProfileView = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { user: currentUser } = useContext(AuthContext); // <-- правильний user
+  console.log("Current User in ProfileView:", currentUser);
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,18 +48,24 @@ const ProfileView = ({ currentUser }) => {
     fetchUserAndPosts();
   }, [id]);
 
-  const handleLikeToggle = async (postId, currentlyLiked) => {
-    setPosts(prevPosts =>
-      prevPosts.map(post =>
+  const handleLikeToggle = (postId, currentlyLiked) => {
+    setPosts(prev =>
+      prev.map(post =>
         post.id === postId
-          ? {
-              ...post,
-              hasCurrentUserLiked: !currentlyLiked,
-              likeCount: currentlyLiked ? post.likeCount - 1 : post.likeCount + 1,
-            }
+          ? { ...post, hasCurrentUserLiked: !currentlyLiked, likeCount: currentlyLiked ? post.likeCount - 1 : post.likeCount + 1 }
           : post
       )
     );
+  };
+
+  const handleMessageClick = async () => {
+    if (!currentUser?.id || !user?.id) return;
+    try {
+      const chat = await getOrCreateDirectChat(currentUser.id, user.id);
+      navigate(`/chats/${chat.id}`);
+    } catch (err) {
+      console.error("Не вдалося відкрити чат:", err);
+    }
   };
 
   if (loading) return <p>Завантаження профілю...</p>;
@@ -67,22 +78,18 @@ const ProfileView = ({ currentUser }) => {
         <div className="profile-photo-area">
           <Avatar photoUrl={user.photoUrl} size={150} />
         </div>
-
         <div className="profile-info-actions">
           <div className="profile-details">
             <h2 className="profile-name">{user.fullName}</h2>
-            <p className="profile-detail-line">
-              <span className="profile-label">Факультет:</span>
-              <span className="profile-value">{user.faculty}</span>
-            </p>
-            <p className="profile-detail-line">
-              <span className="profile-label">Курс:</span>
-              <span className="profile-value">{user.course}</span>
-            </p>
-            <p className="profile-detail-line">
-              <span className="profile-label">Біо:</span>
-              <span className="profile-value">{user.bio}</span>
-            </p>
+            <p><span className="profile-label">Факультет:</span> {user.faculty}</p>
+            <p><span className="profile-label">Курс:</span> {user.course}</p>
+            <p><span className="profile-label">Біо:</span> {user.bio}</p>
+
+            {currentUser?.id && user?.id && currentUser.id !== user.id && (
+              <button className="btn btn-messages" onClick={handleMessageClick}>
+                Повідомлення
+              </button>
+            )}
           </div>
         </div>
       </div>

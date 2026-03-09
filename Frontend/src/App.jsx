@@ -17,6 +17,7 @@ import CreateEvent from "./components/Events/CreateEvent";
 import EventDetails from "./components/Events/EventDetails";
 import PostsList from "./components/Posts/PostsList";
 import ProfileView from "./components/Profile/ProfileView";
+import Chats from "./components/Chats/Chats";
 
 // Публічний маршрут
 function PublicRoute({ children }) {
@@ -78,7 +79,7 @@ function AppRoutes() {
         <Route path="about" element={<AboutUs />} />
         <Route path="events/create" element={<CreateEvent />} />
         <Route path="events/:id" element={<EventDetails />} />
-        <Route path="chats/:fullname" element={<HomePage.Chats />} />
+        <Route path="chats/:fullname" element={<Chats />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />
