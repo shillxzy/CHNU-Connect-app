@@ -33,17 +33,13 @@ export default function Chats() {
   ======================== */
 
   const getChatDisplayInfo = (chat) => {
-  console.log("=== getChatDisplayInfo ===");
-  console.log(chat.members); // дивимось масив member
-  if (chat.type === "private" && chat.members) {
-    const otherUser = chat.members.find(m => m.userId !== userId);
-    console.log("Other user:", otherUser); // дивимось AuthorName, AuthorAvatar
-    if (!otherUser) {
-      return { name: "Unknown", avatar: null };
-    }
+  if (chat.type === "private" && chat.members?.length) {
+    const otherUser = chat.members.find(
+      m => m.userId !== userId && m.role !== "admin" // можна уточнити логіку
+    ) || chat.members[0]; // fallback
     return {
-      name: otherUser.AuthorName || "Unknown",
-      avatar: otherUser.AuthorAvatar || null
+      name: otherUser.authorName || "Unknown",
+      avatar: otherUser.authorAvatar || null
     };
   }
 
@@ -52,6 +48,19 @@ export default function Chats() {
     avatar: null
   };
 };
+
+const getSelectedChatDisplay = (chat) => {
+  if (!chat?.members?.length) return { name: chat.title || "Group chat", avatar: null };
+  if (chat.type === "private") {
+    const otherUser = chat.members.find(m => m.userId !== userId) || chat.members[0];
+    return {
+      name: otherUser.authorName || "Unknown",
+      avatar: otherUser.authorAvatar || "/default-avatar.png"
+    };
+  }
+  return { name: chat.title || "Group chat", avatar: "/default-avatar.png" };
+};
+
 
 
   /* ========================
@@ -233,9 +242,10 @@ export default function Chats() {
   }, [messages]);
   if (loading) return <p>Загрузка чату...</p>;
   const selectedDisplay = selectedChat
-    ? getChatDisplayInfo(selectedChat)
+    ? getSelectedChatDisplay(selectedChat)
     : null;
 
+    
   return (
     <div className="chat-page">
       <div className="chat-layout">

@@ -26,9 +26,39 @@ namespace CHNU_Connect.BLL.Services
 
         public async Task<IEnumerable<ChatDto>> GetUserChatsAsync(int userId)
         {
+            // 1. Беремо чати користувача з репозиторію
             var chats = await _unitOfWork.ChatRepository.GetUserChatsAsync(userId);
-            return chats.Adapt<IEnumerable<ChatDto>>();
+
+            // 2. Перетворюємо їх у DTO з підставленими User (AuthorName, AuthorAvatar)
+            var chatDtos = chats.Select(c => new ChatDto
+            {
+                Id = c.Id,
+                Type = c.Type,
+                Title = c.Title,
+                CreatedBy = c.CreatedBy,
+                CreatedAt = c.CreatedAt,
+                Members = c.Members
+                .GroupBy(m => m.UserId)
+                .Select(g => g.First())
+                .Select(m => new ChatMemberDto
+                {
+                    Id = m.Id,
+                    ChatId = m.ChatId,
+                    UserId = m.UserId,
+                    Role = m.Role,
+                    JoinedAt = m.JoinedAt,
+                    LastReadMessageId = m.LastReadMessageId,
+                    AuthorName = m.User.FullName,
+                    AuthorAvatar = m.User.PhotoUrl
+                }).ToList(),
+                Messages = c.Messages.Adapt<List<ChatMessageDto>>()
+            }).ToList();
+
+
+            // 3. Повертаємо DTO на фронт
+            return chatDtos;
         }
+
 
         public async Task<ChatDto> CreateChatAsync(CreateChatDto dto)
         {

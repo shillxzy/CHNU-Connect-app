@@ -25,10 +25,11 @@ namespace CHNU_Connect.DAL.Repositories
         public async Task<List<ChatMember>> GetMembersByChatIdAsync(int chatId)
         {
             return await _context.ChatMembers
-                .Where(m => m.ChatId == chatId)
-                .Include(m => m.User) 
+                .Include(cm => cm.User) 
+                .Where(cm => cm.ChatId == chatId)
                 .ToListAsync();
         }
+
 
 
     }
