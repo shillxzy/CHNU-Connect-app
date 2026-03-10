@@ -6,7 +6,7 @@ const SideBarGroups = ({ items }) => (
         <h3 className="sidebar-title">Популярні групи</h3>
         <ul className="sidebar-list">
             {items.map((item, index) => (
-                <li key={index}>{item.name || item.title || item}</li>
+                <li className='sidebar-item' key={index}>{item.name || item.title || item}</li>
             ))}
         </ul>
         <Link to="/groups" className="see-more-button">Побачити ще</Link>

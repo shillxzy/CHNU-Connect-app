@@ -60,8 +60,9 @@ export default function Chats() {
 
   useEffect(() => {
 
+    const API_URL = import.meta.env.VITE_API_BASE_URL;
     const connection = new signalR.HubConnectionBuilder()
-      .withUrl("http://localhost:5000/hubs/chat", {
+      .withUrl(`${API_URL}/hubs/chat`, {
         accessTokenFactory: () => localStorage.getItem("accessToken")
       })
       .withAutomaticReconnect()

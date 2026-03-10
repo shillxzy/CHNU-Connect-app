@@ -1,117 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { LikeIcon, CommentIcon } from "../Icons";
-import Avatar from "../Avatar/Avatar";
 import './Post.css';
-import { getCommentsByPost, createComment } from "../../api/commentAPI";
 import UserTooltip from "../ToolTip/UserTooltip";
+import { PostActions } from "./PostAction";
+import { CommentsSection } from "./CommentsSection";
 
-const PostActions = ({ likes, comments, liked, onLikeToggle, onCommentToggle }) => (
-  <div className="post-actions">
-    <button
-      type="button"
-      className={`action-button like ${liked ? "liked" : ""}`}
-      onClick={onLikeToggle}
-    >
-      <img src={LikeIcon} alt="Like" className="action-icon" /> {likes || 0}
-    </button>
-
-    <button
-      type="button"
-      className="action-button"
-      onClick={onCommentToggle} 
-    >
-      <img src={CommentIcon} alt="Comment" className="action-icon" /> {comments || 0}
-    </button>
-
-    <button type="button" className="action-button">
-      🔗 Share
-    </button>
-  </div>
-);
-
-/* ---------------- Comments Section ---------------- */
-const CommentsSection = ({ postId, currentUser, open, onCommentAdded }) => {
-  const [comments, setComments] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [newComment, setNewComment] = useState("");
-
-  useEffect(() => {
-    if (open) fetchComments();
-  }, [open]);
-
-  const fetchComments = async () => {
-    setLoading(true);
-    try {
-      const res = await getCommentsByPost(postId);
-      setComments(res.data || []);
-    } catch (err) {
-      console.error("Failed to fetch comments:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleAddComment = async () => {
-    if (!newComment.trim()) return;
-    if (!currentUser?.id) {
-      console.error("currentUser undefined, cannot add comment");
-      return;
-    }
-    try {
-      const res = await createComment({
-        postId,
-        userId: currentUser.id,
-        content: newComment.trim(),
-      });
-      setComments((prev) => [...prev, res.data]);
-      setNewComment("");
-
-      // Оновлюємо лічильник коментарів у Post
-      if (onCommentAdded) onCommentAdded();
-    } catch (err) {
-      console.error("Failed to add comment:", err);
-    }
-  };
-
-  if (!open) return null;
-
-  return (
-    <div className="comments-section">
-      {loading ? (
-        <p>Завантаження коментарів...</p>
-      ) : comments.length === 0 ? (
-        <p>Ще ніхто не коментував.</p>
-      ) : (
-        comments.map((c) => (
-          <div className="comment-item" key={c.id}>
-            <Avatar photoUrl={c.authorAvatar} size={28} />
-            <div className="comment-content">
-              <strong>{c.authorName}</strong>
-              <p>{c.content}</p>
-            </div>
-          </div>
-        ))
-      )}
-
-      <div className="comment-form">
-        <input
-          type="text"
-          placeholder="Написати коментар..."
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") handleAddComment();
-          }}
-        />
-        <button type="button" onClick={handleAddComment}>
-          Відправити
-        </button>
-      </div>
-    </div>
-  );
-};
-
-/* ---------------- Post Component ---------------- */
 const Post = ({ posts, onLikeToggle, currentUser }) => {
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
   const [openComments, setOpenComments] = useState({});
@@ -121,7 +13,9 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
     const counts = {};
     posts.forEach((post) => {
       counts[post.id] = post.comments?.length || 0;
+      console.log(post.comments?.length)
     });
+
     setCommentsCount(counts);
   }, [posts]);
 
@@ -148,15 +42,15 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
         return (
           <div className="post-card" key={post.id}>
             <div className="post-header">
-  <UserTooltip
-    userId={post.authorId}
-    currentUserId={currentUser?.id}
-    size={35}
-    fallbackAvatar={post.authorAvatar}
-    fallbackName={post.authorName}
-  />
-  <strong>{post.authorName || "Unknown"}</strong>
-</div>
+              <UserTooltip
+                userId={post.authorId}
+                currentUserId={currentUser?.id}
+                size={35}
+                fallbackAvatar={post.authorAvatar}
+                fallbackName={post.authorName}
+              />
+              <div className="author-name">{post.authorName || "Unknown"}</div>
+            </div>
 
 
             <p className="post-content">{post.content}</p>
@@ -168,12 +62,12 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
             )}
 
             <PostActions
-  likes={post.likeCount || 0}
-  comments={commentsCount[post.id] || 0} 
-  liked={post.hasCurrentUserLiked || false} 
-  onLikeToggle={() => onLikeToggle(post.id, post.hasCurrentUserLiked)} 
-  onCommentToggle={() => toggleComments(post.id)}
-/>
+              likes={post.likeCount || 0}
+              comments={commentsCount[post.id] || 0} 
+              liked={post.hasCurrentUserLiked || false} 
+              onLikeToggle={() => onLikeToggle(post.id, post.hasCurrentUserLiked)} 
+              onCommentToggle={() => toggleComments(post.id)}
+            />
 
             <CommentsSection
               postId={post.id}

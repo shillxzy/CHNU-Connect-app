@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import Post from '../Posts/Post';
 import { getPosts, createPostWithImage, likePost, unlikePost } from "../../api/postAPI";
 import { getProfile } from "../../api/userAPI";
-import Avatar from '../Avatar/Avatar';
 import './NewsFeed.css';
 import UserTooltip from '../ToolTip/UserTooltip';
 
@@ -131,12 +130,12 @@ const NewsFeed = () => {
             <div className="post-creator card">
                 <div className="post-creator-top">
                     {currentUser && (
-  <UserTooltip
-    userId={currentUser.id}
-    currentUserId={currentUser?.id}
-    size={38}
-  />
-)}
+                        <UserTooltip
+                            userId={currentUser.id}
+                            currentUserId={currentUser?.id}
+                            size={38}
+                        />
+                    )}
                     <textarea
                         className="creator-input"
                         placeholder="Що нового?"

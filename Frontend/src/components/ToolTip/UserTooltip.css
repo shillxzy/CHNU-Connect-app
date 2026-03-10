@@ -7,9 +7,9 @@
 .user-tooltip-popup {
   position: absolute;
   top: 110%;
-  left: 50%;
+  left: 100%;
   transform: translateX(-40%); /* зміщення вправо на 10% */
-  z-index: 100;
+  z-index: 10;
   padding: 10px;
   background: #ffffff;
   border: 1px solid #ccc;

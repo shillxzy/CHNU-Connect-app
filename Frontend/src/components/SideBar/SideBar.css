@@ -29,21 +29,26 @@
   gap: 10px;
 }
 
-.sidebar-list li {
+.sidebar-item {
   height: 38px;
   background: #f1f1f1;
   border-radius: 10px;
   display: flex;
+  font-size: 14px;
   align-items: center;
   padding: 0 14px;
-  font-size: 14px;
-  color: #444;
   transition: background .2s ease;
   cursor: pointer;
 }
 
 .sidebar-list li:hover {
   background: #e6e6e6;
+}
+
+.sidebar-link {
+  text-decoration: none;
+  color: #444;
+  font-size: 14px;
 }
 
 .see-more-button {

@@ -5,18 +5,19 @@
   padding: 20px;
   margin-top: 10px;
   border: 1px solid rgba(0,0,0,0.06);
+  z-index: 0;
   background: #fff;
   transition: box-shadow 200ms, transform 300ms;
 }
 
 .post-card:hover {
   box-shadow: 0 3px 14px rgba(0,0,0,0.05);
-  transform: translateY(-1px);
 }
 
 .post-header {
   display: flex;
   align-items: center;
+  gap: 8px;
   margin-bottom: 10px;
 }
 
@@ -29,7 +30,7 @@
 }
 
 .author-name {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
 }
 
@@ -40,9 +41,9 @@
 }
 
 .post-actions {
-  position: absolute;
-  right: 14px;
-  bottom: 14px;
+  display: flex;
+  position: relative;
+  justify-content: end;
 }
 
 .action-button {
