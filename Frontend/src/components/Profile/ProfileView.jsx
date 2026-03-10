@@ -11,7 +11,7 @@ import "./Profile.css";
 const ProfileView = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { user: currentUser } = useContext(AuthContext); // <-- правильний user
+  const { user: currentUser } = useContext(AuthContext); 
   console.log("Current User in ProfileView:", currentUser);
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -59,14 +59,18 @@ const ProfileView = () => {
   };
 
   const handleMessageClick = async () => {
-    if (!currentUser?.id || !user?.id) return;
-    try {
-      const chat = await getOrCreateDirectChat(currentUser.id, user.id);
-      navigate(`/chats/${chat.id}`);
-    } catch (err) {
-      console.error("Не вдалося відкрити чат:", err);
-    }
-  };
+  if (!currentUser?.id || !user?.id) return;
+  try {
+    // Отримуємо або створюємо чат
+    const chat = await getOrCreateDirectChat(currentUser.id, user.id);
+    
+    // Переходимо у чат
+    navigate(`/chats/${chat.id}`);
+  } catch (err) {
+    console.error("Не вдалося відкрити чат:", err);
+  }
+};
+
 
   if (loading) return <p>Завантаження профілю...</p>;
   if (error) return <p>Помилка: {error}</p>;

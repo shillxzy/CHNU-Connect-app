@@ -20,23 +20,25 @@ namespace CHNU_Connect.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // ---------- SERILOG CONFIGURATION ----------
+            // ---------- SERILOG ----------
             builder.ConfigureSerilog();
 
-            // ---------- DB CONTEXT ----------
+            // ---------- DATABASE ----------
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // ---------- Email Sender ----------
-            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-            builder.Services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<EmailSettings>>().Value);
+            // ---------- EMAIL SETTINGS ----------
+            builder.Services.Configure<EmailSettings>(
+                builder.Configuration.GetSection("EmailSettings"));
 
+            builder.Services.AddSingleton(resolver =>
+                resolver.GetRequiredService<IOptions<EmailSettings>>().Value);
 
-            // ---------- BUSINESS LOGIC LAYER ----------
+            // ---------- BLL / DAL ----------
             builder.Services.AddBusinessLogic();
             builder.Services.AddDataAccessLayer(builder.Configuration);
 
-            // ---------- JWT AUTHENTICATION ----------
+            // ---------- JWT ----------
             var jwtKey = builder.Configuration["JwtConfig:Key"];
             var jwtIssuer = builder.Configuration["JwtConfig:Issuer"];
             var jwtAudience = builder.Configuration["JwtConfig:Audience"];
@@ -54,14 +56,18 @@ namespace CHNU_Connect.API
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
+
                     ValidateIssuer = true,
                     ValidIssuer = jwtIssuer,
+
                     ValidateAudience = true,
                     ValidAudience = jwtAudience,
+
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.FromMinutes(1)
                 };
 
+                // IMPORTANT FOR SIGNALR
                 options.Events = new JwtBearerEvents
                 {
                     OnMessageReceived = context =>
@@ -69,6 +75,7 @@ namespace CHNU_Connect.API
                         var accessToken = context.Request.Query["access_token"];
 
                         var path = context.HttpContext.Request.Path;
+
                         if (!string.IsNullOrEmpty(accessToken) &&
                             path.StartsWithSegments("/hubs/chat"))
                         {
@@ -80,9 +87,27 @@ namespace CHNU_Connect.API
                 };
             });
 
+            // ---------- CONTROLLERS ----------
+            builder.Services.AddControllers();
 
-            // ---------- SWAGGER/OPENAPI ----------
+            // ---------- SIGNALR ----------
+            builder.Services.AddSignalR();
+
+            // ---------- CORS ----------
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowReactApp", policy =>
+                {
+                    policy.WithOrigins("http://localhost:5173")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+                });
+            });
+
+            // ---------- SWAGGER ----------
             builder.Services.AddEndpointsApiExplorer();
+
             builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
@@ -99,11 +124,10 @@ namespace CHNU_Connect.API
 
                 c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
                 {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Description = "Authorization: Bearer {token}",
                     Name = "Authorization",
                     In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
+                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey
                 });
 
                 c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
@@ -122,36 +146,19 @@ namespace CHNU_Connect.API
                 });
             });
 
-            // ---------- CONTROLLERS ----------
-            builder.Services.AddControllers();
-
-            // ---------- SignalR ----------
-            builder.Services.AddSignalR();
-
-            // ---------- CORS ----------
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowReactApp", policy =>
-                {
-                    policy.WithOrigins("http://localhost:5173")
-                          .AllowAnyMethod()
-                          .AllowAnyHeader();
-                });
-            });
-
-            // ---------- BUILD APP ----------
             var app = builder.Build();
 
-            // ---------- ENSURE MIGRATIONS ----------
+            // ---------- AUTO MIGRATIONS ----------
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 db.Database.Migrate();
             }
 
-            // ---------- MIDDLEWARE PIPELINE ----------
+            // ---------- GLOBAL ERROR HANDLER ----------
             app.UseMiddleware<CHNU_Connect.API.Middleware.GlobalExceptionHandlingMiddleware>();
 
+            // ---------- SWAGGER ----------
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -159,23 +166,27 @@ namespace CHNU_Connect.API
                 c.RoutePrefix = "swagger";
             });
 
+            // ---------- STATIC FILES ----------
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
-         Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads")
-     ),
+                    Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads")
+                ),
                 RequestPath = "/uploads"
             });
 
-
+            // ---------- PIPELINE ----------
             app.UseHttpsRedirection();
+
             app.UseCors("AllowReactApp");
 
             app.UseAuthentication();
             app.UseAuthorization();
 
+            // ---------- ROUTES ----------
             app.MapControllers();
 
+            // SIGNALR HUB
             app.MapHub<ChatHub>("/hubs/chat");
 
             app.Run();

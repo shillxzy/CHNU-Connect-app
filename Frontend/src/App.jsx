@@ -79,7 +79,7 @@ function AppRoutes() {
         <Route path="about" element={<AboutUs />} />
         <Route path="events/create" element={<CreateEvent />} />
         <Route path="events/:id" element={<EventDetails />} />
-        <Route path="chats/:fullname" element={<Chats />} />
+        <Route path="chats/:chatId" element={<Chats />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

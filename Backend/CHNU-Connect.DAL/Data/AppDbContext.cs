@@ -246,6 +246,25 @@ namespace CHNU_Connect.DAL.Data
                 entity.HasOne(e => e.Sender).WithMany().HasForeignKey(e => e.SenderId).OnDelete(DeleteBehavior.Cascade);
             });
 
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                entity.ToTable("notifications");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.UserId).HasColumnName("user_id").IsRequired();
+                entity.Property(e => e.Type).HasColumnName("type").IsRequired();
+                entity.Property(e => e.EntityId).HasColumnName("entity_id");
+                entity.Property(e => e.IsRead).HasColumnName("is_read").HasDefaultValue(false);
+                entity.Property(e => e.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("now()");
+
+                entity.HasOne(e => e.User)
+                      .WithMany()
+                      .HasForeignKey(e => e.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+
+
         }
     }
 }

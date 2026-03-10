@@ -25,6 +25,7 @@ namespace CHNU_Connect.DAL.Entities
         [ForeignKey(nameof(CreatedBy))]
         public User Creator { get; set; }
 
+        [Column("direct_key")]
         public string? DirectKey { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

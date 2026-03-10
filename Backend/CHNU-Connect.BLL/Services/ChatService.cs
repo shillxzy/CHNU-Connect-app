@@ -55,7 +55,8 @@ namespace CHNU_Connect.BLL.Services
                 {
                     Type = "private",
                     DirectKey = directKey,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = dto.CreatedBy
                 };
 
                 await _unitOfWork.ChatRepository.InsertAsync(chat);
