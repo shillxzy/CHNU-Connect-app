@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getChatsByUser, getMessages, sendMessage, markMessageRead } 
-  from "../../api/chatAPI";
+import { getChatsByUser, getMessages, sendMessage, markMessageRead } from "../../api/chatAPI";
 import * as signalR from "@microsoft/signalr";
 import "./Chats.css";
 import AuthContext from "../../context/AuthContext";
+import Avatar from "../Avatar/Avatar";
 
 export default function Chats() {
+
   const { user } = useContext(AuthContext);
   const userId = user?.id;
 
@@ -23,13 +24,42 @@ export default function Chats() {
   const selectedChatRef = useRef(null);
   const messagesEndRef = useRef(null);
 
-  // тримаємо актуальний чат
   useEffect(() => {
     selectedChatRef.current = selectedChat;
   }, [selectedChat]);
 
-  // SignalR connection
+  /* ========================
+      CHAT DISPLAY INFO
+  ======================== */
+
+  const getChatDisplayInfo = (chat) => {
+  console.log("=== getChatDisplayInfo ===");
+  console.log(chat.members); // дивимось масив member
+  if (chat.type === "private" && chat.members) {
+    const otherUser = chat.members.find(m => m.userId !== userId);
+    console.log("Other user:", otherUser); // дивимось AuthorName, AuthorAvatar
+    if (!otherUser) {
+      return { name: "Unknown", avatar: null };
+    }
+    return {
+      name: otherUser.AuthorName || "Unknown",
+      avatar: otherUser.AuthorAvatar || null
+    };
+  }
+
+  return {
+    name: chat.title || "Group chat",
+    avatar: null
+  };
+};
+
+
+  /* ========================
+      SIGNALR
+  ======================== */
+
   useEffect(() => {
+
     const connection = new signalR.HubConnectionBuilder()
       .withUrl("http://localhost:5000/hubs/chat", {
         accessTokenFactory: () => localStorage.getItem("accessToken")
@@ -38,7 +68,9 @@ export default function Chats() {
       .build();
 
     connection.on("ReceiveMessage", (message) => {
+
       const chat = selectedChatRef.current;
+
       if (!chat || message.chatId !== chat.id) return;
 
       setMessages(prev => {
@@ -46,6 +78,7 @@ export default function Chats() {
         newMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
         return newMessages;
       });
+
     });
 
     const startConnection = async () => {
@@ -53,7 +86,7 @@ export default function Chats() {
         await connection.start();
         console.log("SignalR connected");
       } catch (err) {
-        console.error("SignalR connection error:", err);
+        console.error("SignalR error:", err);
       }
     };
 
@@ -63,69 +96,90 @@ export default function Chats() {
     return () => connection.stop().catch(() => {});
   }, []);
 
-  // Завантаження чатів
+  /* ========================
+      LOAD CHATS
+  ======================== */
+
   useEffect(() => {
+
     if (!userId) return;
 
     const fetchChats = async () => {
+
       try {
         const response = await getChatsByUser(userId);
         setChats(response.data);
       } catch (err) {
-        console.error("Помилка завантаження чатів:", err);
+        console.error("Chat load error:", err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchChats();
   }, [userId]);
 
-  // Вибір чату з URL
-  useEffect(() => {
-    if (!chatId || chats.length === 0) return;
+  /* ========================
+      SELECT CHAT
+  ======================== */
 
-    const chat = chats.find(c => c.id === parseInt(chatId));
-    if (chat) setSelectedChat(chat);
-  }, [chatId, chats]);
-
-  // Завантаження повідомлень
   useEffect(() => {
+  if (!chatId || chats.length === 0) return;
+  const chat = chats.find(c => c.id === parseInt(chatId));
+  if (chat) {
+    console.log("=== Selected chat from list ===");
+    console.log(chat); // ← дивимось members, lastMessage, title
+    setSelectedChat(chat);
+  }
+}, [chatId, chats]);
+
+
+  /* ========================
+      LOAD MESSAGES
+  ======================== */
+
+  useEffect(() => {
+
     if (!selectedChat) return;
 
     const fetchMessages = async () => {
+
       try {
+
         const response = await getMessages(selectedChat.id);
         const sorted = response.data.sort(
           (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
         );
         setMessages(sorted);
       } catch (err) {
-        console.error("Помилка завантаження повідомлень:", err);
+        console.error("Messages load error:", err);
       }
     };
 
     fetchMessages();
 
     const joinGroup = async () => {
+
       try {
         if (connectionRef.current?.state === "Connected") {
           await connectionRef.current.invoke("JoinChat", selectedChat.id);
         }
       } catch (err) {
+
         console.error("JoinChat error:", err);
       }
     };
-
     joinGroup();
-
     return () => {
       connectionRef.current?.invoke("LeaveChat", selectedChat.id).catch(() => {});
     };
   }, [selectedChat]);
 
-  // Відправка повідомлення
+  /* ========================
+      SEND MESSAGE
+  ======================== */
+
   const handleSendMessage = async () => {
+
     if (!newMessage.trim() || !selectedChat) return;
 
     try {
@@ -135,75 +189,107 @@ export default function Chats() {
         content: newMessage.trim()
       });
       setNewMessage("");
-      // локально не додаємо — SignalR сам додасть
     } catch (err) {
-      console.error("Помилка відправки повідомлення:", err);
+      console.error("Send error:", err);
     }
+
   };
 
-  // Відзначення повідомлень як прочитаних
+  /* ========================
+      READ MESSAGES
+  ======================== */
+
   useEffect(() => {
+
     if (!selectedChat) return;
 
     const markMessagesAsRead = async () => {
       for (const msg of messages) {
         if (msg.senderId !== userId) {
           try {
-            await markMessageRead(selectedChat.id, msg.id, userId);
+            await markMessageRead(
+              selectedChat.id,
+              msg.id,
+              userId
+            );
           } catch (err) {
-            console.error("Не вдалося відзначити повідомлення:", err);
+            console.error("Read error:", err);
           }
         }
       }
     };
-
     markMessagesAsRead();
   }, [messages, selectedChat, userId]);
 
-  // Автоскрол вниз
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  /* ========================
+      AUTO SCROLL
+  ======================== */
 
-  if (loading) return <p>Завантаження чатів...</p>;
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth"
+    });
+  }, [messages]);
+  if (loading) return <p>Загрузка чату...</p>;
+  const selectedDisplay = selectedChat
+    ? getChatDisplayInfo(selectedChat)
+    : null;
 
   return (
     <div className="chat-page">
       <div className="chat-layout">
-
-        {/* Sidebar */}
+        {/* SIDEBAR */}
         <div className="chat-sidebar">
           <div className="chat-sidebar-header">
             <h2>Чати</h2>
             <button className="add-chat">+</button>
           </div>
-
           <div className="chat-list">
-            {chats.map(chat => (
-              <div
-                key={chat.id}
-                className={`chat-item ${selectedChat?.id === chat.id ? "selected" : ""}`}
-                onClick={() => navigate(`/chats/${chat.id}`)}
-              >
-                <div className="chat-avatar" />
-                <div className="chat-info">
-                  <div className="chat-name">{chat.name || chat.title || "Без назви"}</div>
-                  <div className="chat-last">Останнє: {chat.lastMessage || "-"}</div>
+            {chats.map(chat => {
+              const display = getChatDisplayInfo(chat);
+              return (
+                <div
+                  key={chat.id}
+                  className={`chat-item ${selectedChat?.id === chat.id ? "selected" : ""}`}
+                  onClick={() => navigate(`/chats/${chat.id}`)}
+                >
+                  <div className="chat-avatar">
+                    <Avatar
+                      photoUrl={display.avatar}
+                      size={42}
+                    />
+                  </div>
+                  <div className="chat-info">
+                    <div className="chat-name">
+                      {display.name}
+                    </div>
+                    <div className="chat-last">
+                      {chat.lastMessage || "Немає повідомлень"}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
-
-        {/* Chat window */}
+        {/* CHAT WINDOW */}
         <div className="chat-window">
           {selectedChat ? (
             <>
               <div className="chat-header">
-                <div className="chat-title">{selectedChat.name || selectedChat.title || "Без назви"}</div>
-                <div className="chat-status">Онлайн</div>
+                <Avatar
+                  photoUrl={selectedDisplay?.avatar}
+                  size={40}
+                />
+                <div>
+                  <div className="chat-title">
+                    {selectedDisplay?.name}
+                  </div>
+                  <div className="chat-status">
+                    Онлайн
+                  </div>
+                </div>
               </div>
-
               <div className="messages">
                 {messages.map(msg => (
                   <div
@@ -212,26 +298,31 @@ export default function Chats() {
                   >
                     {msg.content}
                     <span className="time">
-                      {new Date(msg.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {new Date(msg.createdAt)
+                        .toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit"
+                        })}
                     </span>
                   </div>
                 ))}
                 <div ref={messagesEndRef} />
               </div>
-
               <div className="chat-input">
                 <input
                   type="text"
-                  placeholder="Напишіть повідомлення..."
+                  placeholder="Написати повідомлення..."
                   value={newMessage}
                   onChange={e => setNewMessage(e.target.value)}
                   onKeyDown={e => e.key === "Enter" && handleSendMessage()}
                 />
-                <button onClick={handleSendMessage}>Відправити</button>
+                <button onClick={handleSendMessage}>
+                  Відправити
+                </button>
               </div>
             </>
           ) : (
-            <p>Оберіть чат для перегляду повідомлень</p>
+            <p>Обрати чат</p>
           )}
         </div>
       </div>

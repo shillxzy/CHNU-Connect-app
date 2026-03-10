@@ -32,7 +32,7 @@ namespace CHNU_Connect.BLL.Services
 
         public async Task<ChatDto> CreateChatAsync(CreateChatDto dto)
         {
-            // PRIVATE CHAT
+            // -------------------- PRIVATE CHAT --------------------
             if (dto.Type == "private")
             {
                 if (dto.MemberIds == null || dto.MemberIds.Count != 2)
@@ -44,13 +44,18 @@ namespace CHNU_Connect.BLL.Services
                 var directKey = $"{Math.Min(userA, userB)}_{Math.Max(userA, userB)}";
 
                 // 1️⃣ шукаємо існуючий чат
-                var existingChat = await _unitOfWork.ChatRepository
-                    .GetByDirectKeyAsync(directKey);
+                var existingChat = await _unitOfWork.ChatRepository.GetByDirectKeyAsync(directKey);
 
                 if (existingChat != null)
-                    return existingChat.Adapt<ChatDto>();
+                {
+                    // Підвантажуємо Members з User, щоб Mapster міг заповнити AuthorName/AuthorAvatar
+                    existingChat.Members = await _unitOfWork.ChatMemberRepository
+                        .GetMembersByChatIdAsync(existingChat.Id);
 
-                // 2️⃣ створюємо новий
+                    return existingChat.Adapt<ChatDto>();
+                }
+
+                // 2️⃣ створюємо новий чат
                 var chat = new CHNU_Connect.DAL.Entities.Chat
                 {
                     Type = "private",
@@ -74,16 +79,26 @@ namespace CHNU_Connect.BLL.Services
                 }
 
                 await _unitOfWork.SaveChangesAsync();
+
+                // 4️⃣ підвантажуємо Members з User для DTO
+                chat.Members = await _unitOfWork.ChatMemberRepository
+                    .GetMembersByChatIdAsync(chat.Id);
+
                 return chat.Adapt<ChatDto>();
             }
 
-            // GROUP CHAT
+            // -------------------- GROUP CHAT --------------------
             var groupChat = dto.Adapt<CHNU_Connect.DAL.Entities.Chat>();
             await _unitOfWork.ChatRepository.InsertAsync(groupChat);
             await _unitOfWork.SaveChangesAsync();
 
+            // Підвантажуємо Members, якщо потрібні
+            groupChat.Members = await _unitOfWork.ChatMemberRepository
+                .GetMembersByChatIdAsync(groupChat.Id);
+
             return groupChat.Adapt<ChatDto>();
         }
+
 
 
         // -------------------- Учасники --------------------

@@ -148,7 +148,7 @@ export default function Login() {
         <p className="signup-text">
           Не маєте акаунту? 
           <span
-            onClick={() => navigate("/register")}
+            onClick={() => navigate("/registration")}
             className="signup-link"
             style={{ cursor: "pointer" }}
           >

@@ -27,15 +27,19 @@ namespace CHNU_Connect.DAL.Repositories
             return await _dbSet
                 .Where(c => c.Members.Any(m => m.UserId == userId))
                 .Include(c => c.Members)
+                    .ThenInclude(m => m.User) 
                 .ToListAsync();
         }
+
 
         public async Task<Chat?> GetByDirectKeyAsync(string directKey)
         {
             return await _context.Chats
                 .Include(c => c.Members)
+                    .ThenInclude(m => m.User) 
                 .FirstOrDefaultAsync(c => c.DirectKey == directKey);
         }
+
 
     }
 }

@@ -180,7 +180,9 @@ namespace CHNU_Connect.BLL.Configuration
                 .Map(dest => dest.UserId, src => src.UserId)
                 .Map(dest => dest.Role, src => src.Role)
                 .Map(dest => dest.JoinedAt, src => src.JoinedAt)
-                .Map(dest => dest.LastReadMessageId, src => src.LastReadMessageId);
+                .Map(dest => dest.LastReadMessageId, src => src.LastReadMessageId)
+                .Map(dest => dest.AuthorName, src => src.User.FullName)
+                .Map(dest => dest.AuthorAvatar, src => src.User.PhotoUrl);
 
             TypeAdapterConfig<CreateChatMemberDto, ChatMember>
                 .NewConfig()

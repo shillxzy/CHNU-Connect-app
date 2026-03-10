@@ -14,5 +14,8 @@ namespace CHNU_Connect.BLL.DTOs.ChatMember
         public string Role { get; set; } = "member";
         public DateTime JoinedAt { get; set; }
         public int? LastReadMessageId { get; set; }
+
+        public string AuthorName { get; set; } = null!;
+        public string? AuthorAvatar { get; set; }
     }
 }
