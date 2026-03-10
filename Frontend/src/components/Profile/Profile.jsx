@@ -6,6 +6,8 @@ import { getProfile } from "../../api/userAPI";
 import { getPostsByUser } from "../../api/postAPI";
 import Avatar from "../Avatar/Avatar.jsx";
 import Post from "../Posts/Post.jsx"; 
+import { getUnreadNotifications } from "../../api/notificationAPI";
+
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -13,6 +15,8 @@ const Profile = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [unreadCount, setUnreadCount] = useState(0);
+
 
   const handleEditProfile = () => {
     navigate(`/profile/edit/${encodeURIComponent(user.fullName)}`);
@@ -21,6 +25,21 @@ const Profile = () => {
   const handleChatsProfile = () => {
     navigate(`/chats/${encodeURIComponent(user.fullName)}`);
   };
+
+  useEffect(() => {
+  if (!user?.id) return;
+
+  const fetchUnread = async () => {
+    try {
+      const res = await getUnreadNotifications(user.id);
+      setUnreadCount(res.data.length); // припустимо, API повертає масив
+    } catch (err) {
+      console.error("Error fetching unread notifications:", err);
+    }
+  };
+
+  fetchUnread();
+}, [user]);
 
 
   const handleLogout = () => {
@@ -94,9 +113,11 @@ const Profile = () => {
             <button className="btn btn-edit" onClick={handleEditProfile}>
               Редагувати профіль
             </button>
-            <button className="btn btn-messages" onClick={handleChatsProfile}>
-              Повідомлення <span className="notification-badge">{user.unreadMessages || 0}</span>
-            </button>
+           <button className="btn btn-messages" onClick={handleChatsProfile}>
+  Повідомлення
+  {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
+</button>
+
             <button className="btn btn-logout" onClick={handleLogout}>
               Вихід
             </button>

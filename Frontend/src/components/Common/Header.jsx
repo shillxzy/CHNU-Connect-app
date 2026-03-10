@@ -3,6 +3,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CHNUConnectIcon, UserIcon, SearchIcon } from '../Icons';
 import { getProfile } from "../../api/userAPI";
 import './Header.css';
+import { getUnreadNotifications } from "../../api/notificationAPI";
+
 
 const Header = () => {
     const location = useLocation();
@@ -10,6 +12,8 @@ const Header = () => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [user, setUser] = useState(null);   
     const [loading, setLoading] = useState(true);
+    const [unreadCount, setUnreadCount] = useState(0);
+
 
     const isActive = (path) => location.pathname === path;
 
@@ -35,6 +39,22 @@ const Header = () => {
       fetchData();
     }, []);
 
+    useEffect(() => {
+  if (!user?.id) return;
+
+  const fetchUnread = async () => {
+    try {
+      const res = await getUnreadNotifications(user.id);
+      setUnreadCount(res.data.length);
+    } catch (err) {
+      console.error("Error fetching unread notifications:", err);
+    }
+  };
+
+  fetchUnread();
+}, [user]);
+
+
     const handleLogout = () => {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
@@ -59,18 +79,17 @@ const Header = () => {
                 </nav>
 
                 {/* --- Profile Wrapper --- */}
-                <div 
-                    className="profile-wrapper" 
-                    onClick={() => setIsProfileOpen(prev => !prev)}
-                >
-                    <img src={UserIcon} alt="User" className="user-icon" />
+                <div className="profile-wrapper" onClick={() => setIsProfileOpen(prev => !prev)}>
+  <img src={UserIcon} alt="User" className="user-icon" />
+  {unreadCount > 0 && <span className="notification-badge-header">{unreadCount}</span>}
 
-                    <div className={`profile-dropdown ${isProfileOpen ? 'active' : ''}`}>
-                        <button onClick={handleProfile}>Профіль</button>
-                        <Link to="/settings">Налаштування</Link>
-                        <button onClick={handleLogout}>Вихід</button>
-                    </div>
-                </div>
+  <div className={`profile-dropdown ${isProfileOpen ? 'active' : ''}`}>
+      <button onClick={handleProfile}>Профіль</button>
+      <Link to="/settings">Налаштування</Link>
+      <button onClick={handleLogout}>Вихід</button>
+  </div>
+</div>
+
 
                 <div className="search-container">
                     <img src={SearchIcon} alt="Search" className="search-icon" />
