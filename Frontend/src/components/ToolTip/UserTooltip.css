@@ -9,7 +9,7 @@
   top: 110%;
   left: 100%;
   transform: translateX(-40%); /* зміщення вправо на 10% */
-  z-index: 10;
+  z-index: 11;
   padding: 10px;
   background: #ffffff;
   border: 1px solid #ccc;
