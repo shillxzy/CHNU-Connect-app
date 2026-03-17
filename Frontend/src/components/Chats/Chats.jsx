@@ -302,23 +302,42 @@ const getSelectedChatDisplay = (chat) => {
                 </div>
               </div>
               <div className="messages">
-                {messages.map(msg => (
-                  <div
-                    key={msg.id}
-                    className={`message ${msg.senderId === userId ? "mine" : ""}`}
-                  >
-                    {msg.content}
-                    <span className="time">
-                      {new Date(msg.createdAt)
-                        .toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit"
-                        })}
-                    </span>
-                  </div>
-                ))}
-                <div ref={messagesEndRef} />
-              </div>
+  {messages.map((msg, index) => {
+    const msgDate = new Date(msg.createdAt);
+    const prevMsg = messages[index - 1];
+    const prevDate = prevMsg ? new Date(prevMsg.createdAt) : null;
+
+    const showDateDivider =
+      !prevDate ||
+      msgDate.toDateString() !== prevDate.toDateString();
+
+    return (
+      <React.Fragment key={msg.id}>
+        {showDateDivider && (
+          <div className="date-divider">
+            {msgDate.toLocaleDateString(undefined, {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+          </div>
+        )}
+        <div className={`message ${msg.senderId === userId ? "mine" : ""}`}>
+          {msg.content}
+          <span className="time">
+            {msgDate.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </span>
+        </div>
+      </React.Fragment>
+    );
+  })}
+  <div ref={messagesEndRef} />
+</div>
+
               <div className="chat-input">
                 <input
                   type="text"

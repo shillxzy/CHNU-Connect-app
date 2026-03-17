@@ -8,6 +8,6 @@ namespace CHNU_Connect.BLL.DTOs.AdminAction
 {
     public class DeleteAdminActionDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
     }
 }

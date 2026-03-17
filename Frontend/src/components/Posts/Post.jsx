@@ -3,24 +3,37 @@ import './Post.css';
 import UserTooltip from "../ToolTip/UserTooltip";
 import { PostActions } from "./PostAction";
 import { CommentsSection } from "./CommentsSection";
+import { deletePost, updatePost } from "../../api/postAPI";
 
 const Post = ({ posts, onLikeToggle, currentUser }) => {
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
-  const [openComments, setOpenComments] = useState({});
-  const [commentsCount, setCommentsCount] = useState({}); // ключ: postId, значення: true/false
 
-    useEffect(() => {
+  const [openComments, setOpenComments] = useState({});
+  const [commentsCount, setCommentsCount] = useState({});
+  const [openMenu, setOpenMenu] = useState({});
+  const [localPosts, setLocalPosts] = useState(posts);
+  const [editingPostId, setEditingPostId] = useState(null);
+  const [editedContent, setEditedContent] = useState("");
+
+  useEffect(() => {
+    setLocalPosts(posts);
+
     const counts = {};
     posts.forEach((post) => {
       counts[post.id] = post.comments?.length || 0;
-      console.log(post.comments?.length)
     });
-
     setCommentsCount(counts);
   }, [posts]);
 
   const toggleComments = (postId) => {
     setOpenComments((prev) => ({
+      ...prev,
+      [postId]: !prev[postId],
+    }));
+  };
+
+  const toggleMenu = (postId) => {
+    setOpenMenu((prev) => ({
       ...prev,
       [postId]: !prev[postId],
     }));
@@ -33,14 +46,56 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
     }));
   };
 
+  const handleDelete = async (postId) => {
+    const confirmDelete = window.confirm("Видалити пост?");
+    if (!confirmDelete) return;
+
+    try {
+      await deletePost(postId);
+      setLocalPosts((prev) => prev.filter((p) => p.id !== postId));
+    } catch (e) {
+      console.error("Помилка видалення:", e);
+    }
+  };
+
+  const startEditing = (postId, currentContent) => {
+    setEditingPostId(postId);
+    setEditedContent(currentContent);
+    setOpenMenu({});
+  };
+
+  const saveEdit = async (postId) => {
+    if (!editedContent.trim()) return;
+
+    try {
+      const updated = await updatePost(postId, { content: editedContent });
+      setLocalPosts((prev) =>
+        prev.map((p) =>
+          p.id === postId ? { ...p, content: updated.data.content } : p
+        )
+      );
+      setEditingPostId(null);
+      setEditedContent("");
+    } catch (e) {
+      console.error("Помилка редагування:", e);
+    }
+  };
+
+  const cancelEdit = () => {
+    setEditingPostId(null);
+    setEditedContent("");
+  };
+
   return (
     <>
-      {posts.map((post) => {
+      {localPosts.map((post) => {
         const imageUrl = post.imageUrl ? `${API_BASE}${post.imageUrl}` : null;
         const isOpen = !!openComments[post.id];
+        const isEditing = editingPostId === post.id;
 
         return (
           <div className="post-card" key={post.id}>
+
             <div className="post-header">
               <UserTooltip
                 userId={post.authorId}
@@ -50,10 +105,39 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
                 fallbackName={post.authorName}
               />
               <div className="author-name">{post.authorName || "Unknown"}</div>
+
+              {/* ТРИКРАПКА */}
+              {currentUser?.id === post.authorId && !isEditing && (
+                <div className="post-menu">
+                  <button className="menu-btn" onClick={() => toggleMenu(post.id)}>
+                    ⋯
+                  </button>
+                  {openMenu[post.id] && (
+                    <div className="menu-dropdown">
+                      <button onClick={() => startEditing(post.id, post.content)}>Редагувати</button>
+                      <button className="delete-btn" onClick={() => handleDelete(post.id)}>Видалити</button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
-
-            <p className="post-content">{post.content}</p>
+            {/* Контент або редагування */}
+            {isEditing ? (
+              <div>
+                <textarea
+                  className="edit-textarea"
+                  value={editedContent}
+                  onChange={(e) => setEditedContent(e.target.value)}
+                />
+                <div style={{ marginTop: "5px" }}>
+                  <button onClick={() => saveEdit(post.id)}>Зберегти</button>
+                  <button onClick={cancelEdit} style={{ marginLeft: "5px" }}>Скасувати</button>
+                </div>
+              </div>
+            ) : (
+              <p className="post-content">{post.content}</p>
+            )}
 
             {imageUrl && (
               <div className="post-image">
@@ -63,9 +147,9 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
 
             <PostActions
               likes={post.likeCount || 0}
-              comments={commentsCount[post.id] || 0} 
-              liked={post.hasCurrentUserLiked || false} 
-              onLikeToggle={() => onLikeToggle(post.id, post.hasCurrentUserLiked)} 
+              comments={commentsCount[post.id] || 0}
+              liked={post.hasCurrentUserLiked || false}
+              onLikeToggle={() => onLikeToggle(post.id, post.hasCurrentUserLiked)}
               onCommentToggle={() => toggleComments(post.id)}
             />
 

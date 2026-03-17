@@ -18,6 +18,8 @@ import EventDetails from "./components/Events/EventDetails";
 import PostsList from "./components/Posts/PostsList";
 import ProfileView from "./components/Profile/ProfileView";
 import Chats from "./components/Chats/Chats";
+import AdminPanel from "./components/AdminPanel/AdminPanel";
+
 
 // Публічний маршрут
 function PublicRoute({ children }) {
@@ -30,6 +32,26 @@ function ProtectedRoute({ children }) {
   const { accessToken } = useContext(AuthContext);
   return accessToken ? children : <Navigate to="/login" replace />;
 }
+
+function AdminRoute({ children }) {
+  const { accessToken, user } = useContext(AuthContext);
+
+  if (!accessToken) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!user) {
+    return null; // або loader
+  }
+
+  if (user.role !== "admin") {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+}
+
+
 
 function AppRoutes() {
   return (
@@ -74,15 +96,21 @@ function AppRoutes() {
         <Route path="events" element={<EventsList />} />
         <Route path="posts" element={<PostsList />} />
         <Route path="profile/:fullname" element={<Profile />} />
-        <Route path="/profile/view/:id" element={<ProfileView />} />
+        <Route path="profile/view/:id" element={<ProfileView />} />
         <Route path="profile/edit/:fullname" element={<ProfileEdit />} />
         <Route path="about" element={<AboutUs />} />
         <Route path="events/create" element={<CreateEvent />} />
         <Route path="events/:id" element={<EventDetails />} />
         <Route path="chats/:chatId" element={<Chats />} />
+        
+        <Route path="admin-panel" element={
+    <AdminRoute>
+      <AdminPanel />
+    </AdminRoute>}/>
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />
+
     </Routes>
   );
 }

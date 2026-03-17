@@ -148,7 +148,7 @@ namespace CHNU_Connect.API.Controllers
                 var adminAction = new CreateAdminActionDto
                 {
                     AdminId = currentUserId.Value,
-                    TargetId = new Guid(userId.ToString()),
+                    TargetId = userId,
                     Action = "block_user",
                     Reason = request.Reason
                 };
@@ -181,7 +181,7 @@ namespace CHNU_Connect.API.Controllers
                 var adminAction = new CreateAdminActionDto
                 {
                     AdminId = currentUserId.Value,
-                    TargetId = new Guid(userId.ToString()),
+                    TargetId = userId,
                     Action = "unblock_user",
                     Reason = request.Reason
                 };
