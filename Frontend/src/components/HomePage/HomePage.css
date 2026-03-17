@@ -23,6 +23,7 @@ body {
 /* --- Основний Контент (Layout) --- */
 .main-content-area.with-sidebar {
   display: grid;
+  width: 100vw;
   grid-template-columns: 1fr 300px; /* контент + Sidebar */
   gap: 24px;
 }
