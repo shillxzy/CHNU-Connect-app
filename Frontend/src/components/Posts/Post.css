@@ -37,6 +37,7 @@
 
 .post-content {
   margin: 0;
+  white-space: pre-wrap;
   color: #444;
   line-height: 1.6;
 }
@@ -120,12 +121,49 @@
   color: red;
 }
 
+.edit-post {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: left;
+}
+
 .edit-textarea {
+  font-family: inherit;
+  font-size: 15px;
   width: 100%;
-  min-height: 80px;
-  padding: 8px;
-  border-radius: 6px;
+  min-height: 300px;
+  max-height: 500px;
+  padding: 12px 15px;
+  border-radius: 8px;
   border: 1px solid #ccc;
   resize: vertical;
-  font-size: 15px;
+  scrollbar-width: thin;
+}
+
+.change-post-button {
+  border: none;
+  color: white;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.submit {
+  background-color: #2563EB;
+  transition: background-color 300ms;
+}
+
+.submit:hover {
+  background-color: #1d4ed8;
+}
+
+.cancel {
+  background-color: #e30000;
+  transition: background-color 300ms;
+}
+
+.cancel:hover {
+  background-color: #a70000;
 }

@@ -124,15 +124,15 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
 
             {/* Контент або редагування */}
             {isEditing ? (
-              <div>
+              <div className="edit-post" key={post.id}>
                 <textarea
                   className="edit-textarea"
                   value={editedContent}
                   onChange={(e) => setEditedContent(e.target.value)}
                 />
-                <div style={{ marginTop: "5px" }}>
-                  <button onClick={() => saveEdit(post.id)}>Зберегти</button>
-                  <button onClick={cancelEdit} style={{ marginLeft: "5px" }}>Скасувати</button>
+                <div className="edit-post-buttons">
+                  <button className="change-post-button submit" onClick={() => saveEdit(post.id)}>Зберегти</button>
+                  <button className="change-post-button cancel" onClick={cancelEdit} style={{ marginLeft: "5px" }}>Скасувати</button>
                 </div>
               </div>
             ) : (
