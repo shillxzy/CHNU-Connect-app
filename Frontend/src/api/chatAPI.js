@@ -9,6 +9,16 @@ export const getChatsByUser = (userId) => api.get(`/Chat/user/${userId}`);
 export const createChat = (data) => api.post("/Chat", data);
 export const addMembers = (chatId, data) => api.post(`/Chat/${chatId}/members`, data);
 
+export const updateMessage = (chatId, messageId, content) =>
+  api.put(`/Chat/${chatId}/messages/${messageId}`, {
+    content: content
+  });
+
+
+export const deleteMessage = (chatId, messageId) =>
+  api.delete(`/Chat/${chatId}/messages/${messageId}`);
+
+
 export const getMessages = (chatId) => api.get(`/Chat/${chatId}/messages`);
 export const sendMessage = (chatId, data) => api.post(`/Chat/${chatId}/messages`, data);
 export const markMessageRead = (chatId, messageId, userId) =>

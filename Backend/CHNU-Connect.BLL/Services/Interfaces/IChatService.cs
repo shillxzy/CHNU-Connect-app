@@ -24,5 +24,11 @@ namespace CHNU_Connect.BLL.Services.Interfaces
         Task<IEnumerable<ChatMessageDto>> GetMessagesAsync(int chatId, int limit = 50);
         Task<ChatMessageDto> SendMessageAsync(CreateChatMessageDto createMessageDto);
         Task MarkMessageAsReadAsync(int chatId, int userId, int messageId);
+
+
+        // CRUD
+        Task<ChatMessageDto> UpdateMessageAsync(int messageId, int userId, string content);
+        Task DeleteMessageAsync(int messageId, int userId);
+
     }
 }

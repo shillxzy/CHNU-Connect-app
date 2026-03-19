@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getChatsByUser, getMessages, sendMessage, markMessageRead } from "../../api/chatAPI";
+import { getChatsByUser, getMessages, sendMessage, markMessageRead,  updateMessage,
+  deleteMessage } from "../../api/chatAPI";
 import * as signalR from "@microsoft/signalr";
 import "./Chats.css";
 import AuthContext from "../../context/AuthContext";
@@ -19,6 +20,11 @@ export default function Chats() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [editingMessageId, setEditingMessageId] = useState(null);
+  const [editContent, setEditContent] = useState("");
+
+
+  
 
   const connectionRef = useRef(null);
   const selectedChatRef = useRef(null);
@@ -245,6 +251,42 @@ const getSelectedChatDisplay = (chat) => {
     ? getSelectedChatDisplay(selectedChat)
     : null;
 
+
+
+
+  const handleUpdateMessage = async (messageId) => {
+  if (!editContent.trim()) return;
+
+  try {
+   await updateMessage(
+  selectedChat.id,
+  messageId,
+  editContent.trim() // ❗ без об'єкта
+);
+
+
+    setMessages(prev =>
+      prev.map(m =>
+        m.id === messageId ? { ...m, content: editContent } : m
+      )
+    );
+
+    setEditingMessageId(null);
+    setEditContent("");
+  } catch (err) {
+    console.error("Update error:", err);
+  }
+};
+
+  const handleDeleteMessage = async (messageId) => {
+  try {
+    await deleteMessage(selectedChat.id, messageId);
+
+    setMessages(prev => prev.filter(m => m.id !== messageId));
+  } catch (err) {
+    console.error("Delete error:", err);
+  }
+};  
     
   return (
     <div className="chat-page">
@@ -324,14 +366,48 @@ const getSelectedChatDisplay = (chat) => {
           </div>
         )}
         <div className={`message ${msg.senderId === userId ? "mine" : ""}`}>
-          {msg.content}
-          <span className="time">
-            {msgDate.toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-          </span>
+  {editingMessageId === msg.id ? (
+    <>
+      <input
+        value={editContent}
+        onChange={(e) => setEditContent(e.target.value)}
+      />
+      <div className="message-actions">
+        <button onClick={() => handleUpdateMessage(msg.id)}>Save</button>
+        <button onClick={() => setEditingMessageId(null)}>Cancel</button>
+      </div>
+    </>
+  ) : (
+    <>
+      {msg.content}
+
+      {msg.senderId === userId && (
+        <div className="message-actions">
+          <button
+            onClick={() => {
+              setEditingMessageId(msg.id);
+              setEditContent(msg.content);
+            }}
+          >
+            Edit
+          </button>
+
+          <button onClick={() => handleDeleteMessage(msg.id)}>
+            Delete
+          </button>
         </div>
+      )}
+    </>
+  )}
+
+  <span className="time">
+    {msgDate.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    })}
+  </span>
+</div>
+
       </React.Fragment>
     );
   })}

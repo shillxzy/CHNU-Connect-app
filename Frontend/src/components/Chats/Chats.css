@@ -198,3 +198,31 @@
   border-bottom: 1px solid #ccc;
   margin: 0 10px;
 }
+
+
+.message-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 11px;
+}
+
+.message-actions button {
+  background: none;
+  border: none;
+  color: #1f6feb;
+  cursor: pointer;
+}
+
+.message-actions button:hover {
+  text-decoration: underline;
+}
+
+.edited-label {
+  font-size: 10px;
+  font-style: italic;
+  color: #777;
+  margin-top: 2px;
+}
+
+

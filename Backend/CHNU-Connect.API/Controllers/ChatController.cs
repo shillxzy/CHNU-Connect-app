@@ -1,16 +1,19 @@
-﻿using CHNU_Connect.BLL.DTOs.Chat;
+﻿using CHNU_Connect.API.Hubs;
+using CHNU_Connect.BLL.DTOs.Chat;
 using CHNU_Connect.BLL.DTOs.ChatMember;
 using CHNU_Connect.BLL.DTOs.ChatMessage;
 using CHNU_Connect.BLL.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using CHNU_Connect.API.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using System.Security.Claims;
 
 
 namespace CHNU_Connect.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ChatController : ControllerBase
     {
         private readonly IChatService _chatService;
@@ -89,5 +92,37 @@ namespace CHNU_Connect.API.Controllers
             await _chatService.MarkMessageAsReadAsync(chatId, userId, messageId);
             return NoContent();
         }
+
+        [HttpPut("{chatId}/messages/{messageId}")]
+        public async Task<IActionResult> UpdateMessage(
+     int chatId,
+     int messageId,
+     [FromBody] UpdateChatMessageDto dto)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
+                return Unauthorized();
+
+            var result = await _chatService.UpdateMessageAsync(messageId, userId, dto.Content);
+
+            if (result == null)
+                return NotFound();
+
+            return Ok(result);
+        }
+
+
+
+        [HttpDelete("{chatId}/messages/{messageId}")]
+        public async Task<IActionResult> DeleteMessage(int chatId, int messageId)
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            await _chatService.DeleteMessageAsync(messageId, userId);
+
+            return NoContent();
+        }
+
     }
 }

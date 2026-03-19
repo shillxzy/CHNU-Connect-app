@@ -188,5 +188,43 @@ namespace CHNU_Connect.BLL.Services
                 await _unitOfWork.SaveChangesAsync();
             }
         }
+
+        public async Task<ChatMessageDto?> UpdateMessageAsync(int messageId, int userId, string content)
+        {
+            var message = await _unitOfWork.ChatMessageRepository.GetByIdAsync(messageId);
+
+            if (message == null)
+                return null;
+
+            if (message.SenderId != userId)
+                return null;
+
+            message.Content = content;
+            message.EditedAt = DateTime.UtcNow;
+
+            _unitOfWork.ChatMessageRepository.Update(message);
+            await _unitOfWork.SaveChangesAsync();
+
+            return message.Adapt<ChatMessageDto>();
+        }
+
+
+        public async Task DeleteMessageAsync(int messageId, int userId)
+        {
+            var message = await _unitOfWork.ChatMessageRepository.GetByIdAsync(messageId);
+
+            if (message == null)
+                return;
+
+            if (message.SenderId != userId)
+                throw new UnauthorizedAccessException();
+
+            _unitOfWork.ChatMessageRepository.Delete(message); 
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+
+
+
     }
 }
