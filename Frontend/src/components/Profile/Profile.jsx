@@ -7,6 +7,7 @@ import { getPostsByUser } from "../../api/postAPI";
 import Avatar from "../Avatar/Avatar.jsx";
 import Post from "../Posts/Post.jsx"; 
 import { getUnreadNotifications } from "../../api/notificationAPI";
+import Loading from "../Loading/Loading.jsx";
 
 
 const Profile = () => {
@@ -81,7 +82,7 @@ const Profile = () => {
     fetchData();
   }, []);
 
-  if (loading) return <p>Завантаження профілю...</p>;
+  if (loading) return <Loading />;
   if (error) return <p>Помилка: {error}</p>;
   if (!user) return <p>Користувач не знайдений</p>;
 

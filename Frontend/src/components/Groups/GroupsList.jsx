@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getGroups, joinGroup } from "../../api/groupAPI";
 import "./Groups.css";
 import { Group } from "./Group";
+import Loading from "../Loading/Loading";
 
 export default function GroupsList() {
   const [groups, setGroups] = useState([]);
@@ -51,7 +52,7 @@ export default function GroupsList() {
     }
   };
 
-  if (loading) return <p>Завантаження груп...</p>;
+  if (loading) return <Loading />;
   if (error) return <p>Помилка: {error}</p>;
 
   return (

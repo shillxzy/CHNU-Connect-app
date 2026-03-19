@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getEventById, joinEvent } from "../../api/eventAPI";
 import "./Events.css";
+import Loading from "../Loading/Loading";
 
 export default function EventDetails() {
   const { id } = useParams();
@@ -41,7 +42,7 @@ export default function EventDetails() {
     }
   };
 
-  if (loading) return <p>Завантаження...</p>;
+  if (loading) return <Loading />;
   if (error) return <p>Помилка: {error}</p>;
   if (!event) return <p>Подію не знайдено</p>;
 

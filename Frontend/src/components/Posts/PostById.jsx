@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { getPostById } from "../api/postApi";
+import Loading from "../Loading/Loading";
 
 export default function PostById() {
   const [postId, setPostId] = useState("");
@@ -35,7 +36,7 @@ export default function PostById() {
       />
       <button onClick={handleFetch}>Load Post</button>
 
-      {loading && <p>Loading...</p>}
+      {loading && <Loading />}
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
 
       {post && (

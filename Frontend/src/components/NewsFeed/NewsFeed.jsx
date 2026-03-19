@@ -6,6 +6,7 @@ import { getPosts, createPostWithImage, likePost, unlikePost } from "../../api/p
 import { getProfile } from "../../api/userAPI";
 import './NewsFeed.css';
 import UserTooltip from '../ToolTip/UserTooltip';
+import Loading from '../Loading/Loading';
 
 const NewsFeed = () => {
     const [posts, setPosts] = useState([]);
@@ -115,12 +116,7 @@ const NewsFeed = () => {
     };
 
     if (loading) {
-        return (
-            <div className="news-feed-container">
-                <h2 className="section-title">Стрічка новин</h2>
-                <p>Завантаження...</p>
-            </div>
-        );
+        return <Loading />
     }
 
     return (

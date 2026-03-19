@@ -7,6 +7,7 @@ import {
 } from "../../api/commentAPI";
 import Avatar from "../Avatar/Avatar";
 import './Comment.css'
+import Loading from "../Loading/Loading";
 
 export const CommentsSection = ({ postId, currentUser, open, onCommentAdded, onCommentDeleted }) => {
   const [comments, setComments] = useState([]);
@@ -101,7 +102,7 @@ export const CommentsSection = ({ postId, currentUser, open, onCommentAdded, onC
   return (
     <div className="comments-section">
       {loading ? (
-        <p>Завантаження коментарів...</p>
+        <Loading />
       ) : comments.length === 0 ? (
         <p>Ще ніхто не коментував.</p>
       ) : (

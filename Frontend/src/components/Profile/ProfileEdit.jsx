@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getProfile, updateProfile, uploadPhoto } from "../../api/userAPI";
 import "./ProfileEdit.css";
 import Avatar from "../Avatar/Avatar.jsx";
+import Loading from "../Loading/Loading.jsx";
 
 const faculties = [
   "Навчально-науковий інститут біології, хімії та біоресурсів",
@@ -95,7 +96,7 @@ const ProfileEdit = () => {
     }
   };
 
-  if (loading) return <p>Завантаження профілю...</p>;
+  if (loading) return Loading();
   if (error) return <p>Помилка: {error}</p>;
   if (!user) return <p>Користувач не знайдений</p>;
 
