@@ -6,7 +6,6 @@ import { login as loginAPI } from "../../api/authAPI";
 import AuthContext from "../../context/AuthContext";
 
 
-// Тестова кнопка Google Sign In
 const handleGoogleSignIn = () => alert("Button 'Sign in with Google' clicked!");
 
 export default function Login() {
@@ -31,13 +30,11 @@ export default function Login() {
     setError("");
 
     try {
-      // Викликаємо API логіну
       const res = await loginAPI({ email, password });
 
-      // Зберігаємо токени і роль у контексті
       login({
         email: res.data.email,
-        password, // пароль не зберігаємо, просто для API виклику
+        password, 
         userId: res.data.userId,
         userName: res.data.userName,
         role: res.data.role,
@@ -45,14 +42,16 @@ export default function Login() {
         refreshToken: res.data.refreshToken,
       });
 
-      // Опціонально: запам’ятати користувача у localStorage
       if (rememberMe) {
         localStorage.setItem("rememberMe", "true");
       } else {
         localStorage.removeItem("rememberMe");
       }
 
-      navigate("/"); // редірект на дашборд після логіну
+      
+
+
+      navigate("/");
     } catch (err) {
       console.error(err);
       setError(err.response?.data?.message || "Сталася помилка під час входу");

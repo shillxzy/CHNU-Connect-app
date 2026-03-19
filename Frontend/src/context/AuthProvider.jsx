@@ -21,6 +21,8 @@ export function AuthProvider({ children }) {
     setUser({ id: res.data.userId, email: res.data.email, name: res.data.userName });
   };
 
+
+  
   const logout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
@@ -39,6 +41,25 @@ export function AuthProvider({ children }) {
       setRole(userRole);
     }
   }, []);
+
+  useEffect(() => {
+  const token = localStorage.getItem("accessToken");
+
+  if (token) {
+    api.get("/User/profile")
+      .then(res => {
+        setUser({
+          id: res.data.id,
+          email: res.data.email,
+          name: res.data.fullName,
+        });
+      })
+      .catch(() => {
+        logout(); 
+      });
+  }
+}, []);
+
 
   return (
     <AuthContext.Provider

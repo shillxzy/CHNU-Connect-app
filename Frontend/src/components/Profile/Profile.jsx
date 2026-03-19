@@ -32,7 +32,7 @@ const Profile = () => {
   const fetchUnread = async () => {
     try {
       const res = await getUnreadNotifications(user.id);
-      setUnreadCount(res.data.length); // припустимо, API повертає масив
+      setUnreadCount(res.data.length); 
     } catch (err) {
       console.error("Error fetching unread notifications:", err);
     }
