@@ -70,8 +70,10 @@ const Header = () => {
     return (
         <header className="header">
             <div className="header-left">
+              <Link to="/" className='logo-link'>
                 <img src={CHNUConnectIcon} alt="CHNU Connect" className="logo-icon" />
-                <span className="logo">CHNU Connect</span>
+                <span className="logo-text">CHNU Connect</span>
+              </Link>
             </div>
 
             <div className="header-right">

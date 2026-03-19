@@ -17,17 +17,24 @@
   align-items: center;
 }
 
-.logo {
+.logo-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 50px;
+  text-decoration: none;
+}
+
+.logo-text {
   font-weight: 700;
   font-size: 20px;
-  color: #2563eb; /* синій акцент */
+  color: #2563eb;
 }
 
 .logo-icon {
   width: 32px;
   height: 32px;
   margin-right: 8px;
-  margin-left: 50px;
 }
 
 .header-nav {
