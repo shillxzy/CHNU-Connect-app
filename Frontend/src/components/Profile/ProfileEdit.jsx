@@ -106,28 +106,28 @@ const ProfileEdit = () => {
         <label>
           <div className="photo-upload-wrapper">
 
-  <Avatar
-    photoUrl={photoFile ? URL.createObjectURL(photoFile) : user.photoUrl}
-    size={150}
-  />
+            <Avatar
+              photoUrl={photoFile ? URL.createObjectURL(photoFile) : user.photoUrl}
+              size={150}
+            />
 
-  <button
-    type="button"
-    className="btn btn-upload"
-    onClick={() => fileInputRef.current.click()}
-  >
-    {photoFile ? "Змінити фото" : "Вибрати фото"}
-  </button>
+            <button
+              type="button"
+              className="btn btn-upload"
+              onClick={() => fileInputRef.current.click()}
+            >
+              {photoFile ? "Змінити фото" : "Вибрати фото"}
+            </button>
 
-  <input
-    type="file"
-    accept="image/*"
-    ref={fileInputRef}
-    style={{ display: "none" }}
-    onChange={handlePhotoChange}
-  />
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={handlePhotoChange}
+            />
 
-</div>
+          </div>
 
         </label>
 
