@@ -104,9 +104,12 @@ function AppRoutes() {
         <Route path="chats/:chatId" element={<Chats />} />
         
         <Route path="admin-panel" element={
-    <AdminRoute>
-      <AdminPanel />
-    </AdminRoute>}/>
+            <AdminRoute>
+              <AdminPanel />
+            </AdminRoute>
+          }
+        />
+      
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

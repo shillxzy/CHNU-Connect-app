@@ -52,11 +52,18 @@
   text-decoration: none;
   font-size: 15px;
   padding: 6px 4px;
-  transition: color .2s ease;
+  transition: all 300ms;
+  border-bottom: 2px solid transparent;
 }
 
 .nav-link:hover {
   color: #2563eb;
+}
+
+.active {
+  color: #2563eb;
+  font-weight: 600;
+  border-bottom: 2px solid #2563eb;
 }
 
 .header-right {

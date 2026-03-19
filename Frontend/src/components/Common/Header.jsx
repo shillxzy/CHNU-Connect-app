@@ -1,5 +1,5 @@
 import React, { useEffect, useState} from 'react';
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import { CHNUConnectIcon, UserIcon, SearchIcon } from '../Icons';
 import { getProfile } from "../../api/userAPI";
 import './Header.css';
@@ -7,15 +7,11 @@ import { getUnreadNotifications } from "../../api/notificationAPI";
 
 
 const Header = () => {
-    const location = useLocation();
     const navigate = useNavigate();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [user, setUser] = useState(null);   
     const [loading, setLoading] = useState(true);
     const [unreadCount, setUnreadCount] = useState(0);
-
-
-    const isActive = (path) => location.pathname === path;
 
     const handleProfile = () => {
     navigate(`/profile/${encodeURIComponent(user.fullName)}`);
@@ -61,6 +57,14 @@ const Header = () => {
         navigate("/login");
     };
 
+    const navIsActive = (ctx) => {
+      if (ctx.isActive) {
+        return 'nav-link active';
+      } else {
+        return 'nav-link';
+      }
+    }
+
     if (loading) return <p>Завантаження хедеру...</p>;
 
     return (
@@ -72,23 +76,23 @@ const Header = () => {
 
             <div className="header-right">
                 <nav className="header-nav">
-                    <Link to="/" className={`nav-link ${isActive('/') ? 'active' : ''}`}>Головна</Link>
-                    <Link to="/events" className={`nav-link ${isActive('/events') ? 'active' : ''}`}>Події</Link>
-                    <Link to="/groups" className={`nav-link ${isActive('/groups') ? 'active' : ''}`}>Групи</Link>
-                    <Link to="/about" className={`nav-link ${isActive('/about') ? 'active' : ''}`}>Про Нас</Link>
+                    <NavLink to="/" className={(ctx) => navIsActive(ctx)}>Головна</NavLink>
+                    <NavLink to="/events" className={(ctx) => navIsActive(ctx)}>Події</NavLink>
+                    <NavLink to="/groups" className={(ctx) => navIsActive(ctx)}>Групи</NavLink>
+                    <NavLink to="/about" className={(ctx) => navIsActive(ctx)}>Про Нас</NavLink>
                 </nav>
 
                 {/* --- Profile Wrapper --- */}
                 <div className="profile-wrapper" onClick={() => setIsProfileOpen(prev => !prev)}>
-  <img src={UserIcon} alt="User" className="user-icon" />
-  {unreadCount > 0 && <span className="notification-badge-header">{unreadCount}</span>}
+                  <img src={UserIcon} alt="User" className="user-icon" />
+                  {unreadCount > 0 && <span className="notification-badge-header">{unreadCount}</span>}
 
-  <div className={`profile-dropdown ${isProfileOpen ? 'active' : ''}`}>
-      <button onClick={handleProfile}>Профіль</button>
-      <Link to="/settings">Налаштування</Link>
-      <button onClick={handleLogout}>Вихід</button>
-  </div>
-</div>
+                  <div className={`profile-dropdown ${isProfileOpen ? 'active' : ''}`}>
+                      <button onClick={handleProfile}>Профіль</button>
+                      <Link to="/settings">Налаштування</Link>
+                      <button onClick={handleLogout}>Вихід</button>
+                  </div>
+                </div>
 
 
                 <div className="search-container">
