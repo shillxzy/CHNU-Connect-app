@@ -8,7 +8,7 @@ import {
 import Avatar from "../Avatar/Avatar";
 import './Comment.css'
 
-export const CommentsSection = ({ postId, currentUser, open, onCommentAdded }) => {
+export const CommentsSection = ({ postId, currentUser, open, onCommentAdded, onCommentDeleted }) => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newComment, setNewComment] = useState("");
@@ -52,9 +52,16 @@ export const CommentsSection = ({ postId, currentUser, open, onCommentAdded }) =
   };
 
   const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Видалити цей коментар?");
+    if (!confirmDelete) return;
+
     try {
       await deleteComment(id);
       setComments((prev) => prev.filter((c) => c.id !== id));
+
+      if (onCommentDeleted) {
+        onCommentDeleted();
+      }
     } catch (err) {
       console.error("Delete failed:", err);
     }

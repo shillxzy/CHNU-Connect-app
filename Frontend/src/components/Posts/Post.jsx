@@ -4,6 +4,7 @@ import UserTooltip from "../ToolTip/UserTooltip";
 import { PostActions } from "./PostAction";
 import { CommentsSection } from "./CommentsSection";
 import { deletePost, updatePost } from "../../api/postAPI";
+import { getCommentsByPost } from "../../api/commentAPI";
 
 const Post = ({ posts, onLikeToggle, currentUser }) => {
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
@@ -15,14 +16,39 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
   const [editingPostId, setEditingPostId] = useState(null);
   const [editedContent, setEditedContent] = useState("");
 
-  useEffect(() => {
-    setLocalPosts(posts);
+  const getComments = async (postId) => {
+    try {
+      const res = await getCommentsByPost(postId);
+      
+      if (res) {
+        return res?.data;
+      }
+    } catch {
+      console.error("Can`t get comments");
+      return [];
+    }
+  }
 
-    const counts = {};
-    posts.forEach((post) => {
-      counts[post.id] = post.comments?.length || 0;
-    });
-    setCommentsCount(counts);
+  useEffect(() => {
+    let isMounted = true;
+    setLocalPosts(posts);
+      const fetchAllComments = async () => {
+
+      const counts = {};
+
+      const promises = posts.map(async (post) => {
+        const data = await getComments(post.id);
+        counts[post.id] = data.length;
+      });
+
+      await Promise.all(promises);
+
+      if (isMounted) setCommentsCount(counts);
+    }
+
+    if (posts.length > 0) {
+      fetchAllComments();
+    }
   }, [posts]);
 
   const toggleComments = (postId) => {
@@ -43,6 +69,13 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
     setCommentsCount((prev) => ({
       ...prev,
       [postId]: (prev[postId] || 0) + 1,
+    }));
+  };
+
+  const handleCommentDeleted = (postId) => {
+    setCommentsCount((prev) => ({
+      ...prev,
+      [postId]: Math.max(0, (prev[postId] || 1) - 1),
     }));
   };
 
@@ -158,6 +191,7 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
               currentUser={currentUser}
               open={isOpen}
               onCommentAdded={() => handleCommentAdded(post.id)}
+              onCommentDeleted={() => handleCommentDeleted(post.id)}
             />
           </div>
         );
