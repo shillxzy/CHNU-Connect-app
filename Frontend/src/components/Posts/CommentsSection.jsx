@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
-
-import { getCommentsByPost, createComment } from "../../api/commentAPI";
+import { 
+  getCommentsByPost, 
+  createComment, 
+  deleteComment, 
+  updateComment 
+} from "../../api/commentAPI";
 import Avatar from "../Avatar/Avatar";
 import './Comment.css'
 
@@ -8,6 +12,9 @@ export const CommentsSection = ({ postId, currentUser, open, onCommentAdded }) =
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newComment, setNewComment] = useState("");
+
+  const [editingId, setEditingId] = useState(null);
+  const [editingText, setEditingText] = useState("");
 
   useEffect(() => {
     if (open) fetchComments();
@@ -27,25 +34,60 @@ export const CommentsSection = ({ postId, currentUser, open, onCommentAdded }) =
 
   const handleAddComment = async () => {
     if (!newComment.trim()) return;
-    if (!currentUser?.id) {
-      console.error("currentUser undefined, cannot add comment");
-      return;
-    }
+    if (!currentUser?.id) return;
+
     try {
       const res = await createComment({
         postId,
         userId: currentUser.id,
         content: newComment.trim(),
       });
+
       setComments((prev) => [...prev, res.data]);
       setNewComment("");
-
-      // Оновлюємо лічильник коментарів у Post
-      if (onCommentAdded) onCommentAdded();
+      onCommentAdded?.();
     } catch (err) {
       console.error("Failed to add comment:", err);
     }
   };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteComment(id);
+      setComments((prev) => prev.filter((c) => c.id !== id));
+    } catch (err) {
+      console.error("Delete failed:", err);
+    }
+  };
+
+  const handleEditStart = (comment) => {
+    setEditingId(comment.id);
+    setEditingText(comment.content);
+  };
+
+  const handleEditSave = async (id) => {
+  if (!editingText.trim()) return;
+
+  const oldComment = comments.find(c => c.id === id);
+
+  try {
+    const res = await updateComment(id, {
+      postId: oldComment.postId,
+      userId: oldComment.userId,
+      content: editingText.trim(),
+    });
+
+    setComments((prev) =>
+      prev.map((c) => (c.id === id ? res.data : c))
+    );
+
+    setEditingId(null);
+    setEditingText("");
+  } catch (err) {
+    console.error("Update failed:", err);
+  }
+};
+
 
   if (!open) return null;
 
@@ -57,15 +99,47 @@ export const CommentsSection = ({ postId, currentUser, open, onCommentAdded }) =
         <p>Ще ніхто не коментував.</p>
       ) : (
         <div className="comments-list">
-          {comments.map((c) => (
-            <div className="comment-item" key={c.id}>
-              <Avatar photoUrl={c.authorAvatar} size={28} />
-              <div className="comment-content">
-                <div className="comment-user">{c.authorName}</div>
-                <p className="comment-description">{c.content}</p>
+          {comments.map((c) => {
+            const isOwner = currentUser?.id === c.userId;
+
+            return (
+              <div className="comment-item" key={c.id}>
+                <Avatar photoUrl={c.authorAvatar} size={28} />
+
+                <div className="comment-content">
+                  <div className="comment-user">{c.authorName}</div>
+
+                  {editingId === c.id ? (
+                    <>
+                      <input
+                        value={editingText}
+                        onChange={(e) => setEditingText(e.target.value)}
+                      />
+                      <div className="comment-actions">
+                        <button onClick={() => handleEditSave(c.id)}>Зберегти</button>
+                        <button onClick={() => setEditingId(null)}>Скасувати</button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p className="comment-description">{c.content}</p>
+
+                      {isOwner && (
+                        <div className="comment-actions">
+                          <button onClick={() => handleEditStart(c)}>
+                            Редагувати
+                          </button>
+                          <button onClick={() => handleDelete(c.id)}>
+                            Видалити
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
