@@ -31,10 +31,10 @@ namespace CHNU_Connect.DAL.Repositories
                 .CountAsync(pl => pl.PostId == postId);
         }
 
-        public async Task<PostLike?> GetPostLikeAsync(int postId, int userId)
+        public async Task<PostLike?> GetPostLikeAsync(int userId, int postId)
         {
             return await _dbSet
-                .FirstOrDefaultAsync(pl => pl.PostId == postId && pl.UserId == userId);
+                .FirstOrDefaultAsync(pl => pl.UserId == userId && pl.PostId == postId);
         }
 
         public async Task<bool> IsPostLikedByUserAsync(int userId, int postId)

@@ -8,7 +8,7 @@ namespace CHNU_Connect.DAL.Repositories.Interfaces
 
         Task<int> GetLikesCountByPostIdAsync(int postId);
 
-        Task<PostLike?> GetPostLikeAsync(int postId, int userId);
+        Task<PostLike?> GetPostLikeAsync(int userId, int postId);
 
         Task<IEnumerable<PostLike>> GetLikesByUserIdAsync(int userId);
 
