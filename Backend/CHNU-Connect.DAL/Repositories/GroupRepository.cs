@@ -11,32 +11,18 @@ namespace CHNU_Connect.DAL.Repositories
         {
         }
 
-        public async Task<IEnumerable<Group>> GetGroupsByUserIdAsync(int userId)
+        public async Task<IEnumerable<Group>> GetByCreatorIdAsync(int creatorId)
         {
-            return await _dbSet.Where(g => g.Members.Any(gm => gm.UserId == userId))
-                              .ToListAsync();
+            return await _dbSet
+                .Where(g => g.CreatorId == creatorId)
+                .ToListAsync();
         }
 
-        public async Task<IEnumerable<Group>> GetPublicGroupsAsync()
+        public async Task<IEnumerable<Group>> GetByTypeAsync(GroupType type)
         {
-            return await _dbSet.Where(g => g.IsPublic)
-                              .OrderBy(g => g.Name)
-                              .ToListAsync();
-        }
-
-        public async Task<Group?> GetGroupByNameAsync(string name)
-        {
-            return await _dbSet.FirstOrDefaultAsync(g => g.Name == name);
-        }
-
-        public async Task<int> GetGroupMembersCountAsync(int groupId)
-        {
-            return await _context.GroupMembers.CountAsync(gm => gm.GroupId == groupId);
-        }
-
-        public async Task<bool> IsUserMemberOfGroupAsync(int groupId, int userId)
-        {
-            return await _context.GroupMembers.AnyAsync(gm => gm.GroupId == groupId && gm.UserId == userId);
+            return await _dbSet
+                .Where(g => g.Type == type)
+                .ToListAsync();
         }
     }
 }

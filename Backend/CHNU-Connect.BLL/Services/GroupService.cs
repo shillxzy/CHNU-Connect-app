@@ -8,114 +8,118 @@ namespace CHNU_Connect.BLL.Services
 {
     public class GroupService : IGroupService
     {
-        private readonly IGroupRepository _groupRepository;
-        private readonly IGroupMemberRepository _groupMemberRepository;
+        private readonly IGroupRepository _groupRepo;
+        private readonly IGroupMemberRepository _memberRepo;
 
-        public GroupService(IGroupRepository groupRepository, IGroupMemberRepository groupMemberRepository)
+        public GroupService(IGroupRepository groupRepo, IGroupMemberRepository memberRepo)
         {
-            _groupRepository = groupRepository;
-            _groupMemberRepository = groupMemberRepository;
+            _groupRepo = groupRepo;
+            _memberRepo = memberRepo;
         }
 
         public async Task<GroupDto> CreateGroupAsync(CreateGroupDto dto)
         {
-            var group = dto.Adapt<Group>();
-            await _groupRepository.InsertAsync(group);
-            await _groupRepository.SaveAsync();
-            return group.Adapt<GroupDto>();
+            var entity = dto.Adapt<Group>();
+
+            await _groupRepo.InsertAsync(entity);
+            await _groupRepo.SaveAsync();
+
+            return entity.Adapt<GroupDto>();
         }
 
         public async Task<GroupDto?> GetByIdAsync(int id)
         {
-            var group = await _groupRepository.GetByIdAsync(id);
-            return group?.Adapt<GroupDto>();
+            var entity = await _groupRepo.GetByIdAsync(id);
+            return entity?.Adapt<GroupDto>();
         }
 
         public async Task<IEnumerable<GroupDto>> GetAllAsync()
         {
-            var groups = await _groupRepository.GetAllAsync();
-            return groups.Adapt<IEnumerable<GroupDto>>();
+            var list = await _groupRepo.GetAllAsync();
+            return list.Adapt<IEnumerable<GroupDto>>();
         }
 
         public async Task<IEnumerable<GroupDto>> GetByCreatorIdAsync(int creatorId)
         {
-            var groups = await _groupRepository.GetAllAsync();
-            var userGroups = groups.Where(g => g.CreatorId == creatorId);
-            return userGroups.Adapt<IEnumerable<GroupDto>>();
+            var groups = await _groupRepo.GetByCreatorIdAsync(creatorId);
+            return groups.Adapt<IEnumerable<GroupDto>>();
         }
 
         public async Task<IEnumerable<GroupDto>> GetPublicGroupsAsync()
         {
-            var groups = await _groupRepository.GetAllAsync();
-            var publicGroups = groups.Where(g => g.IsPublic);
-            return publicGroups.Adapt<IEnumerable<GroupDto>>();
+            var groups = await _groupRepo.GetByTypeAsync(GroupType.Announcement);
+            return groups.Adapt<IEnumerable<GroupDto>>();
         }
 
-        public async Task<GroupDto> UpdateGroupAsync(int id, CreateGroupDto dto)
+        public async Task<IEnumerable<GroupDto>> GetUserGroupsAsync(int userId)
         {
-            var group = await _groupRepository.GetByIdAsync(id);
-            if (group == null)
-                throw new ArgumentException("Group not found");
+            var memberships = await _memberRepo.GetByUserIdAsync(userId);
+
+            var groupIds = memberships.Select(m => m.GroupId);
+
+            var groups = await _groupRepo.FindAsync(g => groupIds.Contains(g.Id));
+
+            return groups.Adapt<IEnumerable<GroupDto>>();
+        }
+
+        public async Task<GroupDto?> UpdateGroupAsync(int id, CreateGroupDto dto, int userId)
+        {
+            var group = await _groupRepo.GetByIdAsync(id);
+            if (group == null) return null;
+
+            if (group.CreatorId != userId)
+                return null;
 
             dto.Adapt(group);
-            _groupRepository.Update(group);
-            await _groupRepository.SaveAsync();
+
+            _groupRepo.Update(group);
+            await _groupRepo.SaveAsync();
+
             return group.Adapt<GroupDto>();
         }
 
-        public async Task<bool> DeleteGroupAsync(int id)
+        public async Task<bool> DeleteGroupAsync(int id, int userId)
         {
-            var group = await _groupRepository.GetByIdAsync(id);
-            if (group == null)
+            var group = await _groupRepo.GetByIdAsync(id);
+            if (group == null) return false;
+
+            if (group.CreatorId != userId)
                 return false;
 
-            _groupRepository.Delete(group);
-            await _groupRepository.SaveAsync();
+            _groupRepo.Delete(group);
+            await _groupRepo.SaveAsync();
+
             return true;
         }
 
         public async Task<bool> JoinGroupAsync(int groupId, int userId)
         {
-            var existingMember = await _groupMemberRepository.GetAllAsync();
-            var member = existingMember.FirstOrDefault(m => m.GroupId == groupId && m.UserId == userId);
-            
-            if (member != null)
-                return false; // Already joined
+            if (await _memberRepo.IsMemberAsync(groupId, userId))
+                return false;
 
-            var newMember = new GroupMember
+            var member = new GroupMember
             {
                 GroupId = groupId,
                 UserId = userId,
-                Role = "member",
+                Role = GroupMemberRole.Student,
                 JoinedAt = DateTime.UtcNow
             };
 
-            await _groupMemberRepository.InsertAsync(newMember);
-            await _groupMemberRepository.SaveAsync();
+            await _memberRepo.InsertAsync(member);
+            await _memberRepo.SaveAsync();
+
             return true;
         }
 
         public async Task<bool> LeaveGroupAsync(int groupId, int userId)
         {
-            var existingMember = await _groupMemberRepository.GetAllAsync();
-            var member = existingMember.FirstOrDefault(m => m.GroupId == groupId && m.UserId == userId);
-            
-            if (member == null)
-                return false; // Not a member
+            var member = await _memberRepo.GetAsync(groupId, userId);
+            if (member == null) return false;
 
-            _groupMemberRepository.Delete(member);
-            await _groupMemberRepository.SaveAsync();
+            _memberRepo.Delete(member);
+            await _memberRepo.SaveAsync();
+
             return true;
-        }
-
-        public async Task<IEnumerable<GroupDto>> GetUserGroupsAsync(int userId)
-        {
-            var members = await _groupMemberRepository.GetAllAsync();
-            var userGroupIds = members.Where(m => m.UserId == userId).Select(m => m.GroupId);
-            
-            var groups = await _groupRepository.GetAllAsync();
-            var userGroups = groups.Where(g => userGroupIds.Contains(g.Id));
-            return userGroups.Adapt<IEnumerable<GroupDto>>();
         }
     }
 }

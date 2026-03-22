@@ -63,7 +63,7 @@ namespace CHNU_Connect.BLL.Services
                 UserId = user.Id,
                 UserName = user.FullName ?? user.Email,
                 Email = user.Email,
-                Role = user.Role,
+                Role = user.Role.ToString(),
                 AccessToken = token,
                 RefreshToken = refreshToken,
                 Token = token
@@ -90,7 +90,7 @@ namespace CHNU_Connect.BLL.Services
                 Email = email,
                 PasswordHash = _passwordHasher.HashPassword(null, password),
                 FullName = username,
-                Role = "student",
+                Role = UserRole.Student,
                 CreatedAt = DateTime.UtcNow,
                 IsEmailConfirmed = false,
                 EmailConfirmationToken = Guid.NewGuid().ToString()
@@ -137,7 +137,7 @@ namespace CHNU_Connect.BLL.Services
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.FullName ?? user.Email),
-                    new Claim(ClaimTypes.Role, user.Role)
+                    new Claim(ClaimTypes.Role, user.Role.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["JwtConfig:TokenValidityMins"])),
                 Issuer = _configuration["JwtConfig:Issuer"],     

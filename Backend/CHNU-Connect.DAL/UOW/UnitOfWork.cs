@@ -25,6 +25,8 @@ namespace CHNU_Connect.DAL.UOW
         private IChatMemberRepository? _chatMemberRepository;
         private IChatMessageRepository? _chatMessageRepository;
         private INotificationRepository? _notificationRepository;
+        private IScheduleRepository? _scheduleRepository;
+        private ISubjectRepository? _subjectRepository;
 
 
         public UnitOfWork(AppDbContext context)
@@ -47,6 +49,8 @@ namespace CHNU_Connect.DAL.UOW
         public IChatMemberRepository ChatMemberRepository => _chatMemberRepository ??= new ChatMemberRepository(_context);
         public IChatMessageRepository ChatMessageRepository => _chatMessageRepository ??= new ChatMessageRepository(_context);
         public INotificationRepository NotificationRepository => _notificationRepository ??= new NotificationRepository(_context);
+        public IScheduleRepository ScheduleRepository => _scheduleRepository ??= new ScheduleRepository(_context);
+        public ISubjectRepository SubjectRepository => _subjectRepository ??= new SubjectRepository(_context);
 
 
 

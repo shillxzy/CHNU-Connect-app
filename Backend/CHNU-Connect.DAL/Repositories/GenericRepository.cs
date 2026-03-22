@@ -80,5 +80,12 @@ namespace CHNU_Connect.DAL.Repositories
         {
             await _context.SaveChangesAsync();
         }
+
+
+        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.Where(predicate).ToListAsync();
+        }
+
     }
 }
