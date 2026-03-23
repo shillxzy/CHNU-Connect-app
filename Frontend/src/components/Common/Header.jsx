@@ -4,6 +4,7 @@ import { CHNUConnectIcon, UserIcon, SearchIcon } from '../Icons';
 import { getProfile } from "../../api/userAPI";
 import './Header.css';
 import { getUnreadNotifications } from "../../api/notificationAPI";
+import Loading from '../Loading/Loading';
 
 
 const Header = () => {
@@ -65,7 +66,7 @@ const Header = () => {
       }
     }
 
-    if (loading) return <p>Завантаження хедеру...</p>;
+    if (loading) return <Loading />;
 
     return (
         <header className="header">

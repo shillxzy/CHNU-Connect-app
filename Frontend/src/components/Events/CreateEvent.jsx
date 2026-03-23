@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createEvent } from "../../api/eventAPI";
 import "./Events.css";
+import Loading from "../Loading/Loading";
 
 export default function CreateEvent() {
   const navigate = useNavigate();
@@ -65,6 +66,7 @@ export default function CreateEvent() {
     <div className="events-page">
       <div className="page-content">
         <div className="content-container">
+          {loading && <Loading />}
           <div className="page-header">
             <button className="btn-back" onClick={() => navigate(-1)}>← Назад</button>
             <h1 className="page-title">Створити подію</h1>

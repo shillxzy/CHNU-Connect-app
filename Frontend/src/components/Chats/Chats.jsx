@@ -6,6 +6,7 @@ import * as signalR from "@microsoft/signalr";
 import "./Chats.css";
 import AuthContext from "../../context/AuthContext";
 import Avatar from "../Avatar/Avatar";
+import Loading from "../Loading/Loading";
 
 export default function Chats() {
 
@@ -246,7 +247,8 @@ const getSelectedChatDisplay = (chat) => {
       behavior: "smooth"
     });
   }, [messages]);
-  if (loading) return <p>Загрузка чату...</p>;
+
+  if (loading) return <Loading />;
   const selectedDisplay = selectedChat
     ? getSelectedChatDisplay(selectedChat)
     : null;
@@ -258,11 +260,11 @@ const getSelectedChatDisplay = (chat) => {
   if (!editContent.trim()) return;
 
   try {
-   await updateMessage(
-  selectedChat.id,
-  messageId,
-  editContent.trim() // ❗ без об'єкта
-);
+    await updateMessage(
+      selectedChat.id,
+      messageId,
+      editContent.trim() // ❗ без об'єкта
+    );
 
 
     setMessages(prev =>
@@ -344,75 +346,75 @@ const getSelectedChatDisplay = (chat) => {
                 </div>
               </div>
               <div className="messages">
-  {messages.map((msg, index) => {
-    const msgDate = new Date(msg.createdAt);
-    const prevMsg = messages[index - 1];
-    const prevDate = prevMsg ? new Date(prevMsg.createdAt) : null;
+                {messages.map((msg, index) => {
+                  const msgDate = new Date(msg.createdAt);
+                  const prevMsg = messages[index - 1];
+                  const prevDate = prevMsg ? new Date(prevMsg.createdAt) : null;
 
-    const showDateDivider =
-      !prevDate ||
-      msgDate.toDateString() !== prevDate.toDateString();
+                  const showDateDivider =
+                    !prevDate ||
+                    msgDate.toDateString() !== prevDate.toDateString();
 
-    return (
-      <React.Fragment key={msg.id}>
-        {showDateDivider && (
-          <div className="date-divider">
-            {msgDate.toLocaleDateString(undefined, {
-              weekday: "long",
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })}
-          </div>
-        )}
-        <div className={`message ${msg.senderId === userId ? "mine" : ""}`}>
-  {editingMessageId === msg.id ? (
-    <>
-      <input
-        value={editContent}
-        onChange={(e) => setEditContent(e.target.value)}
-      />
-      <div className="message-actions">
-        <button onClick={() => handleUpdateMessage(msg.id)}>Save</button>
-        <button onClick={() => setEditingMessageId(null)}>Cancel</button>
-      </div>
-    </>
-  ) : (
-    <>
-      {msg.content}
+                  return (
+                    <React.Fragment key={msg.id}>
+                      {showDateDivider && (
+                        <div className="date-divider">
+                          {msgDate.toLocaleDateString(undefined, {
+                            weekday: "long",
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          })}
+                        </div>
+                      )}
+                      <div className={`message ${msg.senderId === userId ? "mine" : ""}`}>
+                {editingMessageId === msg.id ? (
+                  <>
+                    <input
+                      value={editContent}
+                      onChange={(e) => setEditContent(e.target.value)}
+                    />
+                    <div className="message-actions">
+                      <button onClick={() => handleUpdateMessage(msg.id)}>Save</button>
+                      <button onClick={() => setEditingMessageId(null)}>Cancel</button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {msg.content}
 
-      {msg.senderId === userId && (
-        <div className="message-actions">
-          <button
-            onClick={() => {
-              setEditingMessageId(msg.id);
-              setEditContent(msg.content);
-            }}
-          >
-            Edit
-          </button>
+                    {msg.senderId === userId && (
+                      <div className="message-actions">
+                        <button
+                          onClick={() => {
+                            setEditingMessageId(msg.id);
+                            setEditContent(msg.content);
+                          }}
+                        >
+                          Edit
+                        </button>
 
-          <button onClick={() => handleDeleteMessage(msg.id)}>
-            Delete
-          </button>
-        </div>
-      )}
-    </>
-  )}
+                        <button onClick={() => handleDeleteMessage(msg.id)}>
+                          Delete
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
 
-  <span className="time">
-    {msgDate.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    })}
-  </span>
-</div>
+                <span className="time">
+                  {msgDate.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+              </div>
 
-      </React.Fragment>
-    );
-  })}
-  <div ref={messagesEndRef} />
-</div>
+                    </React.Fragment>
+                  );
+                })}
+                <div ref={messagesEndRef} />
+              </div>
 
               <div className="chat-input">
                 <input

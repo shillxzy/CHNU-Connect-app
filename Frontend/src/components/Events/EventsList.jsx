@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getEvents } from "../../api/eventAPI"; 
 import { Event } from "./Event";
 import "./Events.css";
+import Loading from "../Loading/Loading";
 
 export default function EventsList() {
   const [events, setEvents] = useState([]);
@@ -29,7 +30,7 @@ export default function EventsList() {
     fetchEvents();
   }, []);
 
-  if (loading) return <p>Завантаження подій...</p>;
+  if (loading) return <Loading />;
   if (error) return <p>Помилка: {error}</p>;
 
   return (

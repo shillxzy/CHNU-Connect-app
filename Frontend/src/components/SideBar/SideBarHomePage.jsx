@@ -4,6 +4,7 @@ import { getGroups } from "../../api/groupAPI";
 import { getEvents } from "../../api/eventAPI";
 import SideBarEvents from './SideBarEvents';
 import SideBarGroups from './SideBarGroups';
+import Loading from '../Loading/Loading';
 
 const SidebarHomePage = () => {
     const [groups, setGroups] = useState([]);
@@ -31,7 +32,7 @@ const SidebarHomePage = () => {
     }, []);
 
     if (loading) {
-        return <div className="sidebar-container"><p>Завантаження...</p></div>;
+        return <Loading />;
     }
 
     return (

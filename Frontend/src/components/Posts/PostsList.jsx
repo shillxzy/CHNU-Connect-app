@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getPosts } from "../../api/postAPI";
 import Post from "./Post";
+import Loading from "../Loading/Loading";
 
 export default function PostsList() {
   const [posts, setPosts] = useState([]);
@@ -30,7 +31,7 @@ export default function PostsList() {
     fetchPosts();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loading />;
 
   return (
     <Post posts={posts} />

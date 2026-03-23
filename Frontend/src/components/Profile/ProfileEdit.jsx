@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getProfile, updateProfile, uploadPhoto } from "../../api/userAPI";
 import "./ProfileEdit.css";
 import Avatar from "../Avatar/Avatar.jsx";
+import Loading from "../Loading/Loading.jsx";
 
 const faculties = [
   "Навчально-науковий інститут біології, хімії та біоресурсів",
@@ -95,7 +96,7 @@ const ProfileEdit = () => {
     }
   };
 
-  if (loading) return <p>Завантаження профілю...</p>;
+  if (loading) return Loading();
   if (error) return <p>Помилка: {error}</p>;
   if (!user) return <p>Користувач не знайдений</p>;
 
@@ -106,28 +107,28 @@ const ProfileEdit = () => {
         <label>
           <div className="photo-upload-wrapper">
 
-  <Avatar
-    photoUrl={photoFile ? URL.createObjectURL(photoFile) : user.photoUrl}
-    size={150}
-  />
+            <Avatar
+              photoUrl={photoFile ? URL.createObjectURL(photoFile) : user.photoUrl}
+              size={150}
+            />
 
-  <button
-    type="button"
-    className="btn btn-upload"
-    onClick={() => fileInputRef.current.click()}
-  >
-    {photoFile ? "Змінити фото" : "Вибрати фото"}
-  </button>
+            <button
+              type="button"
+              className="btn btn-upload"
+              onClick={() => fileInputRef.current.click()}
+            >
+              {photoFile ? "Змінити фото" : "Вибрати фото"}
+            </button>
 
-  <input
-    type="file"
-    accept="image/*"
-    ref={fileInputRef}
-    style={{ display: "none" }}
-    onChange={handlePhotoChange}
-  />
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={handlePhotoChange}
+            />
 
-</div>
+          </div>
 
         </label>
 

@@ -7,6 +7,7 @@ import Avatar from "../Avatar/Avatar.jsx";
 import Post from "../Posts/Post.jsx";
 import AuthContext from "../../context/AuthContext";
 import "./Profile.css";
+import Loading from "../Loading/Loading.jsx";
 
 const ProfileView = () => {
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ const ProfileView = () => {
 };
 
 
-  if (loading) return <p>Завантаження профілю...</p>;
+  if (loading) return <Loading />;
   if (error) return <p>Помилка: {error}</p>;
   if (!user) return <p>Користувач не знайдений</p>;
 
