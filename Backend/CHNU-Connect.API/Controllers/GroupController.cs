@@ -1,239 +1,152 @@
 using CHNU_Connect.BLL.DTOs.Group;
 using CHNU_Connect.BLL.Services.Interfaces;
+using CHNU_Connect.DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace CHNU_Connect.API.Controllers
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class GroupController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    [Authorize]
-    public class GroupController : ControllerBase
+    private readonly IGroupService _groupService;
+    private readonly IGroupMemberService _memberService;
+    private readonly ILogger<GroupController> _logger;
+
+    public GroupController(
+        IGroupService groupService,
+        IGroupMemberService memberService,
+        ILogger<GroupController> logger)
     {
-        private readonly IGroupService _groupService;
-        private readonly ILogger<GroupController> _logger;
+        _groupService = groupService;
+        _memberService = memberService;
+        _logger = logger;
+    }
 
-        public GroupController(IGroupService groupService, ILogger<GroupController> logger)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var userId = GetUserId();
+        if (userId == null) return Unauthorized();
+
+        var isMember = await _memberService.IsMemberAsync(id, userId.Value);
+
+        if (!isMember)
+            return Forbid(); 
+        var group = await _groupService.GetByIdAsync(id);
+
+        if (group == null)
+            return NotFound();
+
+        return Ok(group);
+    }
+
+    [HttpGet]
+    [Authorize(Roles = "admin,superAdmin")]
+    public async Task<IActionResult> GetAll()
+    {
+        var groups = await _groupService.GetAllAsync();
+        return Ok(groups);
+    }
+
+
+    [HttpGet("my")]
+    public async Task<IActionResult> MyGroups()
+    {
+        var userId = GetUserId();
+        if (userId == null) return Unauthorized();
+
+        var groups = await _groupService.GetUserGroupsAsync(userId.Value);
+        return Ok(groups);
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "admin,superAdmin")]
+    public async Task<IActionResult> Create(CreateGroupDto dto)
+    {
+        var userId = GetUserId();
+        if (userId == null) return Unauthorized();
+
+        try
         {
-            _groupService = groupService;
-            _logger = logger;
-        }
+            dto.CreatorId = userId.Value;
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllGroups()
+            var group = await _groupService.CreateGroupAsync(dto);
+
+            await _memberService.JoinAsync(group.Id, userId.Value);
+
+            return CreatedAtAction(nameof(GetById), new { id = group.Id }, group);
+        }
+        catch (Exception ex)
         {
-            try
-            {
-                var groups = await _groupService.GetAllAsync();
-                return Ok(groups);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting all groups");
-                return StatusCode(500, new { message = "An error occurred while retrieving groups." });
-            }
+            _logger.LogError(ex, "Error creating group");
+            return StatusCode(500);
         }
+    }
 
-        [HttpGet("public")]
-        public async Task<IActionResult> GetPublicGroups()
-        {
-            try
-            {
-                var groups = await _groupService.GetPublicGroupsAsync();
-                return Ok(groups);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting public groups");
-                return StatusCode(500, new { message = "An error occurred while retrieving public groups." });
-            }
-        }
+    [HttpPut("{id}")]
+    [Authorize(Roles = "admin,superAdmin")]
+    public async Task<IActionResult> Update(int id, CreateGroupDto dto)
+    {
+        var userId = GetUserId();
+        if (userId == null) return Unauthorized();
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetGroup(int id)
-        {
-            try
-            {
-                var group = await _groupService.GetByIdAsync(id);
-                if (group == null)
-                    return NotFound(new { message = "Group not found." });
+        var group = await _groupService.UpdateGroupAsync(id, dto, userId.Value);
 
-                return Ok(group);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting group: {GroupId}", id);
-                return StatusCode(500, new { message = "An error occurred while retrieving the group." });
-            }
-        }
+        if (group == null)
+            return Forbid();
 
-        [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetGroupsByUser(int userId)
-        {
-            try
-            {
-                var groups = await _groupService.GetByCreatorIdAsync(userId);
-                return Ok(groups);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting groups for user: {UserId}", userId);
-                return StatusCode(500, new { message = "An error occurred while retrieving user groups." });
-            }
-        }
+        return Ok(group);
+    }
 
-        [HttpGet("my-groups")]
-        public async Task<IActionResult> GetMyGroups()
-        {
-            try
-            {
-                var currentUserId = GetCurrentUserId();
-                if (currentUserId == null)
-                    return Unauthorized();
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "admin,superAdmin")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var userId = GetUserId();
+        if (userId == null) return Unauthorized();
 
-                var groups = await _groupService.GetUserGroupsAsync(currentUserId.Value);
-                return Ok(groups);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting my groups for user: {UserId}", GetCurrentUserId());
-                return StatusCode(500, new { message = "An error occurred while retrieving your groups." });
-            }
-        }
+        var success = await _groupService.DeleteGroupAsync(id, userId.Value);
 
-        [HttpPost]
-        public async Task<IActionResult> CreateGroup([FromBody] CreateGroupDto request)
-        {
-            try
-            {
-                var currentUserId = GetCurrentUserId();
-                if (currentUserId == null)
-                    return Unauthorized();
+        if (!success)
+            return Forbid();
 
-                request.CreatedById = currentUserId.Value;
-                var group = await _groupService.CreateGroupAsync(request);
-                
-                _logger.LogInformation("Group created by user: {UserId}", currentUserId);
-                return CreatedAtAction(nameof(GetGroup), new { id = group.Id }, group);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error creating group for user: {UserId}", GetCurrentUserId());
-                return StatusCode(500, new { message = "An error occurred while creating the group." });
-            }
-        }
+        return Ok();
+    }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateGroup(int id, [FromBody] CreateGroupDto request)
-        {
-            try
-            {
-                var currentUserId = GetCurrentUserId();
-                if (currentUserId == null)
-                    return Unauthorized();
+    [HttpPost("{groupId}/assign-curator")]
+    [Authorize(Roles = "admin,superAdmin")]
+    public async Task<IActionResult> AssignCurator(int groupId, [FromBody] int curatorId)
+    {
+        var userId = GetUserId();
+        if (userId == null) return Unauthorized();
 
-                var group = await _groupService.GetByIdAsync(id);
-                if (group == null)
-                    return NotFound(new { message = "Group not found." });
+        var success = await _groupService.AssignCuratorAsync(groupId, curatorId, userId.Value);
 
-                // Check if user is the creator
-                if (group.CreatedById != currentUserId.Value)
-                    return Forbid("You can only edit groups you created.");
+        if (!success)
+            return Forbid();
 
-                var updatedGroup = await _groupService.UpdateGroupAsync(id, request);
-                
-                _logger.LogInformation("Group updated: {GroupId} by user: {UserId}", id, currentUserId);
-                return Ok(updatedGroup);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error updating group: {GroupId}", id);
-                return StatusCode(500, new { message = "An error occurred while updating the group." });
-            }
-        }
+        return Ok();
+    }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGroup(int id)
-        {
-            try
-            {
-                var currentUserId = GetCurrentUserId();
-                if (currentUserId == null)
-                    return Unauthorized();
+    [HttpPost("{groupId}/add-user")]
+    public async Task<IActionResult> AddUser(int groupId, [FromBody] AddUserToGroupDto dto)
+    {
+        var userId = GetUserId();
+        if (userId == null) return Unauthorized();
 
-                var group = await _groupService.GetByIdAsync(id);
-                if (group == null)
-                    return NotFound(new { message = "Group not found." });
+        var success = await _memberService.AddStudentAsync(groupId, dto.UserId);
 
-                // Check if user is the creator
-                if (group.CreatedById != currentUserId.Value)
-                    return Forbid("You can only delete groups you created.");
+        if (!success)
+            return BadRequest("User is already in group");
 
-                var success = await _groupService.DeleteGroupAsync(id);
-                if (!success)
-                    return BadRequest(new { message = "Failed to delete group." });
+        return Ok();
+    }
 
-                _logger.LogInformation("Group deleted: {GroupId} by user: {UserId}", id, currentUserId);
-                return Ok(new { message = "Group deleted successfully." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error deleting group: {GroupId}", id);
-                return StatusCode(500, new { message = "An error occurred while deleting the group." });
-            }
-        }
-
-        [HttpPost("{id}/join")]
-        public async Task<IActionResult> JoinGroup(int id)
-        {
-            try
-            {
-                var currentUserId = GetCurrentUserId();
-                if (currentUserId == null)
-                    return Unauthorized();
-
-                var success = await _groupService.JoinGroupAsync(id, currentUserId.Value);
-                if (!success)
-                    return BadRequest(new { message = "Already joined this group or group not found." });
-
-                _logger.LogInformation("User joined group: {GroupId} by user: {UserId}", id, currentUserId);
-                return Ok(new { message = "Successfully joined the group." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error joining group: {GroupId}", id);
-                return StatusCode(500, new { message = "An error occurred while joining the group." });
-            }
-        }
-
-        [HttpDelete("{id}/leave")]
-        public async Task<IActionResult> LeaveGroup(int id)
-        {
-            try
-            {
-                var currentUserId = GetCurrentUserId();
-                if (currentUserId == null)
-                    return Unauthorized();
-
-                var success = await _groupService.LeaveGroupAsync(id, currentUserId.Value);
-                if (!success)
-                    return BadRequest(new { message = "Not a member of this group or group not found." });
-
-                _logger.LogInformation("User left group: {GroupId} by user: {UserId}", id, currentUserId);
-                return Ok(new { message = "Successfully left the group." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error leaving group: {GroupId}", id);
-                return StatusCode(500, new { message = "An error occurred while leaving the group." });
-            }
-        }
-
-        private int? GetCurrentUserId()
-        {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            return int.TryParse(userIdClaim, out var userId) ? userId : null;
-        }
+    private int? GetUserId()
+    {
+        var claim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        return int.TryParse(claim, out var id) ? id : null;
     }
 }

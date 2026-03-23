@@ -52,7 +52,9 @@ export function AuthProvider({ children }) {
           id: res.data.id,
           email: res.data.email,
           name: res.data.fullName,
+          role: res.data.role,
         });
+        
       })
       .catch(() => {
         logout(); 

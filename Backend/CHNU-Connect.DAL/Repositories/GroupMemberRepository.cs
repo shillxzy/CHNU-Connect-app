@@ -11,37 +11,32 @@ namespace CHNU_Connect.DAL.Repositories
         {
         }
 
-        public async Task<IEnumerable<GroupMember>> GetMembersByGroupIdAsync(int groupId)
+        public async Task<GroupMember?> GetAsync(int groupId, int userId)
         {
-            return await _dbSet.Where(gm => gm.GroupId == groupId)
-                              .ToListAsync();
+            return await _dbSet
+                .FirstOrDefaultAsync(m => m.GroupId == groupId && m.UserId == userId);
         }
 
-        public async Task<IEnumerable<GroupMember>> GetGroupsByUserIdAsync(int userId)
+        public async Task<bool> IsMemberAsync(int groupId, int userId)
         {
-            return await _dbSet.Where(gm => gm.UserId == userId)
-                              .ToListAsync();
+            return await _dbSet
+                .AnyAsync(m => m.GroupId == groupId && m.UserId == userId);
         }
 
-        public async Task<bool> IsUserMemberOfGroupAsync(int userId, int groupId)
+        public async Task<IEnumerable<GroupMember>> GetByUserIdAsync(int userId)
         {
-            return await _dbSet.AnyAsync(gm => gm.UserId == userId && gm.GroupId == groupId);
+            return await _dbSet
+                .Where(m => m.UserId == userId)
+                .ToListAsync();
         }
 
-        public async Task<int> GetMembersCountByGroupIdAsync(int groupId)
+        public async Task<IEnumerable<GroupMember>> GetByGroupIdAsync(int groupId)
         {
-            return await _dbSet.CountAsync(gm => gm.GroupId == groupId);
+            return await _context.GroupMembers
+                .Include(m => m.User) 
+                .Where(m => m.GroupId == groupId)
+                .ToListAsync();
         }
 
-        public async Task<GroupMember?> GetGroupMemberAsync(int userId, int groupId)
-        {
-            return await _dbSet.FirstOrDefaultAsync(gm => gm.UserId == userId && gm.GroupId == groupId);
-        }
-
-        public async Task<IEnumerable<GroupMember>> GetMembersByRoleAsync(int groupId, string role)
-        {
-            return await _dbSet.Where(gm => gm.GroupId == groupId && gm.Role == role)
-                              .ToListAsync();
-        }
     }
 }

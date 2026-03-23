@@ -1,0 +1,89 @@
+.schedule-wrapper {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+}
+
+/* HEADER */
+.schedule-header {
+  display: grid;
+  grid-template-columns: 80px repeat(5, 1fr);
+  background: #0056b3;
+  color: white;
+  font-weight: 600;
+}
+
+.corner {
+  height: 50px;
+}
+
+.day-cell {
+  padding: 15px;
+  text-align: center;
+  border-left: 1px solid rgba(255,255,255,0.2);
+}
+
+/* BODY */
+.schedule-row {
+  display: grid;
+  grid-template-columns: 80px repeat(5, 1fr);
+  border-top: 1px solid #e0e0e0;
+}
+
+/* пара */
+.pair-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  background: #f8f9fa;
+  border-right: 1px solid #e0e0e0;
+}
+
+/* день */
+.day-column {
+  border-left: 1px solid #e0e0e0;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* підгрупи */
+.subgroups {
+  display: flex;
+  gap: 5px;
+}
+
+.subgroup {
+  flex: 1;
+  background: #e9ecef;
+  text-align: center;
+  font-size: 12px;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+/* предмети */
+.lessons {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.lesson-card {
+  background: #d1ecf1;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.lesson-card:hover {
+  background: #bee5eb;
+}

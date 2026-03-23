@@ -108,17 +108,19 @@ namespace CHNU_Connect.BLL.Services
             var user = await _userRepository.GetByIdAsync(userId);
             if (user == null) return false;
 
-            var validRoles = new[] { "student", "teacher", "admin" };
-            if (!validRoles.Contains(newRole.ToLower()))
+            if (!Enum.TryParse<UserRole>(newRole, true, out var role))
                 throw new ArgumentException("Invalid role specified");
 
-            user.Role = newRole;
+            user.Role = role;
+
             EnsureUtc(user);
 
             _userRepository.Update(user);
             await _userRepository.SaveAsync();
+
             return true;
         }
+
 
         public async Task UpdateProfileAsync(int id, UpdateProfileDto dto)
         {
@@ -126,7 +128,6 @@ namespace CHNU_Connect.BLL.Services
             if (user == null)
                 throw new Exception("User not found");
 
-            // Оновлюємо лише наявні поля
             user.FullName = dto.FullName ?? user.FullName;
             user.Faculty = dto.Faculty ?? user.Faculty;
             user.Course = dto.Course ?? user.Course;

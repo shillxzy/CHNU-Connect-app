@@ -6,7 +6,7 @@ import AuthContext from "./context/AuthContext";
 import Login from "./components/Auth/Login";
 import HomePage from "./components/HomePage/HomePage";
 import HomePageNewsFeed from "./components/NewsFeed/NewsFeed";
-import GroupsList from "./components/Groups/GroupsList";
+import GroupsPage from "./components/Groups/GroupsPage";
 import EventsList from "./components/Events/EventsList";
 import Profile from "./components/Profile/Profile";
 import ProfileEdit from "./components/Profile/ProfileEdit";
@@ -19,6 +19,8 @@ import PostsList from "./components/Posts/PostsList";
 import ProfileView from "./components/Profile/ProfileView";
 import Chats from "./components/Chats/Chats";
 import AdminPanel from "./components/AdminPanel/AdminPanel";
+import GroupCreate from "./components/Groups/GroupCreate";
+import GroupEdit from "./components/Groups/GroupEdit";
 
 
 // Публічний маршрут
@@ -34,22 +36,15 @@ function ProtectedRoute({ children }) {
 }
 
 function AdminRoute({ children }) {
-  const { accessToken, user } = useContext(AuthContext);
+  const { accessToken, role } = useContext(AuthContext);
 
-  if (!accessToken) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (!user) {
-    return null; // або loader
-  }
-
-  if (user.role !== "admin") {
-    return <Navigate to="/" replace />;
-  }
+  if (!accessToken) return <Navigate to="/login" replace />;
+  if (!role) return null; // або loader
+  if (role !== "admin") return <Navigate to="/" replace />;
 
   return children;
 }
+
 
 
 
@@ -92,7 +87,7 @@ function AppRoutes() {
         }
       >
         <Route index element={<HomePageNewsFeed />} />
-        <Route path="groups" element={<GroupsList />} />
+        <Route path="groups" element={<GroupsPage />} />
         <Route path="events" element={<EventsList />} />
         <Route path="posts" element={<PostsList />} />
         <Route path="profile/:fullname" element={<Profile />} />
@@ -106,6 +101,20 @@ function AppRoutes() {
         <Route path="admin-panel" element={
             <AdminRoute>
               <AdminPanel />
+            </AdminRoute>
+          }
+        />
+
+        <Route path="groups/create" element={
+            <AdminRoute>
+              <GroupCreate />
+            </AdminRoute>
+          }
+        />
+
+        <Route path="groups/edit/:id" element={
+            <AdminRoute>
+              <GroupEdit />
             </AdminRoute>
           }
         />

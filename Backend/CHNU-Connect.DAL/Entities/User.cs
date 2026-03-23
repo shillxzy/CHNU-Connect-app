@@ -7,12 +7,20 @@ using System.Xml.Linq;
 
 namespace CHNU_Connect.DAL.Entities
 {
+    public enum UserRole
+    {
+        student,
+        teacher,
+        admin,
+        superAdmin
+    }
+
     public class User
     {
         public int Id { get; set; }
         public string Email { get; set; } = null!;
         public string PasswordHash { get; set; } = null!;
-        public string Role { get; set; } = null!; 
+        public UserRole Role { get; set; }
         public string? FullName { get; set; }
         public string? Faculty { get; set; }
         public int? Course { get; set; }
@@ -21,6 +29,8 @@ namespace CHNU_Connect.DAL.Entities
         public bool IsBlocked { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public bool IsEmailConfirmed { get; set; } = true;
+        public int? SubGroupId { get; set; }
+        public SubGroup? SubGroup { get; set; }
 
         public string? EmailConfirmationToken { get; set; }
 
@@ -33,5 +43,7 @@ namespace CHNU_Connect.DAL.Entities
         public ICollection<Comment>? Comments { get; set; }
         public ICollection<Message>? SentMessages { get; set; }
         public ICollection<Message>? ReceivedMessages { get; set; }
+        public ICollection<GroupMember>? Groups { get; set; }
+
     }
 }

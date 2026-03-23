@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, useLocation, Outlet } from "react-router-dom";
 import Header from '../Common/Header.jsx';
-import GroupsList from '../Groups/GroupsList.jsx';
+import GroupsPage from '../Groups/GroupsPage.jsx';
 import EventsList from '../Events/EventsList.jsx';
 import PostsList from '../Posts/PostsList.jsx';
 import HeroBanner from '../Common/HeroBanner.jsx';
@@ -13,6 +13,8 @@ import Profile from '../Profile/Profile.jsx';
 import AboutUs from '../AboutUs/AboutUs.jsx';
 import ProfileEdit from '../Profile/ProfileEdit.jsx';
 import Chats from '../Chats/Chats.jsx';
+import GroupCreate from '../Groups/GroupCreate.jsx';
+import GroupEdit from '../Groups/GroupEdit.jsx';
 
 function HomePage({ onLogout }) {
   const location = useLocation();
@@ -34,7 +36,9 @@ function HomePage({ onLogout }) {
 }
 
 HomePage.NewsFeed = NewsFeed;
-HomePage.GroupsList = GroupsList;
+HomePage.GroupsPage = GroupsPage;
+HomePage.GroupCreate = GroupCreate;
+HomePage.GroupEdit = GroupEdit;
 HomePage.EventsList = EventsList;
 HomePage.PostsList = PostsList;
 HomePage.Profile = Profile;

@@ -11,6 +11,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
+using System.Text.Json.Serialization;
+
 
 namespace CHNU_Connect.API
 {
@@ -89,6 +91,13 @@ namespace CHNU_Connect.API
 
             // ---------- CONTROLLERS ----------
             builder.Services.AddControllers();
+
+            builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
+
 
             // ---------- SIGNALR ----------
             builder.Services.AddSignalR();

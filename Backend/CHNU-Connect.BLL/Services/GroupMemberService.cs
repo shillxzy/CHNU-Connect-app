@@ -1,8 +1,6 @@
-using CHNU_Connect.BLL.DTOs.GroupMember;
 using CHNU_Connect.BLL.Services.Interfaces;
 using CHNU_Connect.DAL.Entities;
 using CHNU_Connect.DAL.Repositories.Interfaces;
-using Mapster;
 
 namespace CHNU_Connect.BLL.Services
 {
@@ -15,68 +13,70 @@ namespace CHNU_Connect.BLL.Services
             _groupMemberRepository = groupMemberRepository;
         }
 
-        public async Task<GroupMemberDto> CreateGroupMemberAsync(CreateGroupMemberDto dto)
+        public async Task<bool> JoinAsync(int groupId, int userId)
         {
-            var member = dto.Adapt<GroupMember>();
+            if (await _groupMemberRepository.IsMemberAsync(groupId, userId))
+                return false;
+
+            var member = new GroupMember
+            {
+                GroupId = groupId,
+                UserId = userId,
+                Role = GroupMemberRole.Student
+            };
+
             await _groupMemberRepository.InsertAsync(member);
             await _groupMemberRepository.SaveAsync();
-            return member.Adapt<GroupMemberDto>();
+
+            return true;
         }
 
-        public async Task<GroupMemberDto?> GetByIdAsync(int id)
+        public async Task<bool> LeaveAsync(int groupId, int userId)
         {
-            var member = await _groupMemberRepository.GetByIdAsync(id);
-            return member?.Adapt<GroupMemberDto>();
-        }
+            var member = await _groupMemberRepository.GetAsync(groupId, userId);
 
-        public async Task<IEnumerable<GroupMemberDto>> GetByGroupIdAsync(int groupId)
-        {
-            var members = await _groupMemberRepository.GetAllAsync();
-            var groupMembers = members.Where(m => m.GroupId == groupId);
-            return groupMembers.Adapt<IEnumerable<GroupMemberDto>>();
-        }
-
-        public async Task<IEnumerable<GroupMemberDto>> GetByUserIdAsync(int userId)
-        {
-            var members = await _groupMemberRepository.GetAllAsync();
-            var userMembers = members.Where(m => m.UserId == userId);
-            return userMembers.Adapt<IEnumerable<GroupMemberDto>>();
-        }
-
-        public async Task<GroupMemberDto> UpdateGroupMemberAsync(int id, CreateGroupMemberDto dto)
-        {
-            var member = await _groupMemberRepository.GetByIdAsync(id);
-            if (member == null)
-                throw new ArgumentException("Group member not found");
-
-            dto.Adapt(member);
-            _groupMemberRepository.Update(member);
-            await _groupMemberRepository.SaveAsync();
-            return member.Adapt<GroupMemberDto>();
-        }
-
-        public async Task<bool> DeleteGroupMemberAsync(int id)
-        {
-            var member = await _groupMemberRepository.GetByIdAsync(id);
             if (member == null)
                 return false;
 
             _groupMemberRepository.Delete(member);
             await _groupMemberRepository.SaveAsync();
+
             return true;
         }
 
-        public async Task<bool> IsUserMemberAsync(int groupId, int userId)
+        public async Task<bool> IsMemberAsync(int groupId, int userId)
         {
-            var members = await _groupMemberRepository.GetAllAsync();
-            return members.Any(m => m.GroupId == groupId && m.UserId == userId);
+            return await _groupMemberRepository.IsMemberAsync(groupId, userId);
         }
 
         public async Task<string?> GetUserRoleAsync(int groupId, int userId)
         {
-            var members = await _groupMemberRepository.GetAllAsync();
-            var member = members.FirstOrDefault(m => m.GroupId == groupId && m.UserId == userId);
-            return member?.Role;
+            var member = await _groupMemberRepository.GetAsync(groupId, userId);
+
+            return member?.Role.ToString();
         }
+
+        public async Task<IEnumerable<int>> GetGroupIdsByUserAsync(int userId)
+        {
+            var members = await _groupMemberRepository.GetByUserIdAsync(userId);
+            return members.Select(m => m.GroupId);
+        }
+
+        public async Task<bool> AddStudentAsync(int groupId, int userId)
+        {
+            if (await _groupMemberRepository.IsMemberAsync(groupId, userId))
+                return false;
+
+            await _groupMemberRepository.InsertAsync(new GroupMember
+            {
+                GroupId = groupId,
+                UserId = userId,
+                Role = GroupMemberRole.Student
+            });
+
+            await _groupMemberRepository.SaveAsync();
+            return true;
+        }
+
     }
 }

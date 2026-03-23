@@ -83,7 +83,8 @@ namespace CHNU_Connect.BLL.Configuration
                 .NewConfig()
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
-                .Map(dest => dest.CreatorId, src => src.CreatorId);
+                .Map(dest => dest.CreatorId, src => src.CreatorId)
+                .Ignore(dest => dest.CreatorId);
 
             // Comment mappings
             TypeAdapterConfig<Comment, CommentDto>

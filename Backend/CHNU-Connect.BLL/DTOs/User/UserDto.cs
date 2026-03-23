@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CHNU_Connect.DAL.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,5 +19,6 @@ namespace CHNU_Connect.BLL.DTOs.User
         public int? Course { get; set; }
         public string? PhotoUrl { get; set; }
         public string? Bio { get; set; }
+        public UserRole Role { get; set; }
     }
 }

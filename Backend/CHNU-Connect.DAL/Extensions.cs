@@ -28,6 +28,8 @@ namespace CHNU_Connect.DAL.Extensions
             services.AddScoped<Repositories.Interfaces.IGroupMemberRepository, Repositories.GroupMemberRepository>();
             services.AddScoped<Repositories.Interfaces.IPostLikeRepository, Repositories.PostLikeRepository>();
             services.AddScoped<Repositories.Interfaces.INotificationRepository, Repositories.NotificationRepository>();
+            services.AddScoped<Repositories.Interfaces.IScheduleRepository, Repositories.ScheduleRepository>();
+            services.AddScoped<Repositories.Interfaces.ISubjectRepository, Repositories.SubjectRepository>();
         }
 
         public static IServiceCollection AddDataAccessLayer(this IServiceCollection services, IConfiguration configuration)

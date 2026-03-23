@@ -15,5 +15,7 @@ namespace CHNU_Connect.DAL.Repositories.Interfaces
         Task DeleteByIdAsync(object id);
         void Update(T entity);
         Task SaveAsync();
+
+        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
     }
 }

@@ -4,11 +4,9 @@ namespace CHNU_Connect.DAL.Repositories.Interfaces
 {
     public interface IGroupMemberRepository : IGenericRepository<GroupMember>
     {
-        Task<IEnumerable<GroupMember>> GetMembersByGroupIdAsync(int groupId);
-        Task<IEnumerable<GroupMember>> GetGroupsByUserIdAsync(int userId);
-        Task<bool> IsUserMemberOfGroupAsync(int userId, int groupId);
-        Task<int> GetMembersCountByGroupIdAsync(int groupId);
-        Task<GroupMember?> GetGroupMemberAsync(int userId, int groupId);
-        Task<IEnumerable<GroupMember>> GetMembersByRoleAsync(int groupId, string role);
+        Task<GroupMember?> GetAsync(int groupId, int userId);
+        Task<bool> IsMemberAsync(int groupId, int userId);
+        Task<IEnumerable<GroupMember>> GetByUserIdAsync(int userId);
+        Task<IEnumerable<GroupMember>> GetByGroupIdAsync(int groupId);
     }
 }
