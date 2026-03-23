@@ -1,10 +1,13 @@
 import { useEffect, useState, useContext } from "react";
-import { getGroups } from "../../api/groupAPI";
+import { getGroups, getGroupById } from "../../api/groupAPI";
 import AuthContext from "../../context/AuthContext";
 import "./GroupsPage.css";
+import { useNavigate } from "react-router-dom";
+import Avatar from "../Avatar/Avatar";
 
 export default function GroupsPage() {
-  const { user } = useContext(AuthContext);
+  const { role } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
@@ -18,8 +21,9 @@ export default function GroupsPage() {
     setGroups(res.data);
   };
 
-  const openGroup = (group) => {
-    setSelectedGroup(group);
+  const openGroup = async (group) => {
+    const res = await getGroupById(group.id);
+    setSelectedGroup(res.data);
   };
 
   const backToList = () => {
@@ -36,8 +40,11 @@ export default function GroupsPage() {
           <div className="page-header">
             <h1>Групи</h1>
 
-            {user?.role === "admin" && (
-              <button className="btn-primary">
+            {role === "admin" && (
+              <button
+                className="btn-primary"
+                onClick={() => navigate("/groups/create")}
+              >
                 + Створити групу
               </button>
             )}
@@ -52,7 +59,10 @@ export default function GroupsPage() {
               >
                 <strong>{g.name}</strong>
                 <p>{g.description}</p>
-                <span>Куратор: {g.curatorName || "Немає"}</span>
+
+                <span>
+                  Куратор: {g.curatorName || "Немає"}
+                </span>
               </div>
             ))}
           </div>
@@ -71,54 +81,65 @@ export default function GroupsPage() {
           <h2>{selectedGroup.name}</h2>
 
           <p><b>Опис:</b> {selectedGroup.description}</p>
-          <p><b>Куратор:</b> {selectedGroup.curatorName || "Немає"}</p>
+
+          {/* ===== CURATOR ===== */}
+          <div className="section">
+            <h3>Куратор</h3>
+
+            {selectedGroup.curator ? (
+              <div className="user-row">
+                <Avatar
+                  photoUrl={selectedGroup.curator.photoUrl}
+                  size={40}
+                />
+                <span>{selectedGroup.curator.fullName}</span>
+              </div>
+            ) : (
+              <p>Немає</p>
+            )}
+          </div>
 
           <hr />
 
-          {/* 👥 STUDENTS */}
+          {/* ===== STUDENTS ===== */}
           <div className="section">
             <h3>Студенти</h3>
 
-            <div className="placeholder">
-              {/* тут має бути список студентів */}
-              <p>Тут буде список студентів групи</p>
-            </div>
+            {selectedGroup.users && selectedGroup.users.length > 0 ? (
+              selectedGroup.users.map(u => (
+                <div key={u.id} className="user-row">
+                  <Avatar
+                    photoUrl={u.photoUrl}
+                    size={40}
+                  />
+                  <span>{u.fullName}</span>
+                </div>
+              ))
+            ) : (
+              <p>Немає студентів</p>
+            )}
           </div>
 
           <hr />
 
-          {/* 📚 SUBJECTS */}
+          {/* ===== PLACEHOLDERS ===== */}
           <div className="section">
             <h3>Дисципліни</h3>
-
-            <div className="placeholder">
-              {/* тут має бути список дисциплін */}
-              <p>Тут буде список дисциплін</p>
-            </div>
+            <p>Тут буде список дисциплін</p>
           </div>
 
           <hr />
 
-          {/* 📅 SCHEDULE */}
           <div className="section">
             <h3>Розклад</h3>
-
-            <div className="placeholder">
-              {/* тут має бути таблиця розкладу */}
-              <p>Тут буде розклад (drag & drop)</p>
-            </div>
+            <p>Тут буде розклад (drag & drop)</p>
           </div>
 
           <hr />
 
-          {/* 💬 CHAT */}
           <div className="section">
             <h3>Чат групи</h3>
-
-            <div className="placeholder">
-              {/* тут має бути чат */}
-              <p>Тут буде чат групи</p>
-            </div>
+            <p>Тут буде чат групи</p>
           </div>
 
         </div>

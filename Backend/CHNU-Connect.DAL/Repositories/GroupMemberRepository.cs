@@ -32,9 +32,11 @@ namespace CHNU_Connect.DAL.Repositories
 
         public async Task<IEnumerable<GroupMember>> GetByGroupIdAsync(int groupId)
         {
-            return await _dbSet
+            return await _context.GroupMembers
+                .Include(m => m.User) 
                 .Where(m => m.GroupId == groupId)
                 .ToListAsync();
         }
+
     }
 }

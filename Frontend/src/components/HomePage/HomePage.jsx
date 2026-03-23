@@ -13,6 +13,7 @@ import Profile from '../Profile/Profile.jsx';
 import AboutUs from '../AboutUs/AboutUs.jsx';
 import ProfileEdit from '../Profile/ProfileEdit.jsx';
 import Chats from '../Chats/Chats.jsx';
+import GroupCreate from '../Groups/GroupCreate.jsx';
 
 function HomePage({ onLogout }) {
   const location = useLocation();
@@ -35,6 +36,7 @@ function HomePage({ onLogout }) {
 
 HomePage.NewsFeed = NewsFeed;
 HomePage.GroupsPage = GroupsPage;
+HomePage.GroupCreate = GroupCreate;
 HomePage.EventsList = EventsList;
 HomePage.PostsList = PostsList;
 HomePage.Profile = Profile;

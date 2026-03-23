@@ -19,6 +19,7 @@ import PostsList from "./components/Posts/PostsList";
 import ProfileView from "./components/Profile/ProfileView";
 import Chats from "./components/Chats/Chats";
 import AdminPanel from "./components/AdminPanel/AdminPanel";
+import GroupCreate from "./components/Groups/GroupCreate";
 
 
 // Публічний маршрут
@@ -34,22 +35,15 @@ function ProtectedRoute({ children }) {
 }
 
 function AdminRoute({ children }) {
-  const { accessToken, user } = useContext(AuthContext);
+  const { accessToken, role } = useContext(AuthContext);
 
-  if (!accessToken) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (!user) {
-    return null; // або loader
-  }
-
-  if (user.role !== "admin") {
-    return <Navigate to="/" replace />;
-  }
+  if (!accessToken) return <Navigate to="/login" replace />;
+  if (!role) return null; // або loader
+  if (role !== "admin") return <Navigate to="/" replace />;
 
   return children;
 }
+
 
 
 
@@ -106,6 +100,13 @@ function AppRoutes() {
         <Route path="admin-panel" element={
             <AdminRoute>
               <AdminPanel />
+            </AdminRoute>
+          }
+        />
+
+        <Route path="groups/create" element={
+            <AdminRoute>
+              <GroupCreate />
             </AdminRoute>
           }
         />

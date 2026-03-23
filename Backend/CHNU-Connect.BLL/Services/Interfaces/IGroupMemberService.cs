@@ -16,6 +16,9 @@ namespace CHNU_Connect.BLL.Services.Interfaces
         Task<string?> GetUserRoleAsync(int groupId, int userId);
 
         Task<IEnumerable<int>> GetGroupIdsByUserAsync(int userId);
+        Task<bool> AddStudentAsync(int groupId, int userId);
+
+
     }
 
 }

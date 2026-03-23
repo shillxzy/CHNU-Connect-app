@@ -42,6 +42,15 @@ public class GroupController : ControllerBase
         return Ok(group);
     }
 
+    [HttpGet]
+    [Authorize(Roles = "admin,superAdmin")]
+    public async Task<IActionResult> GetAll()
+    {
+        var groups = await _groupService.GetAllAsync();
+        return Ok(groups);
+    }
+
+
     [HttpGet("my")]
     public async Task<IActionResult> MyGroups()
     {
@@ -102,6 +111,35 @@ public class GroupController : ControllerBase
 
         if (!success)
             return Forbid();
+
+        return Ok();
+    }
+
+    [HttpPost("{groupId}/assign-curator")]
+    [Authorize(Roles = "admin,superAdmin")]
+    public async Task<IActionResult> AssignCurator(int groupId, [FromBody] int curatorId)
+    {
+        var userId = GetUserId();
+        if (userId == null) return Unauthorized();
+
+        var success = await _groupService.AssignCuratorAsync(groupId, curatorId, userId.Value);
+
+        if (!success)
+            return Forbid();
+
+        return Ok();
+    }
+
+    [HttpPost("{groupId}/add-user")]
+    public async Task<IActionResult> AddUser(int groupId, [FromBody] AddUserToGroupDto dto)
+    {
+        var userId = GetUserId();
+        if (userId == null) return Unauthorized();
+
+        var success = await _memberService.AddStudentAsync(groupId, dto.UserId);
+
+        if (!success)
+            return BadRequest("User is already in group");
 
         return Ok();
     }

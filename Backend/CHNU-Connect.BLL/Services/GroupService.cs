@@ -1,4 +1,5 @@
 using CHNU_Connect.BLL.DTOs.Group;
+using CHNU_Connect.BLL.DTOs.User;
 using CHNU_Connect.BLL.Services.Interfaces;
 using CHNU_Connect.DAL.Entities;
 using CHNU_Connect.DAL.Repositories.Interfaces;
@@ -10,12 +11,19 @@ namespace CHNU_Connect.BLL.Services
     {
         private readonly IGroupRepository _groupRepo;
         private readonly IGroupMemberRepository _memberRepo;
+        private readonly IUserRepository _userRepo;
 
-        public GroupService(IGroupRepository groupRepo, IGroupMemberRepository memberRepo)
+
+        public GroupService(
+     IGroupRepository groupRepo,
+     IGroupMemberRepository memberRepo,
+     IUserRepository userRepo)
         {
             _groupRepo = groupRepo;
             _memberRepo = memberRepo;
+            _userRepo = userRepo;
         }
+
 
         public async Task<GroupDto> CreateGroupAsync(CreateGroupDto dto)
         {
@@ -29,9 +37,35 @@ namespace CHNU_Connect.BLL.Services
 
         public async Task<GroupDto?> GetByIdAsync(int id)
         {
-            var entity = await _groupRepo.GetByIdAsync(id);
-            return entity?.Adapt<GroupDto>();
+            var group = await _groupRepo.GetByIdAsync(id);
+            if (group == null) return null;
+
+            var dto = group.Adapt<GroupDto>();
+
+            // 👇 curator
+            if (group.CuratorId != null)
+            {
+                var curator = await _userRepo.GetByIdAsync(group.CuratorId.Value);
+                dto.Curator = curator?.Adapt<UserDto>();
+            }
+
+            // 👇 users
+            var members = await _memberRepo.GetByGroupIdAsync(id);
+
+            var users = new List<UserDto>();
+
+            foreach (var m in members)
+            {
+                var user = await _userRepo.GetByIdAsync(m.UserId);
+                if (user != null)
+                    users.Add(user.Adapt<UserDto>());
+            }
+
+            dto.Users = users;
+
+            return dto;
         }
+
 
         public async Task<IEnumerable<GroupDto>> GetAllAsync()
         {

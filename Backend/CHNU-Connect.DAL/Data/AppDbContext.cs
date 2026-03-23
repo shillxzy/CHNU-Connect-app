@@ -251,6 +251,9 @@ namespace CHNU_Connect.DAL.Data
                 entity.Property(e => e.Name).HasColumnName("name").IsRequired();
                 entity.HasIndex(e => e.Name).IsUnique();
 
+                entity.Property(e => e.Description).HasColumnName("description");
+                entity.Property(e => e.IsPrivate).HasColumnName("is_private");
+
                 entity.Property(e => e.Type).HasColumnName("type").IsRequired();
 
                 entity.Property(e => e.CreatedAt)
