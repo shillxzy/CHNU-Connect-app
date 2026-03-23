@@ -20,6 +20,7 @@ import ProfileView from "./components/Profile/ProfileView";
 import Chats from "./components/Chats/Chats";
 import AdminPanel from "./components/AdminPanel/AdminPanel";
 import GroupCreate from "./components/Groups/GroupCreate";
+import GroupEdit from "./components/Groups/GroupEdit";
 
 
 // Публічний маршрут
@@ -107,6 +108,13 @@ function AppRoutes() {
         <Route path="groups/create" element={
             <AdminRoute>
               <GroupCreate />
+            </AdminRoute>
+          }
+        />
+
+        <Route path="groups/edit/:id" element={
+            <AdminRoute>
+              <GroupEdit />
             </AdminRoute>
           }
         />

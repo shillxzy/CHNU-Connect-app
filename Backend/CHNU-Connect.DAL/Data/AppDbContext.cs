@@ -313,10 +313,28 @@ namespace CHNU_Connect.DAL.Data
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Name).HasColumnName("name").IsRequired();
+                entity.Property(e => e.Name)
+                    .HasColumnName("name")
+                    .IsRequired();
 
-                entity.Property(e => e.GroupId).HasColumnName("group_id");
-                entity.Property(e => e.TeacherId).HasColumnName("teacher_id");
+                entity.Property(e => e.Description)
+                    .HasColumnName("description");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnName("created_at")
+                    .HasDefaultValueSql("now()");
+
+                entity.Property(e => e.GroupId)
+                    .HasColumnName("group_id");
+
+                entity.Property(e => e.TeacherId)
+                    .HasColumnName("teacher_id");
+
+                entity.Property(e => e.MoodleLink)
+                    .HasColumnName("moodle_link");
+
+                entity.Property(e => e.Semester)
+                    .HasColumnName("semester");
 
                 entity.HasOne(e => e.Group)
                     .WithMany(g => g.Subjects)
@@ -326,6 +344,7 @@ namespace CHNU_Connect.DAL.Data
                     .WithMany()
                     .HasForeignKey(e => e.TeacherId);
             });
+
 
             // ================= SUBGROUP =================
             modelBuilder.Entity<SubGroup>(entity =>

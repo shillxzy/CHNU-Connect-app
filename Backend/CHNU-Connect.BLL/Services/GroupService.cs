@@ -104,7 +104,8 @@ namespace CHNU_Connect.BLL.Services
             if (group.CreatorId != userId)
                 return null;
 
-            dto.Adapt(group);
+            group.Name = dto.Name;
+            group.Description = dto.Description;
 
             _groupRepo.Update(group);
             await _groupRepo.SaveAsync();

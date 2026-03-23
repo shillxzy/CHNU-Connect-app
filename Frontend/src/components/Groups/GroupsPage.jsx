@@ -1,16 +1,18 @@
 import { useEffect, useState, useContext } from "react";
 import { getGroups, getGroupById } from "../../api/groupAPI";
+import { getSubjectsByGroup } from "../../api/subjectAPI";
 import AuthContext from "../../context/AuthContext";
 import "./GroupsPage.css";
 import { useNavigate } from "react-router-dom";
-import Avatar from "../Avatar/Avatar";
+import UserTooltip from "../ToolTip/UserTooltip";
 
 export default function GroupsPage() {
-  const { role } = useContext(AuthContext);
+  const { role, userId: currentUserId } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
+  const [subjects, setSubjects] = useState([]);
 
   useEffect(() => {
     load();
@@ -24,10 +26,15 @@ export default function GroupsPage() {
   const openGroup = async (group) => {
     const res = await getGroupById(group.id);
     setSelectedGroup(res.data);
+
+    // 👇 підтягуємо дисципліни
+    const subjectsRes = await getSubjectsByGroup(group.id);
+    setSubjects(subjectsRes.data);
   };
 
   const backToList = () => {
     setSelectedGroup(null);
+    setSubjects([]);
   };
 
   return (
@@ -35,7 +42,7 @@ export default function GroupsPage() {
 
       {/* ===== LIST ===== */}
       {!selectedGroup && (
-        <div className="groups-container">
+        <div className="container">
 
           <div className="page-header">
             <h1>Групи</h1>
@@ -57,12 +64,12 @@ export default function GroupsPage() {
                 className="group-card"
                 onClick={() => openGroup(g)}
               >
-                <strong>{g.name}</strong>
-                <p>{g.description}</p>
+                <div className="group-title">{g.name}</div>
+                <div className="group-desc">{g.description}</div>
 
-                <span>
-                  Куратор: {g.curatorName || "Немає"}
-                </span>
+                <div className="group-meta">
+                  Куратор: <b>{g.curatorName || "Нікого"}</b>
+                </div>
               </div>
             ))}
           </div>
@@ -72,74 +79,103 @@ export default function GroupsPage() {
 
       {/* ===== DETAILS ===== */}
       {selectedGroup && (
-        <div className="group-details">
+        <div className="container">
 
           <button className="btn-back" onClick={backToList}>
             ← Назад
           </button>
 
-          <h2>{selectedGroup.name}</h2>
+          {role === "admin" && (
+            <button
+              className="btn-primary"
+              onClick={() => navigate(`/groups/edit/${selectedGroup.id}`)}
+            >
+              Редагувати
+            </button>
+          )}
 
-          <p><b>Опис:</b> {selectedGroup.description}</p>
+          <div className="card">
+            <h2>{selectedGroup.name}</h2>
+            <p className="desc">{selectedGroup.description}</p>
 
-          {/* ===== CURATOR ===== */}
-          <div className="section">
-            <h3>Куратор</h3>
+            {/* ===== CURATOR ===== */}
+            <div className="section">
+              <h3>Куратор</h3>
 
-            {selectedGroup.curator ? (
-              <div className="user-row">
-                <Avatar
-                  photoUrl={selectedGroup.curator.photoUrl}
-                  size={40}
-                />
-                <span>{selectedGroup.curator.fullName}</span>
-              </div>
-            ) : (
-              <p>Немає</p>
-            )}
-          </div>
-
-          <hr />
-
-          {/* ===== STUDENTS ===== */}
-          <div className="section">
-            <h3>Студенти</h3>
-
-            {selectedGroup.users && selectedGroup.users.length > 0 ? (
-              selectedGroup.users.map(u => (
-                <div key={u.id} className="user-row">
-                  <Avatar
-                    photoUrl={u.photoUrl}
+              {selectedGroup.curator ? (
+                <div className="user-row">
+                  <UserTooltip
+                    userId={selectedGroup.curator.id}
+                    currentUserId={currentUserId}
                     size={40}
                   />
-                  <span>{u.fullName}</span>
+                  <span>{selectedGroup.curator.fullName}</span>
                 </div>
-              ))
-            ) : (
-              <p>Немає студентів</p>
-            )}
-          </div>
+              ) : (
+                <p className="muted">Нікого</p>
+              )}
+            </div>
 
-          <hr />
+            {/* ===== STUDENTS ===== */}
+            <div className="section">
+              <h3>Студенти</h3>
 
-          {/* ===== PLACEHOLDERS ===== */}
-          <div className="section">
-            <h3>Дисципліни</h3>
-            <p>Тут буде список дисциплін</p>
-          </div>
+              {selectedGroup.users && selectedGroup.users.length > 0 ? (
+                <div className="users-list">
+                  {selectedGroup.users.map(u => (
+                    <div key={u.id} className="user-row">
+                      <UserTooltip
+                        userId={u.id}
+                        currentUserId={currentUserId}
+                        size={40}
+                      />
+                      <span>{u.fullName}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="muted">Немає студентів</p>
+              )}
+            </div>
 
-          <hr />
+            {/* ===== SUBJECTS ===== */}
+            <div className="section">
+              <h3>Дисципліни</h3>
 
-          <div className="section">
-            <h3>Розклад</h3>
-            <p>Тут буде розклад (drag & drop)</p>
-          </div>
+              {subjects && subjects.length > 0 ? (
+                <div className="subjects-list">
+                  {subjects.map(s => (
+                    <div
+  key={s.id}
+  className="subject-item"
+  onClick={() => {
+    if (s.moodleLink) {
+      const url = s.moodleLink.startsWith("http")
+        ? s.moodleLink
+        : `https://${s.moodleLink}`;
 
-          <hr />
+      window.open(url, "_blank");
+    }
+  }}
+  style={{ cursor: s.moodleLink ? "pointer" : "default" }}
+>
+  <div className="subject-info">
+    <b>{s.name}</b>
+    <span>{s.moodleLink}</span>
+  </div>
+</div>
 
-          <div className="section">
-            <h3>Чат групи</h3>
-            <p>Тут буде чат групи</p>
+                  ))}
+                </div>
+              ) : (
+                <p className="muted">Немає дисциплін</p>
+              )}
+            </div>
+
+            {/* ===== PLACEHOLDERS ===== */}
+            <div className="section muted-box">Розклад</div>
+            <div className="section muted-box">Чат групи</div>
+
           </div>
 
         </div>

@@ -22,6 +22,8 @@ namespace CHNU_Connect.BLL
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IChatService, ChatService>();
             services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<ISubjectService, SubjectService>();
+
 
             return services;
         }

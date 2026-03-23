@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CHNU_Connect.DAL.Entities
 {
@@ -7,6 +8,8 @@ namespace CHNU_Connect.DAL.Entities
         public int Id { get; set; }
 
         public string Name { get; set; } = null!;
+
+        [Column("description")]
         public string? Description { get; set; }
 
         public int GroupId { get; set; }
@@ -19,6 +22,7 @@ namespace CHNU_Connect.DAL.Entities
 
         public int Semester { get; set; }
 
+        [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public ICollection<Schedule>? Schedules { get; set; }
