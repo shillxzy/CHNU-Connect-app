@@ -22,6 +22,9 @@ namespace CHNU_Connect.DAL.Entities
         public int CreatorId { get; set; }
         public User? Creator { get; set; }
 
+        public bool IsPrivate { get; set; } = true;
+
+
         public int? CuratorId { get; set; }
         public User? Curator { get; set; }
 

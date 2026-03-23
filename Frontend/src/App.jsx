@@ -6,7 +6,7 @@ import AuthContext from "./context/AuthContext";
 import Login from "./components/Auth/Login";
 import HomePage from "./components/HomePage/HomePage";
 import HomePageNewsFeed from "./components/NewsFeed/NewsFeed";
-import GroupsList from "./components/Groups/GroupsList";
+import GroupsPage from "./components/Groups/GroupsPage";
 import EventsList from "./components/Events/EventsList";
 import Profile from "./components/Profile/Profile";
 import ProfileEdit from "./components/Profile/ProfileEdit";
@@ -92,7 +92,7 @@ function AppRoutes() {
         }
       >
         <Route index element={<HomePageNewsFeed />} />
-        <Route path="groups" element={<GroupsList />} />
+        <Route path="groups" element={<GroupsPage />} />
         <Route path="events" element={<EventsList />} />
         <Route path="posts" element={<PostsList />} />
         <Route path="profile/:fullname" element={<Profile />} />

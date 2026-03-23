@@ -61,5 +61,22 @@ namespace CHNU_Connect.BLL.Services
             var members = await _groupMemberRepository.GetByUserIdAsync(userId);
             return members.Select(m => m.GroupId);
         }
+
+        public async Task<bool> AddStudentAsync(int groupId, int userId)
+        {
+            if (await _groupMemberRepository.IsMemberAsync(groupId, userId))
+                return false;
+
+            await _groupMemberRepository.InsertAsync(new GroupMember
+            {
+                GroupId = groupId,
+                UserId = userId,
+                Role = GroupMemberRole.Student
+            });
+
+            await _groupMemberRepository.SaveAsync();
+            return true;
+        }
+
     }
 }

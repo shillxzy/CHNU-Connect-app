@@ -9,10 +9,10 @@ namespace CHNU_Connect.DAL.Entities
 {
     public enum UserRole
     {
-        Student,
-        Teacher,
-        Admin,
-        SuperAdmin
+        student,
+        teacher,
+        admin,
+        superAdmin
     }
 
     public class User

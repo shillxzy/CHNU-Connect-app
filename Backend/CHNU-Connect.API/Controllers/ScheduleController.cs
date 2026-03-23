@@ -34,6 +34,7 @@ namespace CHNU_Connect.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin,superAdmin")]
         public async Task<IActionResult> Create(CreateScheduleDto dto)
         {
             var result = await _scheduleService.CreateAsync(dto);
@@ -41,6 +42,7 @@ namespace CHNU_Connect.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin,superAdmin")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _scheduleService.DeleteAsync(id);

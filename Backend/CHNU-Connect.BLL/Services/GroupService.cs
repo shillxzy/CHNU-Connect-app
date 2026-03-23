@@ -92,34 +92,29 @@ namespace CHNU_Connect.BLL.Services
             return true;
         }
 
-        public async Task<bool> JoinGroupAsync(int groupId, int userId)
+
+        public async Task<bool> AssignCuratorAsync(int groupId, int curatorId, int currentUserId)
         {
-            if (await _memberRepo.IsMemberAsync(groupId, userId))
+            var group = await _groupRepo.GetByIdAsync(groupId);
+            if (group == null) return false;
+
+            // тільки creator може призначати куратора
+            if (group.CreatorId != currentUserId)
                 return false;
 
-            var member = new GroupMember
-            {
-                GroupId = groupId,
-                UserId = userId,
-                Role = GroupMemberRole.Student,
-                JoinedAt = DateTime.UtcNow
-            };
+            group.CuratorId = curatorId;
 
-            await _memberRepo.InsertAsync(member);
-            await _memberRepo.SaveAsync();
+            _groupRepo.Update(group);
+            await _groupRepo.SaveAsync();
 
             return true;
         }
 
-        public async Task<bool> LeaveGroupAsync(int groupId, int userId)
+        public async Task<bool> CanAccessGroupAsync(int groupId, int userId)
         {
-            var member = await _memberRepo.GetAsync(groupId, userId);
-            if (member == null) return false;
-
-            _memberRepo.Delete(member);
-            await _memberRepo.SaveAsync();
-
-            return true;
+            return await _memberRepo.IsMemberAsync(groupId, userId);
         }
+
+
     }
 }

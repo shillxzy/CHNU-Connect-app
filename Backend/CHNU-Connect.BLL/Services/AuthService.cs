@@ -90,7 +90,7 @@ namespace CHNU_Connect.BLL.Services
                 Email = email,
                 PasswordHash = _passwordHasher.HashPassword(null, password),
                 FullName = username,
-                Role = UserRole.Student,
+                Role = UserRole.student,
                 CreatedAt = DateTime.UtcNow,
                 IsEmailConfirmed = false,
                 EmailConfirmationToken = Guid.NewGuid().ToString()

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, useLocation, Outlet } from "react-router-dom";
 import Header from '../Common/Header.jsx';
-import GroupsList from '../Groups/GroupsList.jsx';
+import GroupsPage from '../Groups/GroupsPage.jsx';
 import EventsList from '../Events/EventsList.jsx';
 import PostsList from '../Posts/PostsList.jsx';
 import HeroBanner from '../Common/HeroBanner.jsx';
@@ -34,7 +34,7 @@ function HomePage({ onLogout }) {
 }
 
 HomePage.NewsFeed = NewsFeed;
-HomePage.GroupsList = GroupsList;
+HomePage.GroupsPage = GroupsPage;
 HomePage.EventsList = EventsList;
 HomePage.PostsList = PostsList;
 HomePage.Profile = Profile;

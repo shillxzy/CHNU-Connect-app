@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace CHNU_Connect.BLL.DTOs.Group
 {
-    public class CreateGroupDto
+    public class AssignCuratorDto
     {
-        public string Name { get; set; } = null!;
-        public string? Description { get; set; }
-        public int CreatorId { get; set; }
+        public int UserId { get; set; }
     }
 }

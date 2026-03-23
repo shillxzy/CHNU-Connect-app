@@ -14,8 +14,7 @@ namespace CHNU_Connect.BLL.Services.Interfaces
 
         Task<GroupDto?> UpdateGroupAsync(int id, CreateGroupDto dto, int userId);
         Task<bool> DeleteGroupAsync(int id, int userId);
+        Task<bool> AssignCuratorAsync(int groupId, int curatorId, int currentUserId);
 
-        Task<bool> JoinGroupAsync(int groupId, int userId);
-        Task<bool> LeaveGroupAsync(int groupId, int userId);
     }
 }

@@ -13,23 +13,18 @@ namespace CHNU_Connect.DAL.Data
         public DbSet<Post> Posts { get; set; } = null!;
         public DbSet<PostLike> PostLikes { get; set; } = null!;
         public DbSet<Comment> Comments { get; set; } = null!;
-
         public DbSet<Group> Groups { get; set; } = null!;
         public DbSet<GroupMember> GroupMembers { get; set; } = null!;
         public DbSet<Subject> Subjects { get; set; } = null!;
         public DbSet<Schedule> Schedules { get; set; } = null!;
         public DbSet<SubGroup> SubGroups { get; set; } = null!;
-
         public DbSet<Event> Events { get; set; } = null!;
         public DbSet<EventParticipant> EventParticipants { get; set; } = null!;
-
         public DbSet<Message> Messages { get; set; } = null!;
         public DbSet<AdminAction> AdminActions { get; set; } = null!;
-
         public DbSet<Chat> Chats { get; set; } = null!;
         public DbSet<ChatMember> ChatMembers { get; set; } = null!;
         public DbSet<ChatMessage> ChatMessages { get; set; } = null!;
-
         public DbSet<Notification> Notifications { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -40,23 +35,209 @@ namespace CHNU_Connect.DAL.Data
             modelBuilder.Entity<User>(entity =>
             {
                 entity.ToTable("users");
-
                 entity.HasKey(e => e.Id);
-
-                entity.Property(e => e.Email).HasMaxLength(255).IsRequired();
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Email).HasColumnName("email").HasMaxLength(255).IsRequired();
                 entity.HasIndex(e => e.Email).IsUnique();
+                entity.Property(e => e.PasswordHash).HasColumnName("password_hash").IsRequired();
+                entity.Property(e => e.Role).HasConversion<string>().HasColumnName("role").HasMaxLength(30).IsRequired();
+                entity.Property(e => e.FullName).HasColumnName("full_name").HasMaxLength(255);
+                entity.Property(e => e.Faculty).HasColumnName("faculty").HasMaxLength(255);
+                entity.Property(e => e.Course).HasColumnName("course");
+                entity.Property(e => e.PhotoUrl).HasColumnName("photo_url");
+                entity.Property(e => e.Bio).HasColumnName("bio");
+                entity.Property(e => e.IsBlocked).HasColumnName("is_blocked").HasDefaultValue(false);
+                entity.Property(e => e.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("now()");
 
-                entity.Property(e => e.PasswordHash).IsRequired();
-                entity.Property(e => e.Role).IsRequired();
+                entity.Property(e => e.SubGroupId).HasColumnName("sub_group_id");
 
-                entity.Property(e => e.CreatedAt)
-                    .HasDefaultValueSql("now()");
-
-                // SubGroup
                 entity.HasOne(e => e.SubGroup)
                     .WithMany(sg => sg.Users)
                     .HasForeignKey(e => e.SubGroupId)
                     .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            // Posts
+            modelBuilder.Entity<Post>(entity =>
+            {
+                entity.ToTable("posts");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.UserId).HasColumnName("user_id");
+                entity.HasOne(e => e.User).WithMany(u => u.Posts).HasForeignKey(e => e.UserId).OnDelete(DeleteBehavior.Cascade);
+                entity.Property(e => e.Content).HasColumnName("content").IsRequired();
+                entity.Property(e => e.ImageUrl).HasColumnName("image_url");
+                entity.Property(e => e.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("now()");
+                entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
+            });
+
+            // PostLikes
+            modelBuilder.Entity<PostLike>(entity =>
+            {
+                entity.ToTable("post_likes");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.PostId).HasColumnName("post_id");
+                entity.Property(e => e.UserId).HasColumnName("user_id");
+                entity.Property(e => e.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("now()");
+                entity.HasOne(e => e.Post).WithMany(p => p.Likes).HasForeignKey(e => e.PostId).OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId).OnDelete(DeleteBehavior.Cascade);
+                entity.HasIndex(e => new { e.PostId, e.UserId }).IsUnique();
+            });
+
+            // Comments
+            modelBuilder.Entity<Comment>(entity =>
+            {
+                entity.ToTable("comments");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.PostId).HasColumnName("post_id");
+                entity.Property(e => e.UserId).HasColumnName("user_id");
+                entity.Property(e => e.Content).HasColumnName("content").IsRequired();
+                entity.Property(e => e.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("now()");
+                entity.HasOne(e => e.Post).WithMany(p => p.Comments).HasForeignKey(e => e.PostId).OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.User).WithMany(u => u.Comments).HasForeignKey(e => e.UserId).OnDelete(DeleteBehavior.Cascade);
+
+            });
+
+            // Events
+            modelBuilder.Entity<Event>(entity =>
+            {
+                entity.ToTable("events");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Title).HasColumnName("title").HasMaxLength(255).IsRequired();
+                entity.Property(e => e.Description).HasColumnName("description");
+
+                entity.Property(e => e.StartTime)
+                    .HasColumnName("start_time")
+                    .IsRequired();
+
+                entity.Property(e => e.EndTime)
+                    .HasColumnName("end_time")
+                    .IsRequired();
+
+                entity.Property(e => e.CreatorId).HasColumnName("creator_id");
+                entity.HasOne(e => e.Creator)
+                    .WithMany()
+                    .HasForeignKey(e => e.CreatorId)
+                    .OnDelete(DeleteBehavior.SetNull);
+
+                entity.Property(e => e.IsPublic)
+                    .HasColumnName("is_public")
+                    .HasDefaultValue(true);
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnName("created_at")
+                    .HasDefaultValueSql("now()");
+            });
+
+
+            // EventParticipants
+            modelBuilder.Entity<EventParticipant>(entity =>
+            {
+                entity.ToTable("event_participants");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.EventId).HasColumnName("event_id");
+                entity.Property(e => e.UserId).HasColumnName("user_id");
+                entity.Property(e => e.JoinedAt).HasColumnName("joined_at").HasDefaultValueSql("now()");
+                entity.HasOne(e => e.Event).WithMany(e => e.Participants).HasForeignKey(e => e.EventId).OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId).OnDelete(DeleteBehavior.Cascade);
+                entity.HasIndex(e => new { e.EventId, e.UserId }).IsUnique();
+            });
+
+            // Messages
+            modelBuilder.Entity<Message>(entity =>
+            {
+                entity.ToTable("messages");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.SenderId).HasColumnName("sender_id");
+                entity.Property(e => e.ReceiverId).HasColumnName("receiver_id");
+                entity.Property(e => e.Content).HasColumnName("content").IsRequired();
+                entity.Property(e => e.IsRead).HasColumnName("is_read").HasDefaultValue(false);
+                entity.Property(e => e.SentAt).HasColumnName("sent_at").HasDefaultValueSql("now()");
+                entity.HasOne(e => e.Sender).WithMany(u => u.SentMessages).HasForeignKey(e => e.SenderId).OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.Receiver).WithMany(u => u.ReceivedMessages).HasForeignKey(e => e.ReceiverId).OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // AdminActions
+            modelBuilder.Entity<AdminAction>(entity =>
+            {
+                entity.ToTable("admin_actions");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.AdminId).HasColumnName("admin_id");
+                entity.Property(e => e.TargetUserId).HasColumnName("target_user_id");
+                entity.Property(e => e.Action).HasColumnName("action").HasMaxLength(50);
+                entity.Property(e => e.Reason).HasColumnName("reason");
+                entity.Property(e => e.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("now()");
+                entity.HasOne(e => e.Admin).WithMany().HasForeignKey(e => e.AdminId).OnDelete(DeleteBehavior.SetNull);
+                entity.HasOne(e => e.TargetUser).WithMany().HasForeignKey(e => e.TargetUserId).OnDelete(DeleteBehavior.SetNull);
+            });
+
+            // Chats
+            modelBuilder.Entity<Chat>(entity =>
+            {
+                entity.ToTable("chats");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Type).HasColumnName("type").HasMaxLength(20).IsRequired();
+                entity.Property(e => e.Title).HasColumnName("title").HasMaxLength(255);
+                entity.Property(e => e.CreatedBy).HasColumnName("created_by");
+                entity.HasOne(e => e.Creator).WithMany().HasForeignKey(e => e.CreatedBy).OnDelete(DeleteBehavior.SetNull);
+                entity.Property(e => e.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("now()");
+            });
+
+            // ChatMembers
+            modelBuilder.Entity<ChatMember>(entity =>
+            {
+                entity.ToTable("chat_members");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.ChatId).HasColumnName("chat_id");
+                entity.Property(e => e.UserId).HasColumnName("user_id");
+                entity.Property(e => e.Role).HasColumnName("role").HasMaxLength(20).HasDefaultValue("member");
+                entity.Property(e => e.JoinedAt).HasColumnName("joined_at").HasDefaultValueSql("now()");
+                entity.Property(e => e.LastReadMessageId).HasColumnName("last_read_message_id");
+                entity.HasOne(e => e.Chat).WithMany(c => c.Members).HasForeignKey(e => e.ChatId).OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId).OnDelete(DeleteBehavior.Cascade);
+                entity.HasIndex(e => new { e.ChatId, e.UserId }).IsUnique();
+            });
+
+            // ChatMessages
+            modelBuilder.Entity<ChatMessage>(entity =>
+            {
+                entity.ToTable("chat_messages");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.ChatId).HasColumnName("chat_id");
+                entity.Property(e => e.SenderId).HasColumnName("sender_id");
+                entity.Property(e => e.Content).HasColumnName("content");
+                entity.Property(e => e.MessageType).HasColumnName("message_type").HasMaxLength(20).HasDefaultValue("text");
+                entity.Property(e => e.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("now()");
+                entity.Property(e => e.EditedAt).HasColumnName("edited_at");
+                entity.Property(e => e.IsDeleted).HasColumnName("is_deleted").HasDefaultValue(false);
+                entity.HasOne(e => e.Chat).WithMany(c => c.Messages).HasForeignKey(e => e.ChatId).OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.Sender).WithMany().HasForeignKey(e => e.SenderId).OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                entity.ToTable("notifications");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.UserId).HasColumnName("user_id").IsRequired();
+                entity.Property(e => e.Type).HasColumnName("type").IsRequired();
+                entity.Property(e => e.EntityId).HasColumnName("entity_id");
+                entity.Property(e => e.IsRead).HasColumnName("is_read").HasDefaultValue(false);
+                entity.Property(e => e.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("now()");
+
+                entity.HasOne(e => e.User)
+                      .WithMany()
+                      .HasForeignKey(e => e.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
 
             // ================= GROUP =================
@@ -65,14 +246,19 @@ namespace CHNU_Connect.DAL.Data
                 entity.ToTable("groups");
 
                 entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Name).IsRequired();
+                entity.Property(e => e.Name).HasColumnName("name").IsRequired();
                 entity.HasIndex(e => e.Name).IsUnique();
 
-                entity.Property(e => e.Type).IsRequired();
+                entity.Property(e => e.Type).HasColumnName("type").IsRequired();
 
                 entity.Property(e => e.CreatedAt)
+                    .HasColumnName("created_at")
                     .HasDefaultValueSql("now()");
+
+                entity.Property(e => e.CreatorId).HasColumnName("creator_id");
+                entity.Property(e => e.CuratorId).HasColumnName("curator_id");
 
                 entity.HasOne(e => e.Creator)
                     .WithMany()
@@ -91,23 +277,27 @@ namespace CHNU_Connect.DAL.Data
                 entity.ToTable("group_members");
 
                 entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Role)
+                    .HasColumnName("role")
                     .HasConversion<string>()
                     .IsRequired();
 
                 entity.Property(e => e.JoinedAt)
+                    .HasColumnName("joined_at")
                     .HasDefaultValueSql("now()");
+
+                entity.Property(e => e.GroupId).HasColumnName("group_id");
+                entity.Property(e => e.UserId).HasColumnName("user_id");
 
                 entity.HasOne(e => e.Group)
                     .WithMany(g => g.Members)
-                    .HasForeignKey(e => e.GroupId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .HasForeignKey(e => e.GroupId);
 
                 entity.HasOne(e => e.User)
                     .WithMany(u => u.Groups)
-                    .HasForeignKey(e => e.UserId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .HasForeignKey(e => e.UserId);
 
                 entity.HasIndex(e => new { e.GroupId, e.UserId }).IsUnique();
             });
@@ -118,18 +308,20 @@ namespace CHNU_Connect.DAL.Data
                 entity.ToTable("subjects");
 
                 entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Name).IsRequired();
+                entity.Property(e => e.Name).HasColumnName("name").IsRequired();
+
+                entity.Property(e => e.GroupId).HasColumnName("group_id");
+                entity.Property(e => e.TeacherId).HasColumnName("teacher_id");
 
                 entity.HasOne(e => e.Group)
                     .WithMany(g => g.Subjects)
-                    .HasForeignKey(e => e.GroupId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .HasForeignKey(e => e.GroupId);
 
                 entity.HasOne(e => e.Teacher)
                     .WithMany()
-                    .HasForeignKey(e => e.TeacherId)
-                    .OnDelete(DeleteBehavior.SetNull);
+                    .HasForeignKey(e => e.TeacherId);
             });
 
             // ================= SUBGROUP =================
@@ -138,13 +330,14 @@ namespace CHNU_Connect.DAL.Data
                 entity.ToTable("sub_groups");
 
                 entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Name).IsRequired();
+                entity.Property(e => e.Name).HasColumnName("name").IsRequired();
+                entity.Property(e => e.GroupId).HasColumnName("group_id");
 
                 entity.HasOne(e => e.Group)
                     .WithMany()
-                    .HasForeignKey(e => e.GroupId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .HasForeignKey(e => e.GroupId);
             });
 
             // ================= SCHEDULE =================
@@ -153,90 +346,22 @@ namespace CHNU_Connect.DAL.Data
                 entity.ToTable("schedules");
 
                 entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Day).IsRequired();
-                entity.Property(e => e.StartTime).IsRequired();
-                entity.Property(e => e.EndTime).IsRequired();
+                entity.Property(e => e.Day).HasColumnName("day").IsRequired();
+                entity.Property(e => e.StartTime).HasColumnName("start_time").IsRequired();
+                entity.Property(e => e.EndTime).HasColumnName("end_time").IsRequired();
 
-                entity.HasOne(e => e.Group)
-                    .WithMany(g => g.Schedules)
-                    .HasForeignKey(e => e.GroupId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                entity.Property(e => e.GroupId).HasColumnName("group_id");
+                entity.Property(e => e.SubjectId).HasColumnName("subject_id");
+                entity.Property(e => e.SubGroupId).HasColumnName("sub_group_id");
 
-                entity.HasOne(e => e.Subject)
-                    .WithMany(s => s.Schedules)
-                    .HasForeignKey(e => e.SubjectId)
-                    .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(e => e.SubGroup)
-                    .WithMany(sg => sg.Schedules)
-                    .HasForeignKey(e => e.SubGroupId)
-                    .OnDelete(DeleteBehavior.SetNull);
+                entity.HasOne(e => e.Group).WithMany(g => g.Schedules).HasForeignKey(e => e.GroupId);
+                entity.HasOne(e => e.Subject).WithMany(s => s.Schedules).HasForeignKey(e => e.SubjectId);
+                entity.HasOne(e => e.SubGroup).WithMany(sg => sg.Schedules).HasForeignKey(e => e.SubGroupId);
             });
 
-            // ================= POSTS =================
-            modelBuilder.Entity<Post>(entity =>
-            {
-                entity.ToTable("posts");
-
-                entity.HasOne(e => e.User)
-                    .WithMany(u => u.Posts)
-                    .HasForeignKey(e => e.UserId)
-                    .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            // ================= COMMENTS =================
-            modelBuilder.Entity<Comment>(entity =>
-            {
-                entity.HasOne(e => e.User)
-                    .WithMany(u => u.Comments)
-                    .HasForeignKey(e => e.UserId);
-
-                entity.HasOne(e => e.Post)
-                    .WithMany(p => p.Comments)
-                    .HasForeignKey(e => e.PostId);
-            });
-
-            // ================= MESSAGES =================
-            modelBuilder.Entity<Message>(entity =>
-            {
-                entity.HasOne(e => e.Sender)
-                    .WithMany(u => u.SentMessages)
-                    .HasForeignKey(e => e.SenderId);
-
-                entity.HasOne(e => e.Receiver)
-                    .WithMany(u => u.ReceivedMessages)
-                    .HasForeignKey(e => e.ReceiverId);
-            });
-
-            // ================= CHAT =================
-            modelBuilder.Entity<Chat>(entity =>
-            {
-                entity.HasOne(e => e.Creator)
-                    .WithMany()
-                    .HasForeignKey(e => e.CreatedBy)
-                    .OnDelete(DeleteBehavior.SetNull);
-            });
-
-            // ================= CHAT MESSAGES =================
-            modelBuilder.Entity<ChatMessage>(entity =>
-            {
-                entity.HasOne(e => e.Chat)
-                    .WithMany(c => c.Messages)
-                    .HasForeignKey(e => e.ChatId);
-
-                entity.HasOne(e => e.Sender)
-                    .WithMany()
-                    .HasForeignKey(e => e.SenderId);
-            });
-
-            // ================= CHAT MEMBERS =================
-            modelBuilder.Entity<ChatMember>(entity =>
-            {
-                entity.HasIndex(e => new { e.ChatId, e.UserId }).IsUnique();
-            });
+            
         }
-
     }
 }
-

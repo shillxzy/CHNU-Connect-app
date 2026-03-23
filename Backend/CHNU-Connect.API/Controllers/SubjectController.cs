@@ -24,6 +24,7 @@ namespace CHNU_Connect.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin,superAdmin")]
         public async Task<IActionResult> Create(CreateSubjectDto dto)
         {
             var result = await _subjectService.CreateAsync(dto);
@@ -31,6 +32,7 @@ namespace CHNU_Connect.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin,superAdmin")]
         public async Task<IActionResult> Update(int id, CreateSubjectDto dto)
         {
             var result = await _subjectService.UpdateAsync(id, dto);
@@ -38,6 +40,7 @@ namespace CHNU_Connect.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin,superAdmin")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _subjectService.DeleteAsync(id);
