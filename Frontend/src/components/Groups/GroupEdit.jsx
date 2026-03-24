@@ -10,7 +10,8 @@ import {
 
 import {
   getSubjectsByGroup,
-  createSubject
+  createSubject,
+  deleteSubject
 } from "../../api/subjectAPI";
 
 import { getAllUsers } from "../../api/userAPI";
@@ -63,7 +64,7 @@ export default function GroupEdit() {
 
     if (g.users) {
       setSelectedStudents(g.users);
-      setExistingStudents(g.users); // 👈 важливо
+      setExistingStudents(g.users); 
     }
 
     const subjectsRes = await getSubjectsByGroup(id);
@@ -104,27 +105,46 @@ export default function GroupEdit() {
   /* ================= SUBJECTS ================= */
 
   const handleAddSubject = () => {
-    if (!newSubject.name.trim()) return;
+  if (!newSubject.name.trim()) return;
 
-    setSubjects(prev => [
-      ...prev,
-      {
-        id: Date.now(),
-        ...newSubject,
-        isNew: true
-      }
-    ]);
-
-    setNewSubject({
-      name: "",
-      moodleLink: "",
-      teacherId: null
-    });
+  const subjectToAdd = {
+    name: newSubject.name,
+    moodleLink: newSubject.moodleLink || null,
+    teacherId: newSubject.teacherId || null,
+    isNew: true,
+    id: Date.now()
   };
 
-  const removeSubject = (id) => {
-    setSubjects(prev => prev.filter(s => s.id !== id));
-  };
+  console.log("ADDING SUBJECT:", subjectToAdd);
+
+  setSubjects(prev => [...prev, subjectToAdd]);
+
+  setNewSubject({
+    name: "",
+    moodleLink: "",
+    teacherId: null
+  });
+};
+
+
+  const removeSubject = async (subject) => {
+  try {
+
+    if (subject.isNew) {
+      setSubjects(prev => prev.filter(s => s.id !== subject.id));
+      return;
+    }
+
+    await deleteSubject(subject.id);
+
+    setSubjects(prev => prev.filter(s => s.id !== subject.id));
+
+  } catch (err) {
+    console.error("DELETE SUBJECT ERROR:", err);
+    alert("Не вдалося видалити дисципліну");
+  }
+};
+
 
   /* ================= SAVE ================= */
 
@@ -155,7 +175,8 @@ export default function GroupEdit() {
           await createSubject({
             name: s.name,
             groupId: id,
-            teacherId: s.teacherId
+            teacherId: s.teacherId,
+            moodleLink: s.moodleLink
           });
         }
       }
@@ -185,6 +206,9 @@ export default function GroupEdit() {
       </div>
     </div>
   );
+
+  console.log("SUBJECTS:", subjects);
+
 
   return (
     <div className="edit-page">
@@ -310,7 +334,8 @@ export default function GroupEdit() {
                 <span>{s.moodleLink}</span>
               </div>
 
-              <button onClick={() => removeSubject(s.id)}>✕</button>
+              <button onClick={() => removeSubject(s)}>✕</button>
+
 
             </div>
           ))}

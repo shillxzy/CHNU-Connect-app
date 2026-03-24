@@ -37,6 +37,9 @@ export default function GroupsPage() {
     setSubjects([]);
   };
 
+  console.log("SUBJECTS:", subjects);
+
+
   return (
     <div className="groups-page">
 

@@ -9,6 +9,7 @@ using CHNU_Connect.BLL.DTOs.Group;
 using CHNU_Connect.BLL.DTOs.GroupMember;
 using CHNU_Connect.BLL.DTOs.Post;
 using CHNU_Connect.BLL.DTOs.PostLike;
+using CHNU_Connect.BLL.DTOs.Subject;
 using CHNU_Connect.BLL.DTOs.User;
 using CHNU_Connect.DAL.Entities;
 using Mapster;
@@ -212,6 +213,16 @@ namespace CHNU_Connect.BLL.Configuration
                 .Map(dest => dest.MessageType, src => src.MessageType)
                 .Map(dest => dest.CreatedAt, src => DateTime.UtcNow)
                 .Map(dest => dest.IsDeleted, src => false);
+
+
+            TypeAdapterConfig<Subject, SubjectDto>
+    .NewConfig()
+    .Map(dest => dest.Id, src => src.Id)
+    .Map(dest => dest.Name, src => src.Name)
+    .Map(dest => dest.GroupId, src => src.GroupId)
+    .Map(dest => dest.TeacherId, src => src.TeacherId)
+    .Map(dest => dest.MoodleLink, src => src.MoodleLink);
+
         }
     }
 }
