@@ -12,5 +12,7 @@ namespace CHNU_Connect.BLL.DTOs.Subject
         public string Name { get; set; } = null!;
         public int GroupId { get; set; }
         public int? TeacherId { get; set; }
+        public string? MoodleLink { get; set; }
+
     }
 }
