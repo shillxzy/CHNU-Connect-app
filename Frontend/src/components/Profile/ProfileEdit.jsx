@@ -114,7 +114,7 @@ const ProfileEdit = () => {
 
             <button
               type="button"
-              className="btn btn-upload"
+              className="profile-edit-btn btn-upload"
               onClick={() => fileInputRef.current.click()}
             >
               {photoFile ? "Змінити фото" : "Вибрати фото"}
@@ -170,7 +170,7 @@ const ProfileEdit = () => {
         </label>
 
         <div className="profile-form-actions">
-          <button className="btn btn-save" onClick={handleSave} disabled={saving}>
+          <button className="profile-edit-btn btn-save" onClick={handleSave} disabled={saving}>
             {saving ? "Збереження..." : "Зберегти"}
           </button>
         </div>

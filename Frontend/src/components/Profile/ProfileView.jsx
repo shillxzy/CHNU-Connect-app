@@ -91,7 +91,7 @@ const ProfileView = () => {
             <p><span className="profile-label">Біо:</span> {user.bio}</p>
 
             {currentUser?.id && user?.id && currentUser.id !== user.id && (
-              <button className="btn btn-messages" onClick={handleMessageClick}>
+              <button className="profile-btn btn-messages" onClick={handleMessageClick}>
                 Повідомлення
               </button>
             )}

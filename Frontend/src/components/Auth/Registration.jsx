@@ -61,7 +61,7 @@ export default function Registration() {
 
         <form onSubmit={handleSubmit}>
           <label htmlFor="username" className="label">Ім'я</label>
-          <div className="input-group">
+          <div className="input-login-group">
             <input
               id="username"
               type="text"
@@ -69,12 +69,12 @@ export default function Registration() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="input-field"
+              className="input-login-field"
             />
           </div>
 
           <label htmlFor="email" className="label">Емейл</label>
-          <div className="input-group">
+          <div className="input-login-group">
             <img src={MailIcon} alt="mail" className="icon" />
             <input
               id="email"
@@ -83,12 +83,12 @@ export default function Registration() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="input-field"
+              className="input-login-field"
             />
           </div>
 
           <label htmlFor="password" className="label">Пароль</label>
-          <div className="input-group">
+          <div className="input-login-group">
             <img src={LockIcon} alt="lock" className="icon" />
             <input
               id="password"
@@ -97,7 +97,7 @@ export default function Registration() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="input-field"
+              className="input-login-field"
             />
             <button
               type="button"
@@ -116,7 +116,7 @@ export default function Registration() {
           </div>
 
           <label htmlFor="confirmPassword" className="label">Підтвердження паролю</label>
-          <div className="input-group">
+          <div className="input-login-group">
             <img src={LockIcon} alt="lock" className="icon" />
             <input
               id="confirmPassword"
@@ -125,7 +125,7 @@ export default function Registration() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              className="input-field"
+              className="input-login-field"
             />
           </div>
 

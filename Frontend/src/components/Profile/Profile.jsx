@@ -111,15 +111,15 @@ const Profile = () => {
           </div>
 
           <div className="profile-actions">
-            <button className="btn btn-edit" onClick={handleEditProfile}>
+            <button className="profile-btn btn-edit" onClick={handleEditProfile}>
               Редагувати профіль
             </button>
-           <button className="btn btn-messages" onClick={handleChatsProfile}>
+           <button className="profile-btn btn-messages" onClick={handleChatsProfile}>
   Повідомлення
   {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
 </button>
 
-            <button className="btn btn-logout" onClick={handleLogout}>
+            <button className="profile-btn btn-logout" onClick={handleLogout}>
               Вихід
             </button>
           </div>

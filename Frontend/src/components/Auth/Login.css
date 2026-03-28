@@ -76,7 +76,7 @@
 /* 3. ПОЛЯ ВВЕДЕННЯ ТА ІКОНКИ */
 /* ----------------------------------- */
 
-.input-group {
+.input-login-group {
     position: relative;
     display: flex;
     align-items: center;
@@ -87,17 +87,18 @@
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.input-group:focus-within {
+.input-login-group:focus-within {
     border-color: #007bff;
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
-.input-field {
+.input-login-field {
     border: none;
     outline: none;
     flex-grow: 1;
     font-size: 16px;
     padding: 0;
+    margin: 0;
     background-color: transparent;
     color: #333;
 }

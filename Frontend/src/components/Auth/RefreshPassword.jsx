@@ -80,10 +80,10 @@ export default function RefreshPassword() {
         {step === "email" && (
           <>
             <label className="label">Емайл</label>
-            <div className="input-group">
+            <div className="input-login-group">
               <input
                 type="email"
-                className="input-field"
+                className="input-login-field"
                 placeholder="Введіть ваш email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}

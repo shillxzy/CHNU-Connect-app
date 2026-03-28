@@ -74,7 +74,7 @@ export default function Login() {
 
         <form onSubmit={handleSubmit}>
           <label htmlFor="email" className="label">Емейл</label>
-          <div className="input-group">
+          <div className="input-login-group">
             <img src={MailIcon} alt="mail" className="icon" />
             <input
               id="email"
@@ -83,12 +83,12 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="input-field"
+              className="input-login-field"
             />
           </div>
 
           <label htmlFor="password" className="label">Пароль</label>
-          <div className="input-group">
+          <div className="input-login-group">
             <img src={LockIcon} alt="lock" className="icon" />
             <input
               id="password"
@@ -97,7 +97,7 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="input-field"
+              className="input-login-field"
             />
             <button
               type="button"
