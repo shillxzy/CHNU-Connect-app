@@ -20,11 +20,6 @@ dist-ssr/
 .idea/
 .DS_Store
 
-# Visual Studio
-.vs/
-bin/
-obj/
-
 # Temporary / user-specific files
 *.user
 *.suo
