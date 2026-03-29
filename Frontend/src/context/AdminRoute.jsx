@@ -7,7 +7,7 @@ export default function AdminRoute({ children }) {
   const { accessToken, role } = useContext(AuthContext);
 
   if (!accessToken) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/login" replace />;
   }
   if (!role) {
     return <Loading />;
