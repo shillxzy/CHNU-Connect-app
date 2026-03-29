@@ -17,16 +17,18 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  border: 1px solid rgba(0,0,0,0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   padding: 14px;
   border-radius: 12px;
   background: #fafafa;
-  transition: all 200ms, box-shadow 200ms;
+  transition:
+    all 200ms,
+    box-shadow 200ms;
 }
 
 .post-creator:hover {
   background: #ffffff;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
 }
 
 .post-creator-top {
@@ -117,15 +119,15 @@
 }
 
 .post-image {
-    margin-top: 10px;
-    display: flex;
-    justify-content: flex-start; /* фото зліва */
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-start; /* фото зліва */
 }
 
 .post-image img {
-    width: 70%;           
-    max-width: 420px;     
-    max-height: 350px;    
-    object-fit: cover;
-    border-radius: 10px;
+  width: 70%;
+  max-width: 420px;
+  max-height: 350px;
+  object-fit: cover;
+  border-radius: 10px;
 }

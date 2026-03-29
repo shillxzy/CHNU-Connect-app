@@ -1,38 +1,38 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState, React } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import {
   getGroupById,
   updateGroup,
   assignCurator,
-  addUserToGroup
-} from "../../api/groupAPI";
+  addUserToGroup,
+} from '../../api/groupAPI';
 
 import {
   getSubjectsByGroup,
   createSubject,
-  deleteSubject
-} from "../../api/subjectAPI";
+  deleteSubject,
+} from '../../api/subjectAPI';
 
-import { getAllUsers } from "../../api/userAPI";
+import { getAllUsers } from '../../api/userAPI';
 
-import Avatar from "../Avatar/Avatar";
-import "./GroupEdit.css";
+import Avatar from '../Avatar/Avatar';
+import './GroupEdit.css';
 
 export default function GroupEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   /* ===== GROUP ===== */
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
 
   /* ===== USERS ===== */
   const [users, setUsers] = useState([]);
-  const [mode, setMode] = useState("teacher");
+  const [mode, setMode] = useState('teacher');
 
-  const [search, setSearch] = useState("");
-  const [debounced, setDebounced] = useState("");
+  const [search, setSearch] = useState('');
+  const [debounced, setDebounced] = useState('');
 
   const [selectedCurator, setSelectedCurator] = useState(null);
   const [selectedStudents, setSelectedStudents] = useState([]);
@@ -43,9 +43,9 @@ export default function GroupEdit() {
   /* ===== SUBJECTS ===== */
   const [subjects, setSubjects] = useState([]);
   const [newSubject, setNewSubject] = useState({
-    name: "",
-    moodleLink: "",
-    teacherId: null
+    name: '',
+    moodleLink: '',
+    teacherId: null,
   });
 
   /* ================= LOAD ================= */
@@ -60,11 +60,13 @@ export default function GroupEdit() {
     setName(g.name);
     setDescription(g.description);
 
-    if (g.curator) setSelectedCurator(g.curator);
+    if (g.curator) {
+      setSelectedCurator(g.curator);
+    }
 
     if (g.users) {
       setSelectedStudents(g.users);
-      setExistingStudents(g.users); 
+      setExistingStudents(g.users);
     }
 
     const subjectsRes = await getSubjectsByGroup(id);
@@ -81,70 +83,68 @@ export default function GroupEdit() {
   }, [search]);
 
   useEffect(() => {
-    setSearch("");
+    setSearch('');
   }, [mode]);
 
   const filteredUsers = users
-    .filter(u => (u.role || "").toLowerCase() === mode)
-    .filter(u =>
-      (u.fullName || "").toLowerCase().includes(debounced.toLowerCase())
+    .filter((u) => (u.role || '').toLowerCase() === mode)
+    .filter((u) =>
+      (u.fullName || '').toLowerCase().includes(debounced.toLowerCase()),
     );
 
   /* ================= USERS ACTIONS ================= */
 
   const addStudent = (user) => {
-    if (!selectedStudents.some(s => s.id === user.id)) {
-      setSelectedStudents(prev => [...prev, user]);
+    if (!selectedStudents.some((s) => s.id === user.id)) {
+      setSelectedStudents((prev) => [...prev, user]);
     }
   };
 
   const removeStudent = (id) => {
-    setSelectedStudents(prev => prev.filter(s => s.id !== id));
+    setSelectedStudents((prev) => prev.filter((s) => s.id !== id));
   };
 
   /* ================= SUBJECTS ================= */
 
   const handleAddSubject = () => {
-  if (!newSubject.name.trim()) return;
-
-  const subjectToAdd = {
-    name: newSubject.name,
-    moodleLink: newSubject.moodleLink || null,
-    teacherId: newSubject.teacherId || null,
-    isNew: true,
-    id: Date.now()
-  };
-
-  console.log("ADDING SUBJECT:", subjectToAdd);
-
-  setSubjects(prev => [...prev, subjectToAdd]);
-
-  setNewSubject({
-    name: "",
-    moodleLink: "",
-    teacherId: null
-  });
-};
-
-
-  const removeSubject = async (subject) => {
-  try {
-
-    if (subject.isNew) {
-      setSubjects(prev => prev.filter(s => s.id !== subject.id));
+    if (!newSubject.name.trim()) {
       return;
     }
 
-    await deleteSubject(subject.id);
+    const subjectToAdd = {
+      name: newSubject.name,
+      moodleLink: newSubject.moodleLink || null,
+      teacherId: newSubject.teacherId || null,
+      isNew: true,
+      id: Date.now(),
+    };
 
-    setSubjects(prev => prev.filter(s => s.id !== subject.id));
+    console.log('ADDING SUBJECT:', subjectToAdd);
 
-  } catch (err) {
-    console.error("DELETE SUBJECT ERROR:", err);
-    alert("Не вдалося видалити дисципліну");
-  }
-};
+    setSubjects((prev) => [...prev, subjectToAdd]);
 
+    setNewSubject({
+      name: '',
+      moodleLink: '',
+      teacherId: null,
+    });
+  };
+
+  const removeSubject = async (subject) => {
+    try {
+      if (subject.isNew) {
+        setSubjects((prev) => prev.filter((s) => s.id !== subject.id));
+        return;
+      }
+
+      await deleteSubject(subject.id);
+
+      setSubjects((prev) => prev.filter((s) => s.id !== subject.id));
+    } catch (err) {
+      console.error('DELETE SUBJECT ERROR:', err);
+      alert('Не вдалося видалити дисципліну');
+    }
+  };
 
   /* ================= SAVE ================= */
 
@@ -159,14 +159,16 @@ export default function GroupEdit() {
       }
 
       // 3. students (тільки нові)
-      const existingIds = existingStudents.map(s => s.id);
+      const existingIds = existingStudents.map((s) => s.id);
 
       await Promise.all(
-        selectedStudents.map(s => {
-          if (existingIds.includes(s.id)) return;
+        selectedStudents.map((s) => {
+          if (existingIds.includes(s.id)) {
+            return;
+          }
 
-          return addUserToGroup(id, s.id, "student");
-        })
+          return addUserToGroup(id, s.id, 'student');
+        }),
       );
 
       // 4. subjects
@@ -176,17 +178,16 @@ export default function GroupEdit() {
             name: s.name,
             groupId: id,
             teacherId: s.teacherId,
-            moodleLink: s.moodleLink
+            moodleLink: s.moodleLink,
           });
         }
       }
 
-      alert("Збережено");
+      alert('Збережено');
       navigate(`/groups/${id}`);
-
     } catch (err) {
       console.error(err);
-      alert("Помилка збереження");
+      alert('Помилка збереження');
     }
   };
 
@@ -195,7 +196,7 @@ export default function GroupEdit() {
   const renderUser = (user, onClick, isSelected) => (
     <div
       key={user.id}
-      className={`user-card ${isSelected ? "selected" : ""}`}
+      className={`user-card ${isSelected ? 'selected' : ''}`}
       onClick={() => onClick(user)}
     >
       <Avatar photoUrl={user.photoUrl} size={42} />
@@ -207,12 +208,10 @@ export default function GroupEdit() {
     </div>
   );
 
-  console.log("SUBJECTS:", subjects);
-
+  console.log('SUBJECTS:', subjects);
 
   return (
     <div className="edit-page">
-
       <h2>Редагування групи</h2>
 
       {/* ===== GROUP ===== */}
@@ -222,30 +221,29 @@ export default function GroupEdit() {
         <input
           placeholder="Назва групи"
           value={name}
-          onChange={e => setName(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
         />
 
         <textarea
           placeholder="Опис"
           value={description}
-          onChange={e => setDescription(e.target.value)}
+          onChange={(e) => setDescription(e.target.value)}
         />
       </div>
 
       {/* ===== CURATOR + STUDENTS ===== */}
       <div className="card">
-
         <div className="mode-switch">
           <button
-            className={mode === "teacher" ? "active" : ""}
-            onClick={() => setMode("teacher")}
+            className={mode === 'teacher' ? 'active' : ''}
+            onClick={() => setMode('teacher')}
           >
             Куратор
           </button>
 
           <button
-            className={mode === "student" ? "active" : ""}
-            onClick={() => setMode("student")}
+            className={mode === 'student' ? 'active' : ''}
+            onClick={() => setMode('student')}
           >
             Студенти
           </button>
@@ -255,36 +253,32 @@ export default function GroupEdit() {
           className="search"
           placeholder="Пошук..."
           value={search}
-          onChange={e => setSearch(e.target.value)}
+          onChange={(e) => setSearch(e.target.value)}
         />
 
         <div className="list">
-          {filteredUsers.map(u =>
-            mode === "teacher"
-              ? renderUser(
-                  u,
-                  setSelectedCurator,
-                  selectedCurator?.id === u.id
-                )
+          {filteredUsers.map((u) =>
+            mode === 'teacher'
+              ? renderUser(u, setSelectedCurator, selectedCurator?.id === u.id)
               : renderUser(
                   u,
                   addStudent,
-                  selectedStudents.some(s => s.id === u.id)
-                )
+                  selectedStudents.some((s) => s.id === u.id),
+                ),
           )}
         </div>
 
         {/* SELECTED */}
-        {mode === "teacher" && selectedCurator && (
+        {mode === 'teacher' && selectedCurator && (
           <div className="selected-block">
             <Avatar photoUrl={selectedCurator.photoUrl} size={50} />
             <span>{selectedCurator.fullName}</span>
           </div>
         )}
 
-        {mode === "student" && (
+        {mode === 'student' && (
           <div className="chips">
-            {selectedStudents.map(s => (
+            {selectedStudents.map((s) => (
               <div
                 key={s.id}
                 className="chip"
@@ -299,14 +293,13 @@ export default function GroupEdit() {
 
       {/* ===== SUBJECTS ===== */}
       <div className="card">
-
         <h3>Дисципліни</h3>
 
         <div className="add-subject">
           <input
             placeholder="Назва"
             value={newSubject.name}
-            onChange={e =>
+            onChange={(e) =>
               setNewSubject({ ...newSubject, name: e.target.value })
             }
           />
@@ -314,7 +307,7 @@ export default function GroupEdit() {
           <input
             placeholder="Moodle"
             value={newSubject.moodleLink}
-            onChange={e =>
+            onChange={(e) =>
               setNewSubject({ ...newSubject, moodleLink: e.target.value })
             }
           />
@@ -323,9 +316,8 @@ export default function GroupEdit() {
         </div>
 
         <div className="subjects-list">
-          {subjects.map(s => (
+          {subjects.map((s) => (
             <div key={s.id} className="subject-item">
-
               <div
                 className="subject-info"
                 onClick={() => s.moodleLink && window.open(s.moodleLink)}
@@ -335,18 +327,14 @@ export default function GroupEdit() {
               </div>
 
               <button onClick={() => removeSubject(s)}>✕</button>
-
-
             </div>
           ))}
         </div>
-
       </div>
 
       <button className="save-btn" onClick={handleSave}>
         Зберегти зміни
       </button>
-
     </div>
   );
 }

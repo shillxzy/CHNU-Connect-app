@@ -1,25 +1,21 @@
-import { useEffect, useState } from "react";
-import {
-  createGroup,
-  assignCurator,
-  addUserToGroup
-} from "../../api/groupAPI";
-import { getAllUsers } from "../../api/userAPI";
-import { useNavigate } from "react-router-dom";
-import Avatar from "../Avatar/Avatar";
-import "./GroupCreate.css";
+import { useEffect, useState, React } from 'react';
+import { createGroup, assignCurator, addUserToGroup } from '../../api/groupAPI';
+import { getAllUsers } from '../../api/userAPI';
+import { useNavigate } from 'react-router-dom';
+import Avatar from '../Avatar/Avatar';
+import './GroupCreate.css';
 
 export default function GroupCreate() {
   const navigate = useNavigate();
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
 
   const [users, setUsers] = useState([]);
 
-  const [mode, setMode] = useState("teacher"); // teacher | student
-  const [search, setSearch] = useState("");
-  const [debounced, setDebounced] = useState("");
+  const [mode, setMode] = useState('teacher'); // teacher | student
+  const [search, setSearch] = useState('');
+  const [debounced, setDebounced] = useState('');
 
   const [selectedCurator, setSelectedCurator] = useState(null);
   const [selectedStudents, setSelectedStudents] = useState([]);
@@ -42,36 +38,35 @@ export default function GroupCreate() {
 
   /* ================= RESET SEARCH ================= */
   useEffect(() => {
-    setSearch("");
+    setSearch('');
   }, [mode]);
 
   /* ================= FILTER ================= */
-const filteredUsers = users
-  .filter(u => (u.role || "").toLowerCase() === mode)
-  .filter(u =>
-    (u.fullName || "")
-      .toLowerCase()
-      .includes(debounced.toLowerCase())
-  );
+  const filteredUsers = users
+    .filter((u) => (u.role || '').toLowerCase() === mode)
+    .filter((u) =>
+      (u.fullName || '').toLowerCase().includes(debounced.toLowerCase()),
+    );
 
-
-console.log("USERS:", users);
-console.log("MODE:", mode);
-console.log("FILTERED:", filteredUsers);
+  console.log('USERS:', users);
+  console.log('MODE:', mode);
+  console.log('FILTERED:', filteredUsers);
 
   /* ================= ACTIONS ================= */
   const addStudent = (user) => {
-    if (!selectedStudents.some(s => s.id === user.id)) {
-      setSelectedStudents(prev => [...prev, user]);
+    if (!selectedStudents.some((s) => s.id === user.id)) {
+      setSelectedStudents((prev) => [...prev, user]);
     }
   };
 
   const removeStudent = (id) => {
-    setSelectedStudents(prev => prev.filter(s => s.id !== id));
+    setSelectedStudents((prev) => prev.filter((s) => s.id !== id));
   };
 
   const handleCreate = async () => {
-    if (!name.trim()) return alert("Введи назву");
+    if (!name.trim()) {
+      return alert('Введи назву');
+    }
 
     try {
       const res = await createGroup({ name, description });
@@ -82,15 +77,13 @@ console.log("FILTERED:", filteredUsers);
       }
 
       await Promise.all(
-        selectedStudents.map(s =>
-          addUserToGroup(groupId, s.id, "student")
-        )
+        selectedStudents.map((s) => addUserToGroup(groupId, s.id, 'student')),
       );
 
-      navigate("/groups");
+      navigate('/groups');
     } catch (err) {
       console.error(err);
-      alert("Помилка створення групи");
+      alert('Помилка створення групи');
     }
   };
 
@@ -98,7 +91,7 @@ console.log("FILTERED:", filteredUsers);
   const renderUser = (user, onClick, isSelected) => (
     <div
       key={user.id}
-      className={`user-card ${isSelected ? "selected" : ""}`}
+      className={`user-card ${isSelected ? 'selected' : ''}`}
       onClick={() => onClick(user)}
     >
       <Avatar photoUrl={user.photoUrl} size={42} />
@@ -113,33 +106,32 @@ console.log("FILTERED:", filteredUsers);
   return (
     <div className="create-wrapper">
       <div className="create-card">
-
         <h2>Створення групи</h2>
 
         <input
           placeholder="Назва групи"
           value={name}
-          onChange={e => setName(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
         />
 
         <textarea
           placeholder="Опис"
           value={description}
-          onChange={e => setDescription(e.target.value)}
+          onChange={(e) => setDescription(e.target.value)}
         />
 
         {/* ================= MODE ================= */}
         <div className="mode-switch">
           <button
-            className={mode === "teacher" ? "active" : ""}
-            onClick={() => setMode("teacher")}
+            className={mode === 'teacher' ? 'active' : ''}
+            onClick={() => setMode('teacher')}
           >
             Куратор
           </button>
 
           <button
-            className={mode === "student" ? "active" : ""}
-            onClick={() => setMode("student")}
+            className={mode === 'student' ? 'active' : ''}
+            onClick={() => setMode('student')}
           >
             Студенти
           </button>
@@ -150,24 +142,24 @@ console.log("FILTERED:", filteredUsers);
           className="search"
           placeholder="Пошук..."
           value={search}
-          onChange={e => setSearch(e.target.value)}
+          onChange={(e) => setSearch(e.target.value)}
         />
 
         {/* ================= LIST ================= */}
         <div className="list">
           {filteredUsers.length > 0 ? (
-            filteredUsers.map(u =>
-              mode === "teacher"
+            filteredUsers.map((u) =>
+              mode === 'teacher'
                 ? renderUser(
                     u,
                     setSelectedCurator,
-                    selectedCurator?.id === u.id
+                    selectedCurator?.id === u.id,
                   )
                 : renderUser(
                     u,
                     addStudent,
-                    selectedStudents.some(s => s.id === u.id)
-                  )
+                    selectedStudents.some((s) => s.id === u.id),
+                  ),
             )
           ) : (
             <div className="empty">Нічого не знайдено</div>
@@ -175,16 +167,16 @@ console.log("FILTERED:", filteredUsers);
         </div>
 
         {/* ================= SELECTED ================= */}
-        {mode === "teacher" && selectedCurator && (
+        {mode === 'teacher' && selectedCurator && (
           <div className="selected-block">
             <Avatar photoUrl={selectedCurator.photoUrl} size={50} />
             <span>{selectedCurator.fullName}</span>
           </div>
         )}
 
-        {mode === "student" && (
+        {mode === 'student' && (
           <div className="chips">
-            {selectedStudents.map(s => (
+            {selectedStudents.map((s) => (
               <div
                 key={s.id}
                 className="chip"
@@ -199,7 +191,6 @@ console.log("FILTERED:", filteredUsers);
         <button className="btn" onClick={handleCreate}>
           Створити
         </button>
-
       </div>
     </div>
   );

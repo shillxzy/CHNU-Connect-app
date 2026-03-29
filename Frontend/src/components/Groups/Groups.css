@@ -189,7 +189,9 @@
   text-align: center;
   background-color: #f8f9fa;
   cursor: pointer;
-  transition: border-color 0.2s, background-color 0.2s;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
 }
 
 .file-upload-area:hover {
@@ -278,7 +280,7 @@
   cursor: pointer;
 }
 
-.checkbox-label input[type="checkbox"] {
+.checkbox-label input[type='checkbox'] {
   width: 18px;
   height: 18px;
   cursor: pointer;
@@ -470,13 +472,12 @@
   .group-card-container {
     grid-template-columns: 1fr;
   }
-  
+
   .group-card {
     flex-direction: column;
   }
-  
+
   .form-actions {
     flex-direction: column;
   }
 }
-

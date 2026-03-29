@@ -60,19 +60,18 @@
 .user-item {
   display: flex;
   align-items: center;
-  justify-content: flex-start; 
+  justify-content: flex-start;
   padding: 10px 15px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  gap: 20px; 
+  gap: 20px;
 }
 
 .user-info {
   display: flex;
   flex-direction: column;
-  gap: 4px; 
+  gap: 4px;
 }
-
 
 .avatar {
   width: 35px;

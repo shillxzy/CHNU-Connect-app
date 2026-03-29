@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, useLocation, Outlet } from "react-router-dom";
+import { useLocation, Outlet } from 'react-router-dom';
 import Header from '../Common/Header.jsx';
 import GroupsPage from '../Groups/GroupsPage.jsx';
 import EventsList from '../Events/EventsList.jsx';
@@ -18,15 +18,17 @@ import GroupEdit from '../Groups/GroupEdit.jsx';
 
 function HomePage({ onLogout }) {
   const location = useLocation();
-  const isHome = location.pathname === "/";
+  const isHome = location.pathname === '/';
 
   return (
     <div className="app-container">
       <Header onLogout={onLogout} />
       {isHome && <HeroBanner />}
 
-      <div className={`main-content-area ${isHome ? "with-sidebar" : "full-width"}`}>
-        <Outlet /> 
+      <div
+        className={`main-content-area ${isHome ? 'with-sidebar' : 'full-width'}`}
+      >
+        <Outlet />
         {isHome && <Sidebar />}
       </div>
 

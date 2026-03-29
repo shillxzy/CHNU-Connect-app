@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-export const Event = ({ events } ) => {
+export const Event = ({ events }) => {
   return (
     <>
       {Array.isArray(events) && events.length > 0 ? (

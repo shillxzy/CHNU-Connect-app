@@ -1,4 +1,4 @@
-import api from "./axiosInstance";
+import api from './axiosInstance';
 
 /* =========================
    Schedule
@@ -7,11 +7,8 @@ import api from "./axiosInstance";
 export const getScheduleByGroup = (groupId) =>
   api.get(`/Schedule/group/${groupId}`);
 
-export const getMySchedule = () =>
-  api.get("/Schedule/my");
+export const getMySchedule = () => api.get('/Schedule/my');
 
-export const createSchedule = (data) =>
-  api.post("/Schedule", data);
+export const createSchedule = (data) => api.post('/Schedule', data);
 
-export const deleteSchedule = (id) =>
-  api.delete(`/Schedule/${id}`);
+export const deleteSchedule = (id) => api.delete(`/Schedule/${id}`);

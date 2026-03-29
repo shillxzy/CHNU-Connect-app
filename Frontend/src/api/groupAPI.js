@@ -1,13 +1,13 @@
-import api from "./axiosInstance";
+import api from './axiosInstance';
 
 /* =========================
    Group
 ========================= */
 
-export const getGroups = () => api.get("/Group/my");
-export const getAllGroups = () => api.get("/Group");
+export const getGroups = () => api.get('/Group/my');
+export const getAllGroups = () => api.get('/Group');
 export const getGroupById = (id) => api.get(`/Group/${id}`);
-export const createGroup = (data) => api.post("/Group", data);
+export const createGroup = (data) => api.post('/Group', data);
 export const updateGroup = (id, data) => api.put(`/Group/${id}`, data);
 export const deleteGroup = (id) => api.delete(`/Group/${id}`);
 
@@ -18,13 +18,12 @@ export const deleteGroup = (id) => api.delete(`/Group/${id}`);
 export const assignCurator = (groupId, userId) =>
   api.post(`/Group/${groupId}/assign-curator`, userId, {
     headers: {
-      "Content-Type": "application/json"
-    }
+      'Content-Type': 'application/json',
+    },
   });
-
 
 export const addUserToGroup = (groupId, userId, role) =>
   api.post(`/Group/${groupId}/add-user`, {
     userId,
-    role
+    role,
   });
