@@ -1,34 +1,7 @@
-<<<<<<< HEAD
-import React, { useContext } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "./context/AuthProvider";
-import AuthContext from "./context/AuthContext";
-
-import Login from "./components/Auth/Login";
-import HomePage from "./components/HomePage/HomePage";
-import HomePageNewsFeed from "./components/NewsFeed/NewsFeed";
-import GroupsPage from "./components/Groups/GroupsPage";
-import EventsList from "./components/Events/EventsList";
-import Profile from "./components/Profile/Profile";
-import ProfileEdit from "./components/Profile/ProfileEdit";
-import AboutUs from "./components/AboutUs/AboutUs";
-import RefreshPassword from "./components/Auth/RefreshPassword";
-import Registration from "./components/Auth/Registration";
-import CreateEvent from "./components/Events/CreateEvent";
-import EventDetails from "./components/Events/EventDetails";
-import PostsList from "./components/Posts/PostsList";
-import ProfileView from "./components/Profile/ProfileView";
-import Chats from "./components/Chats/Chats";
-import AdminPanel from "./components/AdminPanel/AdminPanel";
-import GroupCreate from "./components/Groups/GroupCreate";
-import GroupEdit from "./components/Groups/GroupEdit";
-import ScheduleEditPage from "./components/Schedule/ScheduleEditPage";
-=======
 import React, { useContext } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthProvider';
 import AuthContext from './context/AuthContext';
->>>>>>> 245101f6cdc1d8c2337001ace2ef6eaec0c9875e
 
 import Login from './components/Auth/Login';
 import HomePage from './components/HomePage/HomePage';
@@ -48,6 +21,7 @@ import Chats from './components/Chats/Chats';
 import AdminPanel from './components/AdminPanel/AdminPanel';
 import GroupCreate from './components/Groups/GroupCreate';
 import GroupEdit from './components/Groups/GroupEdit';
+import ScheduleEditPage from './components/Schedule/ScheduleEditPage';
 
 // Публічний маршрут
 function PublicRoute({ children }) {
@@ -153,16 +127,15 @@ function AppRoutes() {
             </AdminRoute>
           }
         />
-<<<<<<< HEAD
 
-        <Route path="/group/edit/schedule/:id" element={
+        <Route
+          path="/group/edit/schedule/:id"
+          element={
             <AdminRoute>
               <ScheduleEditPage />
             </AdminRoute>
           }
         />
-=======
->>>>>>> 245101f6cdc1d8c2337001ace2ef6eaec0c9875e
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,9 +1,9 @@
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
-import { getScheduleByGroup, createSchedule } from "../../api/scheduleAPI";
+import { getScheduleByGroup, createSchedule } from '../../api/scheduleAPI';
 
-import ScheduleTable from "./ScheduleTable";
+import ScheduleTable from './ScheduleTable';
 
 export default function ScheduleEditPage() {
   const { id } = useParams();
@@ -28,16 +28,11 @@ export default function ScheduleEditPage() {
     load();
   };
 
-
-
   return (
     <div>
       <h2>Редагування розкладу</h2>
 
-      <ScheduleTable
-        schedule={schedule}
-        onUpdateLesson={handleCreate}
-      />
+      <ScheduleTable schedule={schedule} onUpdateLesson={handleCreate} />
     </div>
   );
 }

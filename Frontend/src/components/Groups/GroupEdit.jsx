@@ -292,12 +292,11 @@ export default function GroupEdit() {
       </div>
 
       <button
-  className="schedule-btn"
-  onClick={() => navigate(`/group/edit/schedule/${id}`)}
->
-  Редагувати розклад
-</button>
-
+        className="schedule-btn"
+        onClick={() => navigate(`/group/edit/schedule/${id}`)}
+      >
+        Редагувати розклад
+      </button>
 
       {/* ===== SUBJECTS ===== */}
       <div className="card">
