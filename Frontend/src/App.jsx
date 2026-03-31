@@ -21,6 +21,7 @@ import Chats from "./components/Chats/Chats";
 import AdminPanel from "./components/AdminPanel/AdminPanel";
 import GroupCreate from "./components/Groups/GroupCreate";
 import GroupEdit from "./components/Groups/GroupEdit";
+import ScheduleEditPage from "./components/Schedule/ScheduleEditPage";
 
 
 // Публічний маршрут
@@ -118,7 +119,13 @@ function AppRoutes() {
             </AdminRoute>
           }
         />
-      
+
+        <Route path="/group/edit/schedule/:id" element={
+            <AdminRoute>
+              <ScheduleEditPage />
+            </AdminRoute>
+          }
+        />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />
