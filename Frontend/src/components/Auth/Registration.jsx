@@ -1,40 +1,42 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./Login.css";
-import { MailIcon, LockIcon, EyeIcon, EyeOffIcon, GoogleIcon } from "../Icons";
-import { register as registerAPI } from "../../api/authAPI"; 
+import { useState, React } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './Login.css';
+import { MailIcon, LockIcon, EyeIcon, EyeOffIcon, GoogleIcon } from '../Icons';
+import { register as registerAPI } from '../../api/authAPI';
 
 const handleGoogleSignUp = () => alert("Button 'Sign up with Google' clicked!");
 
 export default function Registration() {
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setError('');
 
     // Перевірка на збіг паролів
     if (password !== confirmPassword) {
-      setError("Паролі не співпадають");
+      setError('Паролі не співпадають');
       return;
     }
 
     setLoading(true);
     try {
       await registerAPI({ username, email, password });
-      alert("Реєстрація пройшла успішно! Перейдіть на сторінку входу.");
-      navigate("/login");
+      alert('Реєстрація пройшла успішно! Перейдіть на сторінку входу.');
+      navigate('/login');
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.message || "Сталася помилка під час реєстрації");
+      setError(
+        err.response?.data?.message || 'Сталася помилка під час реєстрації',
+      );
     } finally {
       setLoading(false);
     }
@@ -45,7 +47,9 @@ export default function Registration() {
       <div className="login-card">
         <div className="login-header">
           <h2 className="h2">Реєстрація</h2>
-          <p className="subtitle">Створи акаунт, щоб почати користуватися додатком.</p>
+          <p className="subtitle">
+            Створи акаунт, щоб почати користуватися додатком.
+          </p>
         </div>
 
         {error && <p className="error-message">{error}</p>}
@@ -60,8 +64,10 @@ export default function Registration() {
         </button>
 
         <form onSubmit={handleSubmit}>
-          <label htmlFor="username" className="label">Ім'я</label>
-          <div className="input-group">
+          <label htmlFor="username" className="label">
+            Ім&apos;я
+          </label>
+          <div className="input-login-group">
             <input
               id="username"
               type="text"
@@ -69,12 +75,14 @@ export default function Registration() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="input-field"
+              className="input-login-field"
             />
           </div>
 
-          <label htmlFor="email" className="label">Емейл</label>
-          <div className="input-group">
+          <label htmlFor="email" className="label">
+            Емейл
+          </label>
+          <div className="input-login-group">
             <img src={MailIcon} alt="mail" className="icon" />
             <input
               id="email"
@@ -83,28 +91,30 @@ export default function Registration() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="input-field"
+              className="input-login-field"
             />
           </div>
 
-          <label htmlFor="password" className="label">Пароль</label>
-          <div className="input-group">
+          <label htmlFor="password" className="label">
+            Пароль
+          </label>
+          <div className="input-login-group">
             <img src={LockIcon} alt="lock" className="icon" />
             <input
               id="password"
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="input-field"
+              className="input-login-field"
             />
             <button
               type="button"
               className="eye-button"
               onClick={() => setShowPassword(!showPassword)}
               aria-pressed={showPassword}
-              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               <img
                 src={showPassword ? EyeOffIcon : EyeIcon}
@@ -115,17 +125,19 @@ export default function Registration() {
             </button>
           </div>
 
-          <label htmlFor="confirmPassword" className="label">Підтвердження паролю</label>
-          <div className="input-group">
+          <label htmlFor="confirmPassword" className="label">
+            Підтвердження паролю
+          </label>
+          <div className="input-login-group">
             <img src={LockIcon} alt="lock" className="icon" />
             <input
               id="confirmPassword"
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               placeholder="Confirm password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              className="input-field"
+              className="input-login-field"
             />
           </div>
 
@@ -134,16 +146,16 @@ export default function Registration() {
             disabled={loading}
             className={`primary-button ${loading ? 'loading' : ''}`}
           >
-            {loading ? "Реєстрація..." : "Зареєструватися"}
+            {loading ? 'Реєстрація...' : 'Зареєструватися'}
           </button>
         </form>
 
         <p className="signup-text">
           Вже маєш акаунт?
           <span
-            onClick={() => navigate("/login")}
+            onClick={() => navigate('/login')}
             className="signup-link"
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
           >
             Увійти
           </span>

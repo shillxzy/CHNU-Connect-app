@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { getEvents } from "../../api/eventAPI"; 
-import { Event } from "./Event";
-import "./Events.css";
-import Loading from "../Loading/Loading";
+import { useEffect, useState, React } from 'react';
+import { Link } from 'react-router-dom';
+import { getEvents } from '../../api/eventAPI';
+import { Event } from './Event';
+import './Events.css';
+import Loading from '../Loading/Loading';
 
 export default function EventsList() {
   const [events, setEvents] = useState([]);
@@ -17,10 +17,13 @@ export default function EventsList() {
 
         const eventsData = Array.isArray(response.data) ? response.data : [];
         setEvents(eventsData);
-
       } catch (err) {
-        console.error("Error fetching events:", err);
-        setError(err.response?.data?.message || err.message || "Помилка при завантаженні подій");
+        console.error('Error fetching events:', err);
+        setError(
+          err.response?.data?.message ||
+            err.message ||
+            'Помилка при завантаженні подій',
+        );
         setEvents([]);
       } finally {
         setLoading(false);
@@ -30,8 +33,12 @@ export default function EventsList() {
     fetchEvents();
   }, []);
 
-  if (loading) return <Loading />;
-  if (error) return <p>Помилка: {error}</p>;
+  if (loading) {
+    return <Loading />;
+  }
+  if (error) {
+    return <p>Помилка: {error}</p>;
+  }
 
   return (
     <div className="events-page">
@@ -43,12 +50,12 @@ export default function EventsList() {
               Створити подію
             </Link>
           </div>
-          
+
           <h2 className="section-subtitle">Список подій</h2>
-          
+
           <div className="events-list">
             <Event events={events} />
-              <p>Немає подій</p>
+            <p>Немає подій</p>
           </div>
         </div>
       </div>

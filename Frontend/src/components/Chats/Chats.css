@@ -177,7 +177,7 @@
 }
 
 .messages::-webkit-scrollbar-thumb {
-  background: rgba(0,0,0,0.2);
+  background: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
 }
 
@@ -193,12 +193,11 @@
 
 .date-divider::before,
 .date-divider::after {
-  content: "";
+  content: '';
   flex: 1;
   border-bottom: 1px solid #ccc;
   margin: 0 10px;
 }
-
 
 .message-actions {
   display: flex;
@@ -224,5 +223,3 @@
   color: #777;
   margin-top: 2px;
 }
-
-

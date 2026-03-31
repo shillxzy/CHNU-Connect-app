@@ -1,17 +1,17 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { createEvent } from "../../api/eventAPI";
-import "./Events.css";
-import Loading from "../Loading/Loading";
+import { useState, React } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { createEvent } from '../../api/eventAPI';
+import './Events.css';
+import Loading from '../Loading/Loading';
 
 export default function CreateEvent() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    startTime: "",
-    endTime: "",
+    title: '',
+    description: '',
+    startTime: '',
+    endTime: '',
     isPublic: true,
   });
 
@@ -22,7 +22,7 @@ export default function CreateEvent() {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
@@ -31,7 +31,12 @@ export default function CreateEvent() {
     setError(null);
 
     // Перевірка обов’язкових полів
-    if (!formData.title || !formData.description || !formData.startTime || !formData.endTime) {
+    if (
+      !formData.title ||
+      !formData.description ||
+      !formData.startTime ||
+      !formData.endTime
+    ) {
       setError("Будь ласка, заповніть всі обов'язкові поля");
       return;
     }
@@ -50,13 +55,13 @@ export default function CreateEvent() {
         isPublic: formData.isPublic,
       };
 
-      console.log("Event payload:", payload); // для дебагу
+      console.log('Event payload:', payload); // для дебагу
 
       await createEvent(payload);
-      navigate("/events");
+      navigate('/events');
     } catch (err) {
-      console.error("Error creating event:", err);
-      setError(err.response?.data?.message || "Помилка при створенні події");
+      console.error('Error creating event:', err);
+      setError(err.response?.data?.message || 'Помилка при створенні події');
     } finally {
       setLoading(false);
     }
@@ -68,12 +73,14 @@ export default function CreateEvent() {
         <div className="content-container">
           {loading && <Loading />}
           <div className="page-header">
-            <button className="btn-back" onClick={() => navigate(-1)}>← Назад</button>
+            <button className="btn-back" onClick={() => navigate(-1)}>
+              ← Назад
+            </button>
             <h1 className="page-title">Створити подію</h1>
           </div>
 
           <div className="event-form">
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
 
             <div className="form-section">
               <label className="form-label">Назва події</label>
@@ -131,11 +138,20 @@ export default function CreateEvent() {
             </div>
 
             <div className="form-actions">
-              <button type="button" className="btn-secondary" onClick={() => navigate("/events")}>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => navigate('/events')}
+              >
                 Відмінити
               </button>
-              <button type="submit" className="btn-primary" onClick={handleSubmit} disabled={loading}>
-                {loading ? "Створюється..." : "Створити подію"}
+              <button
+                type="submit"
+                className="btn-primary"
+                onClick={handleSubmit}
+                disabled={loading}
+              >
+                {loading ? 'Створюється...' : 'Створити подію'}
               </button>
             </div>
           </div>

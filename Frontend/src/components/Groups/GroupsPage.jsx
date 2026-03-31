@@ -1,10 +1,10 @@
-import { useEffect, useState, useContext } from "react";
-import { getGroups, getGroupById } from "../../api/groupAPI";
-import { getSubjectsByGroup } from "../../api/subjectAPI";
-import AuthContext from "../../context/AuthContext";
-import "./GroupsPage.css";
-import { useNavigate } from "react-router-dom";
-import UserTooltip from "../ToolTip/UserTooltip";
+import { useEffect, useState, useContext, React } from 'react';
+import { getGroups, getGroupById } from '../../api/groupAPI';
+import { getSubjectsByGroup } from '../../api/subjectAPI';
+import AuthContext from '../../context/AuthContext';
+import './GroupsPage.css';
+import { useNavigate } from 'react-router-dom';
+import UserTooltip from '../ToolTip/UserTooltip';
 
 export default function GroupsPage() {
   const { role, userId: currentUserId } = useContext(AuthContext);
@@ -37,23 +37,20 @@ export default function GroupsPage() {
     setSubjects([]);
   };
 
-  console.log("SUBJECTS:", subjects);
-
+  console.log('SUBJECTS:', subjects);
 
   return (
     <div className="groups-page">
-
       {/* ===== LIST ===== */}
       {!selectedGroup && (
         <div className="container">
-
           <div className="page-header">
             <h1>Групи</h1>
 
-            {role === "admin" && (
+            {role === 'admin' && (
               <button
                 className="btn-primary"
-                onClick={() => navigate("/groups/create")}
+                onClick={() => navigate('/groups/create')}
               >
                 + Створити групу
               </button>
@@ -71,24 +68,22 @@ export default function GroupsPage() {
                 <div className="group-desc">{g.description}</div>
 
                 <div className="group-meta">
-                  Куратор: <b>{g.curatorName || "Нікого"}</b>
+                  Куратор: <b>{g.curatorName || 'Нікого'}</b>
                 </div>
               </div>
             ))}
           </div>
-
         </div>
       )}
 
       {/* ===== DETAILS ===== */}
       {selectedGroup && (
         <div className="container">
-
           <button className="btn-back" onClick={backToList}>
             ← Назад
           </button>
 
-          {role === "admin" && (
+          {role === 'admin' && (
             <button
               className="btn-primary"
               onClick={() => navigate(`/groups/edit/${selectedGroup.id}`)}
@@ -125,7 +120,7 @@ export default function GroupsPage() {
 
               {selectedGroup.users && selectedGroup.users.length > 0 ? (
                 <div className="users-list">
-                  {selectedGroup.users.map(u => (
+                  {selectedGroup.users.map((u) => (
                     <div key={u.id} className="user-row">
                       <UserTooltip
                         userId={u.id}
@@ -147,27 +142,26 @@ export default function GroupsPage() {
 
               {subjects && subjects.length > 0 ? (
                 <div className="subjects-list">
-                  {subjects.map(s => (
+                  {subjects.map((s) => (
                     <div
-  key={s.id}
-  className="subject-item"
-  onClick={() => {
-    if (s.moodleLink) {
-      const url = s.moodleLink.startsWith("http")
-        ? s.moodleLink
-        : `https://${s.moodleLink}`;
+                      key={s.id}
+                      className="subject-item"
+                      onClick={() => {
+                        if (s.moodleLink) {
+                          const url = s.moodleLink.startsWith('http')
+                            ? s.moodleLink
+                            : `https://${s.moodleLink}`;
 
-      window.open(url, "_blank");
-    }
-  }}
-  style={{ cursor: s.moodleLink ? "pointer" : "default" }}
->
-  <div className="subject-info">
-    <b>{s.name}</b>
-    <span>{s.moodleLink}</span>
-  </div>
-</div>
-
+                          window.open(url, '_blank');
+                        }
+                      }}
+                      style={{ cursor: s.moodleLink ? 'pointer' : 'default' }}
+                    >
+                      <div className="subject-info">
+                        <b>{s.name}</b>
+                        <span>{s.moodleLink}</span>
+                      </div>
+                    </div>
                   ))}
                 </div>
               ) : (
@@ -178,12 +172,9 @@ export default function GroupsPage() {
             {/* ===== PLACEHOLDERS ===== */}
             <div className="section muted-box">Розклад</div>
             <div className="section muted-box">Чат групи</div>
-
           </div>
-
         </div>
       )}
-
     </div>
   );
 }

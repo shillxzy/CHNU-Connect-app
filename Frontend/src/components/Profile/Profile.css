@@ -90,7 +90,7 @@
   gap: 10px;
 }
 
-.btn {
+.profile-btn {
   padding: 8px 15px;
   border: 1px solid #ccc;
   border-radius: 20px;
@@ -100,7 +100,7 @@
   transition: background 0.2s;
 }
 
-.btn:hover {
+.profile-btn:hover {
   background-color: #f0f0f0;
 }
 

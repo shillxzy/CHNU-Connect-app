@@ -1,24 +1,32 @@
-import { useState, useEffect } from "react";
-import { 
-  getCommentsByPost, 
-  createComment, 
-  deleteComment, 
-  updateComment 
-} from "../../api/commentAPI";
-import Avatar from "../Avatar/Avatar";
-import './Comment.css'
-import Loading from "../Loading/Loading";
+import { useState, useEffect } from 'react';
+import {
+  getCommentsByPost,
+  createComment,
+  deleteComment,
+  updateComment,
+} from '../../api/commentAPI';
+import Avatar from '../Avatar/Avatar';
+import './Comment.css';
+import Loading from '../Loading/Loading';
 
-export const CommentsSection = ({ postId, currentUser, open, onCommentAdded, onCommentDeleted }) => {
+export const CommentsSection = ({
+  postId,
+  currentUser,
+  open,
+  onCommentAdded,
+  onCommentDeleted,
+}) => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [newComment, setNewComment] = useState("");
+  const [newComment, setNewComment] = useState('');
 
   const [editingId, setEditingId] = useState(null);
-  const [editingText, setEditingText] = useState("");
+  const [editingText, setEditingText] = useState('');
 
   useEffect(() => {
-    if (open) fetchComments();
+    if (open) {
+      fetchComments();
+    }
   }, [open]);
 
   const fetchComments = async () => {
@@ -27,15 +35,19 @@ export const CommentsSection = ({ postId, currentUser, open, onCommentAdded, onC
       const res = await getCommentsByPost(postId);
       setComments(res.data || []);
     } catch (err) {
-      console.error("Failed to fetch comments:", err);
+      console.error('Failed to fetch comments:', err);
     } finally {
       setLoading(false);
     }
   };
 
   const handleAddComment = async () => {
-    if (!newComment.trim()) return;
-    if (!currentUser?.id) return;
+    if (!newComment.trim()) {
+      return;
+    }
+    if (!currentUser?.id) {
+      return;
+    }
 
     try {
       const res = await createComment({
@@ -45,16 +57,18 @@ export const CommentsSection = ({ postId, currentUser, open, onCommentAdded, onC
       });
 
       setComments((prev) => [...prev, res.data]);
-      setNewComment("");
+      setNewComment('');
       onCommentAdded?.();
     } catch (err) {
-      console.error("Failed to add comment:", err);
+      console.error('Failed to add comment:', err);
     }
   };
 
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Видалити цей коментар?");
-    if (!confirmDelete) return;
+    const confirmDelete = window.confirm('Видалити цей коментар?');
+    if (!confirmDelete) {
+      return;
+    }
 
     try {
       await deleteComment(id);
@@ -64,7 +78,7 @@ export const CommentsSection = ({ postId, currentUser, open, onCommentAdded, onC
         onCommentDeleted();
       }
     } catch (err) {
-      console.error("Delete failed:", err);
+      console.error('Delete failed:', err);
     }
   };
 
@@ -74,30 +88,31 @@ export const CommentsSection = ({ postId, currentUser, open, onCommentAdded, onC
   };
 
   const handleEditSave = async (id) => {
-  if (!editingText.trim()) return;
+    if (!editingText.trim()) {
+      return;
+    }
 
-  const oldComment = comments.find(c => c.id === id);
+    const oldComment = comments.find((c) => c.id === id);
 
-  try {
-    const res = await updateComment(id, {
-      postId: oldComment.postId,
-      userId: oldComment.userId,
-      content: editingText.trim(),
-    });
+    try {
+      const res = await updateComment(id, {
+        postId: oldComment.postId,
+        userId: oldComment.userId,
+        content: editingText.trim(),
+      });
 
-    setComments((prev) =>
-      prev.map((c) => (c.id === id ? res.data : c))
-    );
+      setComments((prev) => prev.map((c) => (c.id === id ? res.data : c)));
 
-    setEditingId(null);
-    setEditingText("");
-  } catch (err) {
-    console.error("Update failed:", err);
+      setEditingId(null);
+      setEditingText('');
+    } catch (err) {
+      console.error('Update failed:', err);
+    }
+  };
+
+  if (!open) {
+    return null;
   }
-};
-
-
-  if (!open) return null;
 
   return (
     <div className="comments-section">
@@ -124,8 +139,12 @@ export const CommentsSection = ({ postId, currentUser, open, onCommentAdded, onC
                         onChange={(e) => setEditingText(e.target.value)}
                       />
                       <div className="comment-actions">
-                        <button onClick={() => handleEditSave(c.id)}>Зберегти</button>
-                        <button onClick={() => setEditingId(null)}>Скасувати</button>
+                        <button onClick={() => handleEditSave(c.id)}>
+                          Зберегти
+                        </button>
+                        <button onClick={() => setEditingId(null)}>
+                          Скасувати
+                        </button>
                       </div>
                     </>
                   ) : (
@@ -158,10 +177,16 @@ export const CommentsSection = ({ postId, currentUser, open, onCommentAdded, onC
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter") handleAddComment();
+            if (e.key === 'Enter') {
+              handleAddComment();
+            }
           }}
         />
-        <button type="button" className="create-comment-button" onClick={handleAddComment}>
+        <button
+          type="button"
+          className="create-comment-button"
+          onClick={handleAddComment}
+        >
           Відправити
         </button>
       </div>

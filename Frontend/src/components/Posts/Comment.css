@@ -1,7 +1,7 @@
 .comments-section {
-    margin-top: 12px;
-    padding-top: 10px;
-    border-top: 1px solid #eee;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
 }
 
 .comments-list {
@@ -35,27 +35,30 @@
 }
 
 .comment-form {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 .comment-form input {
-    flex: 1;
-    padding: 6px 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
 
 .create-comment-button {
-    padding: 6px 12px;
-    border: none;
-    font-weight: 600;
-    background: #2563eb;
-    color: #fff;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 300ms;
+  padding: 6px 12px;
+  height: 100%;
+  margin: 0;
+  border: none;
+  font-weight: 600;
+  background: #2563eb;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 300ms;
 }
 
 .create-comment-button:hover {
@@ -80,4 +83,3 @@
 .comment-actions button:hover {
   text-decoration: underline;
 }
-

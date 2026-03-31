@@ -1,10 +1,9 @@
-import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import "./Login.css";
-import { MailIcon, LockIcon, EyeIcon, GoogleIcon, EyeOffIcon } from "../Icons";
-import { login as loginAPI } from "../../api/authAPI";
-import AuthContext from "../../context/AuthContext";
-
+import { useState, useContext, React } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './Login.css';
+import { MailIcon, LockIcon, EyeIcon, GoogleIcon, EyeOffIcon } from '../Icons';
+import { login as loginAPI } from '../../api/authAPI';
+import AuthContext from '../../context/AuthContext';
 
 const handleGoogleSignIn = () => alert("Button 'Sign in with Google' clicked!");
 
@@ -12,29 +11,29 @@ export default function Login() {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const handleForgotPassword = (e) => {
     e.preventDefault();
-    navigate("/refresh-password");
+    navigate('/refresh-password');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setError('');
 
     try {
       const res = await loginAPI({ email, password });
 
       login({
         email: res.data.email,
-        password, 
+        password,
         userId: res.data.userId,
         userName: res.data.userName,
         role: res.data.role,
@@ -43,18 +42,15 @@ export default function Login() {
       });
 
       if (rememberMe) {
-        localStorage.setItem("rememberMe", "true");
+        localStorage.setItem('rememberMe', 'true');
       } else {
-        localStorage.removeItem("rememberMe");
+        localStorage.removeItem('rememberMe');
       }
 
-      
-
-
-      navigate("/");
+      navigate('/');
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.message || "Сталася помилка під час входу");
+      setError(err.response?.data?.message || 'Сталася помилка під час входу');
     } finally {
       setLoading(false);
     }
@@ -66,15 +62,17 @@ export default function Login() {
         <div className="login-header">
           <h2 className="h2">Увійти</h2>
           <p className="subtitle">
-            Увійдіть, використовуючи своє ім'я користувача та пароль.
+            Увійдіть, використовуючи своє ім&apos;я користувача та пароль.
           </p>
         </div>
 
         {error && <p className="error-message">{error}</p>}
 
         <form onSubmit={handleSubmit}>
-          <label htmlFor="email" className="label">Емейл</label>
-          <div className="input-group">
+          <label htmlFor="email" className="label">
+            Емейл
+          </label>
+          <div className="input-login-group">
             <img src={MailIcon} alt="mail" className="icon" />
             <input
               id="email"
@@ -83,21 +81,23 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="input-field"
+              className="input-login-field"
             />
           </div>
 
-          <label htmlFor="password" className="label">Пароль</label>
-          <div className="input-group">
+          <label htmlFor="password" className="label">
+            Пароль
+          </label>
+          <div className="input-login-group">
             <img src={LockIcon} alt="lock" className="icon" />
             <input
               id="password"
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="input-field"
+              className="input-login-field"
             />
             <button
               type="button"
@@ -114,7 +114,11 @@ export default function Login() {
             </button>
           </div>
 
-          <a href="#" onClick={handleForgotPassword} className="forgot-password-link">
+          <a
+            href="#"
+            onClick={handleForgotPassword}
+            className="forgot-password-link"
+          >
             Забули пароль?
           </a>
 
@@ -123,18 +127,18 @@ export default function Login() {
             disabled={loading}
             className={`primary-button ${loading ? 'loading' : ''}`}
           >
-            {loading ? "Завантаження..." : "Увійти"}
+            {loading ? 'Завантаження...' : 'Увійти'}
           </button>
         </form>
 
         <div className="remember-me-container">
-          <div 
-            className={`toggle ${rememberMe ? 'checked' : ''}`} 
+          <div
+            className={`toggle ${rememberMe ? 'checked' : ''}`}
             onClick={() => setRememberMe(!rememberMe)}
           >
             <div className="toggle-circle"></div>
           </div>
-          <span className="remember-me-label">Запам'ятати мене</span>
+          <span className="remember-me-label">Запам&apos;ятати мене</span>
         </div>
 
         <hr className="divider" />
@@ -145,11 +149,11 @@ export default function Login() {
         </button>
 
         <p className="signup-text">
-          Не маєте акаунту? 
+          Не маєте акаунту?
           <span
-            onClick={() => navigate("/registration")}
+            onClick={() => navigate('/registration')}
             className="signup-link"
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
           >
             Зареєструйтесь
           </span>

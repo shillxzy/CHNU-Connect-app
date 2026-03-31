@@ -5,7 +5,7 @@
   align-items: center;
   background: #ffffff;
   padding: 14px 28px;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
   z-index: 50;
@@ -53,7 +53,6 @@
   margin-right: 10px;
 }
 
-
 .nav-link {
   color: #444;
   text-decoration: none;
@@ -93,13 +92,13 @@
 }
 
 .search-input {
-  border: 1px solid rgba(0,0,0,0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 20px;
   padding: 6px 12px;
   font-size: 14px;
   width: 140px;
   outline: none;
-  transition: border .2s ease;
+  transition: border 0.2s ease;
 }
 
 .search-input:focus {
@@ -117,9 +116,9 @@
   top: 40px; /* трохи нижче іконки */
   right: 0;
   background: #fff;
-  border: 1px solid rgba(0,0,0,0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   min-width: 160px;
   z-index: 100;
   display: none;
@@ -142,7 +141,7 @@
   border: none;
   width: 100%;
   cursor: pointer;
-  transition: background .2s ease;
+  transition: background 0.2s ease;
 }
 
 .profile-dropdown a:hover,

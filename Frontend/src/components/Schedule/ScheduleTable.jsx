@@ -1,10 +1,6 @@
-import {
-  DndContext,
-  useDraggable,
-  useDroppable
-} from "@dnd-kit/core";
+import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
 
-import { CSS } from "@dnd-kit/utilities";
+import { CSS } from '@dnd-kit/utilities';
 
 function Lesson({ lesson }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -39,25 +35,24 @@ function Cell({ day, pair, children }) {
   return (
     <div
       ref={setNodeRef}
-      className={`day-column ${isOver ? "drop-hover" : ""}`}
+      className={`day-column ${isOver ? 'drop-hover' : ''}`}
     >
       {children}
     </div>
   );
 }
 
-export default function ScheduleTable({
-  schedule,
-  onUpdateLesson
-}) {
+export default function ScheduleTable({ schedule, onUpdateLesson }) {
   const days = [0, 1, 2, 3, 4];
 
   const handleDragEnd = (event) => {
     const { active, over } = event;
 
-    if (!over) return;
+    if (!over) {
+      return;
+    }
 
-    const [day, pair] = over.id.split("-");
+    const [day, pair] = over.id.split('-');
 
     const lesson = active.data.current;
 
@@ -71,37 +66,33 @@ export default function ScheduleTable({
   return (
     <DndContext onDragEnd={handleDragEnd}>
       <div className="schedule-wrapper">
-
         {/* HEADER */}
         <div className="schedule-header">
           <div className="corner"></div>
 
-          {["Пн","Вт","Ср","Чт","Пт"].map(d => (
-            <div key={d} className="day-cell">{d}</div>
+          {['Пн', 'Вт', 'Ср', 'Чт', 'Пт'].map((d) => (
+            <div key={d} className="day-cell">
+              {d}
+            </div>
           ))}
         </div>
 
         {/* BODY */}
-        {[1,2,3,4,5].map(pair => (
+        {[1, 2, 3, 4, 5].map((pair) => (
           <div key={pair} className="schedule-row">
-
             <div className="pair-cell">{pair}</div>
 
-            {days.map(day => (
+            {days.map((day) => (
               <Cell key={day} day={day} pair={pair}>
-
                 {schedule
-                  .filter(l => l.day === day && l.pairNumber === pair)
-                  .map(l => (
+                  .filter((l) => l.day === day && l.pairNumber === pair)
+                  .map((l) => (
                     <Lesson key={l.id} lesson={l} />
                   ))}
-
               </Cell>
             ))}
-
           </div>
         ))}
-
       </div>
     </DndContext>
   );

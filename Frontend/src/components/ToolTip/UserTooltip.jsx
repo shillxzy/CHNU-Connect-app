@@ -1,22 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import Avatar from "../Avatar/Avatar";
-import { getUserById } from "../../api/userAPI";
-import "./UserTooltip.css";
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import Avatar from '../Avatar/Avatar';
+import { getUserById } from '../../api/userAPI';
+import './UserTooltip.css';
 
 const UserTooltip = ({ userId, currentUserId, size = 38, fallbackAvatar }) => {
   const [hovered, setHovered] = useState(false);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    if (!userId) return;
+    if (!userId) {
+      return;
+    }
 
     const fetchUser = async () => {
       try {
         const res = await getUserById(userId);
         setUser(res.data);
       } catch (err) {
-        console.error("Error fetching user for tooltip:", err);
+        console.error('Error fetching user for tooltip:', err);
       }
     };
 
@@ -26,7 +28,7 @@ const UserTooltip = ({ userId, currentUserId, size = 38, fallbackAvatar }) => {
   // Лінк на профіль
   const profileLink =
     userId === currentUserId
-      ? `/profile/${encodeURIComponent(user?.fullName || "")}` // поточний користувач
+      ? `/profile/${encodeURIComponent(user?.fullName || '')}` // поточний користувач
       : `/profile/view/${userId}`; // інші користувачі
 
   return (
@@ -36,7 +38,10 @@ const UserTooltip = ({ userId, currentUserId, size = 38, fallbackAvatar }) => {
       onMouseLeave={() => setHovered(false)}
     >
       <Link to={profileLink}>
-        <Avatar photoUrl={fallbackAvatar || (user && user.photoUrl)} size={size} />
+        <Avatar
+          photoUrl={fallbackAvatar || (user && user.photoUrl)}
+          size={size}
+        />
       </Link>
 
       {hovered && user && (

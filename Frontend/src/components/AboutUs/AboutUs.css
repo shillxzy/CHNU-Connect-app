@@ -2,7 +2,7 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 40px 20px;
-  font-family: "Arial", sans-serif;
+  font-family: 'Arial', sans-serif;
   color: #222;
 }
 
@@ -39,7 +39,9 @@
   border-radius: 12px;
   padding: 20px;
   text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .team-card:hover {
