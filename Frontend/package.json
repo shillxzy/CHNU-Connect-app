@@ -10,7 +10,7 @@
     "lint": "eslint . --fix",
     "fix-style": "npm run format && npm run lint",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "cd .. && husky Frontend/.husky"
   },
   "dependencies": {
     "@microsoft/signalr": "^10.0.0",
