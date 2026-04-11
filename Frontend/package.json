@@ -10,7 +10,7 @@
     "lint": "eslint . --fix",
     "fix-style": "npm run format && npm run lint",
     "preview": "vite preview",
-    "prepare": "cd .. && husky Frontend/.husky"
+    "prepare": "cd .. && npx husky"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -39,6 +39,9 @@
     "vite": "^7.3.1"
   },
   "lint-staged": {
-    "*.{js,jsx}": "npm run fix-style"
+    "*.{js,jsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
   }
 }
