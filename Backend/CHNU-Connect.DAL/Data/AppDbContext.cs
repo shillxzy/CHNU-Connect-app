@@ -26,6 +26,8 @@ namespace CHNU_Connect.DAL.Data
         public DbSet<ChatMember> ChatMembers { get; set; } = null!;
         public DbSet<ChatMessage> ChatMessages { get; set; } = null!;
         public DbSet<Notification> Notifications { get; set; } = null!;
+        public DbSet<LessonSlot> LessonSlots { get; set; } = null!;
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -370,20 +372,78 @@ namespace CHNU_Connect.DAL.Data
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Day).HasColumnName("day").IsRequired();
-                entity.Property(e => e.StartTime).HasColumnName("start_time").IsRequired();
-                entity.Property(e => e.EndTime).HasColumnName("end_time").IsRequired();
+                entity.Property(e => e.Day)
+                    .HasColumnName("day")
+                    .IsRequired();
 
-                entity.Property(e => e.GroupId).HasColumnName("group_id");
-                entity.Property(e => e.SubjectId).HasColumnName("subject_id");
-                entity.Property(e => e.SubGroupId).HasColumnName("sub_group_id");
+                entity.Property(e => e.Week)
+                    .HasColumnName("week")
+                    .IsRequired();
 
-                entity.HasOne(e => e.Group).WithMany(g => g.Schedules).HasForeignKey(e => e.GroupId);
-                entity.HasOne(e => e.Subject).WithMany(s => s.Schedules).HasForeignKey(e => e.SubjectId);
-                entity.HasOne(e => e.SubGroup).WithMany(sg => sg.Schedules).HasForeignKey(e => e.SubGroupId);
+                entity.Property(e => e.Type)
+                    .HasColumnName("type")
+                    .IsRequired();
+
+                entity.Property(e => e.GroupId)
+                    .HasColumnName("group_id");
+
+                entity.Property(e => e.SubjectId)
+                    .HasColumnName("subject_id");
+
+                entity.Property(e => e.SubGroupId)
+                    .HasColumnName("sub_group_id");
+
+                entity.Property(e => e.SlotId)
+                    .HasColumnName("slot_id");
+
+                entity.Property(e => e.Location)
+                    .HasColumnName("location");
+
+                entity.HasOne(e => e.Group)
+                    .WithMany(g => g.Schedules)
+                    .HasForeignKey(e => e.GroupId);
+
+                entity.HasOne(e => e.Subject)
+                    .WithMany(s => s.Schedules)
+                    .HasForeignKey(e => e.SubjectId);
+
+                entity.HasOne(e => e.SubGroup)
+                    .WithMany(sg => sg.Schedules)
+                    .HasForeignKey(e => e.SubGroupId);
+
+                // ❗ NEW: LessonSlot relation
+                entity.HasOne(e => e.Slot)
+                    .WithMany()
+                    .HasForeignKey(e => e.SlotId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
-            
+
+            // ================= LESSON SLOT =================
+            modelBuilder.Entity<LessonSlot>(entity =>
+            {
+                entity.ToTable("lesson_slots");
+
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.PairNumber)
+                    .HasColumnName("pair_number")
+                    .IsRequired();
+
+                entity.Property(e => e.StartTime)
+                    .HasColumnName("start_time")
+                    .IsRequired();
+
+                entity.Property(e => e.EndTime)
+                    .HasColumnName("end_time")
+                    .IsRequired();
+            });
+
+
+
+
+
         }
     }
 }

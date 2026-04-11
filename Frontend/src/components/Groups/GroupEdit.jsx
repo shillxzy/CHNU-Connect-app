@@ -119,8 +119,6 @@ export default function GroupEdit() {
       id: Date.now(),
     };
 
-    console.log('ADDING SUBJECT:', subjectToAdd);
-
     setSubjects((prev) => [...prev, subjectToAdd]);
 
     setNewSubject({
@@ -140,8 +138,7 @@ export default function GroupEdit() {
       await deleteSubject(subject.id);
 
       setSubjects((prev) => prev.filter((s) => s.id !== subject.id));
-    } catch (err) {
-      console.error('DELETE SUBJECT ERROR:', err);
+    } catch {
       alert('Не вдалося видалити дисципліну');
     }
   };
@@ -207,8 +204,6 @@ export default function GroupEdit() {
       </div>
     </div>
   );
-
-  console.log('SUBJECTS:', subjects);
 
   return (
     <div className="edit-page">

@@ -1,0 +1,140 @@
+/* BACKDROP */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0, 0, 0, 0.4);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 1000;
+}
+
+/* MODAL */
+
+.modal {
+  width: 400px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+  animation: modalFade 0.2s ease;
+}
+
+@keyframes modalFade {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* TITLE */
+
+.modal h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* INPUTS */
+
+.modal input,
+.modal select {
+  width: 100%;
+  padding: 10px;
+
+  border-radius: 8px;
+  border: 1px solid #ddd;
+
+  font-size: 14px;
+
+  transition: 0.2s;
+}
+
+.modal input:focus,
+.modal select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.15);
+}
+
+/* ACTIONS */
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* BUTTONS */
+
+.modal-actions button {
+  flex: 1;
+  padding: 10px;
+
+  border: none;
+  border-radius: 8px;
+
+  font-size: 14px;
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+/* SAVE */
+
+.modal-actions button:first-child {
+  background: #28a745;
+  color: white;
+}
+
+.modal-actions button:first-child:hover {
+  background: #218838;
+}
+
+/* CANCEL */
+
+.modal-actions button:last-child {
+  background: #dee2e6;
+}
+
+.modal-actions button:last-child:hover {
+  background: #ced4da;
+}
+
+/* CHECKBOX */
+.modal-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 5px 0;
+  font-size: 14px;
+  color: #444;
+  user-select: none;
+}
+
+.modal-checkbox input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #007bff; /* Синій колір галочки */
+}

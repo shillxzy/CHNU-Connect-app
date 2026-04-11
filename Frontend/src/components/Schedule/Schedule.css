@@ -1,89 +1,319 @@
-.schedule-wrapper {
+/* ROOT */
+.chnu-schedule-root {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid #e0e0e0;
+  background: #fff;
+  border: 1px solid #ccc;
+  font-family: sans-serif;
 }
 
 /* HEADER */
-.schedule-header {
-  display: grid;
-  grid-template-columns: 80px repeat(5, 1fr);
+.chnu-schedule-header {
+  display: flex;
   background: #0056b3;
   color: white;
   font-weight: 600;
+  border-bottom: 2px solid #003d82;
 }
 
-.corner {
-  height: 50px;
+.chnu-schedule-header-corner {
+  display: flex;
+  min-width: 160px; /* 80px Час + 80px Тиждень */
 }
 
-.day-cell {
-  padding: 15px;
-  text-align: center;
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* BODY */
-.schedule-row {
-  display: grid;
-  grid-template-columns: 80px repeat(5, 1fr);
-  border-top: 1px solid #e0e0e0;
-}
-
-/* пара */
-.pair-cell {
+.col-pair {
+  width: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
-  background: #f8f9fa;
-  border-right: 1px solid #e0e0e0;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* день */
-.day-column {
-  border-left: 1px solid #e0e0e0;
-  padding: 5px;
+.col-week {
+  width: 80px;
   display: flex;
-  flex-direction: column;
-  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* підгрупи */
-.subgroups {
-  display: flex;
-  gap: 5px;
-}
-
-.subgroup {
+.chnu-schedule-header-days {
   flex: 1;
-  background: #e9ecef;
-  text-align: center;
-  font-size: 12px;
-  padding: 4px;
-  border-radius: 6px;
+  display: flex;
 }
 
-/* предмети */
-.lessons {
+.chnu-schedule-header-day {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.lesson-card {
-  background: #d1ecf1;
-  padding: 8px;
-  border-radius: 6px;
-  font-size: 13px;
+.day-name {
   text-align: center;
-  cursor: pointer;
-  transition: 0.2s;
+  padding: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.lesson-card:hover {
-  background: #bee5eb;
+.subgroups-row {
+  display: flex;
+  font-size: 12px;
+  background: #0062cc;
+}
+
+.subgroup-name {
+  flex: 1;
+  text-align: center;
+  padding: 4px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+.subgroup-name:last-child {
+  border-right: none;
+}
+
+/* BODY */
+.chnu-schedule-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.chnu-schedule-pair-container {
+  display: flex;
+  border-bottom: 2px solid #aaa; /* Жирна лінія між парами */
+}
+
+/* TIME COLUMN */
+.chnu-schedule-time-col {
+  width: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  border-right: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+.pair-number {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.pair-time {
+  font-size: 12px;
+  color: #555;
+  margin-top: 4px;
+}
+
+/* WEEKS WRAPPER */
+.chnu-schedule-weeks-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chnu-schedule-week-row {
+  display: flex;
+  flex: 1;
+  min-height: 80px;
+  border-bottom: 1px dashed #ccc; /* Пунктир між тижнями */
+}
+.chnu-schedule-week-row:last-child {
+  border-bottom: none;
+}
+
+.chnu-schedule-week-label {
+  width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fdfdfd;
+  border-right: 2px solid #aaa;
+  font-size: 12px;
+  color: #444;
+}
+
+/* DAYS WRAPPER */
+.chnu-schedule-days-container {
+  flex: 1;
+  display: flex;
+}
+
+.chnu-schedule-day-cells {
+  flex: 1;
+  display: flex;
+  border-right: 2px solid #aaa; /* Жирна лінія між днями */
+}
+.chnu-schedule-day-cells:last-child {
+  border-right: none;
+}
+
+/* CELL */
+.chnu-schedule-cell {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #eee; /* Лінія між підгрупами */
+  padding: 4px;
+}
+.chnu-schedule-cell.span-2 {
+  grid-row: span 2;
+}
+
+.chnu-schedule-cell:last-child {
+  border-right: none;
+}
+
+.chnu-schedule-cell.is-full-width {
+  flex: 3; /* Лекція займає всі 3 підгрупи */
+}
+
+.chnu-schedule-cell.is-over {
+  background: #e3f2fd;
+}
+
+/* =========================================
+   LESSON CARDS (СУЧАСНИЙ UI)
+   ========================================= */
+
+.chnu-schedule-lesson {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Базова м'яка тінь */
+  cursor: grab;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out; /* Плавна анімація */
+}
+
+/* Прикол: ефект підняття при наведенні */
+.chnu-schedule-lesson:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 2; /* Щоб картка була поверх сітки при наведенні */
+}
+
+.chnu-schedule-lesson:active {
+  cursor: grabbing;
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+/* Внутрішній контейнер для відступів */
+.chnu-schedule-lesson-inner {
+  padding: 8px 10px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* КОЛЬОРИ ЗАНЯТЬ */
+
+/* Лекція - Червоний градієнт з рожевою смужкою */
+.chnu-schedule-lesson.lecture {
+  background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
+  border-left: 5px solid #ffcdd2;
+}
+
+/* Практика - Оранжевий градієнт з жовтою смужкою */
+.chnu-schedule-lesson.practice {
+  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+  border-left: 5px solid #ffe0b2;
+}
+
+/* ТЕКСТ */
+.chnu-schedule-title {
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 6px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Тінь для тексту, щоб краще читалось */
+  line-height: 1.2;
+}
+
+.chnu-schedule-meta {
+  font-size: 11px;
+  opacity: 0.95;
+  margin-bottom: 3px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.chnu-schedule-meta:last-child {
+  margin-bottom: 0;
+}
+
+/* =========================================
+   CELL (Щоб лекція ідеально розтягувалась)
+   ========================================= */
+.chnu-schedule-cell {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: stretch; /* Картка розтягується на всю висоту */
+  justify-content: center;
+  border-right: 1px solid #eee;
+  padding: 4px;
+}
+
+.chnu-schedule-cell:last-child {
+  border-right: none;
+}
+
+.chnu-schedule-cell.is-full-width {
+  flex: 3; /* Лекція забирає ширину 3 підгруп */
+  padding: 4px 6px; /* Трохи більший відступ для краси */
+}
+
+.chnu-schedule-cell.is-over {
+  background: #e3f2fd;
+  border-radius: 6px;
+}
+
+/* PLUS BUTTON */
+.chnu-schedule-plus {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(40, 167, 69, 0.8);
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+.chnu-schedule-plus:hover {
+  background: rgba(40, 167, 69, 1);
+}
+
+/* CONTEXT MENU */
+.chnu-schedule-context {
+  position: fixed;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 6px;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.chnu-schedule-context div {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.chnu-schedule-context div:hover {
+  background: #f1f1f1;
+  border-radius: 4px;
 }

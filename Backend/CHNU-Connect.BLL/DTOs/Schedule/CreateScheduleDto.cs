@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CHNU_Connect.DAL.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,11 +14,14 @@ namespace CHNU_Connect.BLL.DTOs.Schedule
 
         public int? SubGroupId { get; set; }
 
+        public LessonType Type { get; set; }
+        public WeekType Week { get; set; }
+
         public DayOfWeek Day { get; set; }
 
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
+        public int SlotId { get; set; }
 
         public string? Location { get; set; }
     }
+
 }

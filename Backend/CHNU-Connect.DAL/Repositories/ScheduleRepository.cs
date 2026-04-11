@@ -11,24 +11,57 @@ namespace CHNU_Connect.DAL.Repositories
         {
         }
 
-        public async Task<IEnumerable<Schedule>> GetByGroupIdAsync(int groupId)
+        public async Task<IEnumerable<Schedule>> GetByGroupAsync(int groupId)
         {
             return await _dbSet
                 .Include(s => s.Subject)
+                .Include(s => s.SubGroup)
+                .Include(s => s.Slot)
                 .Where(s => s.GroupId == groupId)
-                .OrderBy(s => s.Day)
-                .ThenBy(s => s.StartTime)
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Schedule>> GetBySubGroupIdAsync(int subGroupId)
+        public async Task<IEnumerable<Schedule>> GetByGroupAndWeekAsync(int groupId, WeekType week)
         {
             return await _dbSet
                 .Include(s => s.Subject)
-                .Where(s => s.SubGroupId == subGroupId)
-                .OrderBy(s => s.Day)
-                .ThenBy(s => s.StartTime)
+                .Include(s => s.SubGroup)
+                .Include(s => s.Slot)
+                .Where(s => s.GroupId == groupId && s.Week == week)
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Schedule>> GetByGroupDaySlotAsync(
+            int groupId,
+            DayOfWeek day,
+            int slotId,
+            WeekType week)
+        {
+            return await _dbSet
+                .Where(s =>
+                    s.GroupId == groupId &&
+                    s.Day == day &&
+                    s.SlotId == slotId &&
+                    s.Week == week)
+                .ToListAsync();
+        }
+
+        public async Task<bool> ExistsConflictAsync(
+            int groupId,
+            int slotId,
+            DayOfWeek day,
+            WeekType week,
+            int? subGroupId)
+        {
+            return await _dbSet.AnyAsync(s =>
+                s.GroupId == groupId &&
+                s.SlotId == slotId &&
+                s.Day == day &&
+                s.Week == week &&
+                (
+                    s.SubGroupId == null || subGroupId == null || s.SubGroupId == subGroupId
+                )
+            );
         }
     }
 }

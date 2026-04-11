@@ -27,7 +27,8 @@ namespace CHNU_Connect.DAL.UOW
         private INotificationRepository? _notificationRepository;
         private IScheduleRepository? _scheduleRepository;
         private ISubjectRepository? _subjectRepository;
-
+        private ISubGroupRepository? _subGroupRepository;
+        private ILessonSlotRepository? _lessonSlotRepository;
 
         public UnitOfWork(AppDbContext context)
         {
@@ -51,6 +52,10 @@ namespace CHNU_Connect.DAL.UOW
         public INotificationRepository NotificationRepository => _notificationRepository ??= new NotificationRepository(_context);
         public IScheduleRepository ScheduleRepository => _scheduleRepository ??= new ScheduleRepository(_context);
         public ISubjectRepository SubjectRepository => _subjectRepository ??= new SubjectRepository(_context);
+        public ISubGroupRepository SubGroupRepository => _subGroupRepository ??= new SubGroupRepository(_context);
+        public ILessonSlotRepository LessonSlotRepository => _lessonSlotRepository ??= new LessonSlotRepository(_context);
+
+
 
 
 

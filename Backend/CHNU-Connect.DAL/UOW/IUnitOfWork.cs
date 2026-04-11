@@ -21,6 +21,8 @@ namespace CHNU_Connect.DAL.UOW
         INotificationRepository NotificationRepository { get; }
         ISubjectRepository SubjectRepository { get; }
         IScheduleRepository ScheduleRepository { get; }
+        ISubGroupRepository SubGroupRepository { get; }
+        ILessonSlotRepository LessonSlotRepository { get; }
 
 
         Task<int> SaveChangesAsync();
