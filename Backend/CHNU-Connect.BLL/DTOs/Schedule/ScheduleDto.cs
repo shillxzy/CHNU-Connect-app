@@ -12,7 +12,6 @@ namespace CHNU_Connect.BLL.DTOs.Schedule
         public int Id { get; set; }
 
         public int GroupId { get; set; }
-        public string SubjectName { get; set; }
 
         public int? SubGroupId { get; set; }
         public string? SubGroupName { get; set; }
@@ -25,6 +24,8 @@ namespace CHNU_Connect.BLL.DTOs.Schedule
         public int SlotId { get; set; }
         public int PairNumber { get; set; }
 
+        public string SubjectName { get; set; }
+        public string TeacherName { get; set; }
         public string? Location { get; set; }
     }
 }

@@ -1,53 +1,52 @@
 import { useState, useEffect } from 'react';
 import './LessonModal.css';
+import { LessonType } from './scheduleEnums';
 
 export default function LessonModal({ isOpen, onClose, onSave, cell }) {
   const [form, setForm] = useState({
     subjectName: '',
     teacherName: '',
-    location: '',
-    type: 0, // 0 = lecture, 1 = practice
-    isEveryWeek: false, // <--- НОВЕ ПОЛЕ
+    location:    '',
+    type:        LessonType.Lecture,
   });
 
-  // Очищаємо форму при кожному відкритті модалки
   useEffect(() => {
     if (isOpen) {
       setForm({
         subjectName: '',
         teacherName: '',
-        location: '',
-        type: 0,
-        isEveryWeek: false,
+        location:    '',
+        type:        LessonType.Lecture,
       });
     }
   }, [isOpen]);
 
-  if (!isOpen) {
-    return null;
-  }
+  if (!isOpen) {return null;}
 
   const handleSubmit = () => {
-    onSave({
-      ...form,
-      ...cell,
-    });
+    if (!form.subjectName.trim()) { alert('Введіть назву дисципліни'); return; }
+    if (!form.teacherName.trim()) { alert('Введіть ПІБ викладача');    return; }
+    onSave({ ...form, ...cell });
     onClose();
   };
 
   return (
-    <div className="modal-overlay">
+    <div
+      className="modal-overlay"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
       <div className="modal">
         <h3>Нова пара</h3>
 
         <input
-          placeholder="Назва дисципліни"
+          placeholder="Назва дисципліни *"
           value={form.subjectName}
           onChange={(e) => setForm({ ...form, subjectName: e.target.value })}
+          autoFocus
         />
 
         <input
-          placeholder="ПІБ викладача"
+          placeholder="ПІБ викладача *"
           value={form.teacherName}
           onChange={(e) => setForm({ ...form, teacherName: e.target.value })}
         />
@@ -62,21 +61,9 @@ export default function LessonModal({ isOpen, onClose, onSave, cell }) {
           value={form.type}
           onChange={(e) => setForm({ ...form, type: Number(e.target.value) })}
         >
-          <option value={0}>Лекція (на всю групу)</option>
-          <option value={1}>Практика (для підгрупи)</option>
+          <option value={LessonType.Lecture}>Лекція (на всю групу)</option>
+          <option value={LessonType.Practice}>Практика (для підгрупи)</option>
         </select>
-
-        {/* НОВИЙ ЧЕКБОКС */}
-        <label className="modal-checkbox">
-          <input
-            type="checkbox"
-            checked={form.isEveryWeek}
-            onChange={(e) =>
-              setForm({ ...form, isEveryWeek: e.target.checked })
-            }
-          />
-          <span>Кожного тижня (ігнорувати чисельник/знаменник)</span>
-        </label>
 
         <div className="modal-actions">
           <button onClick={handleSubmit}>Зберегти</button>

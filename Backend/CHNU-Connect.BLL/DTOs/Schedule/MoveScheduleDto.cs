@@ -14,6 +14,8 @@ namespace CHNU_Connect.BLL.DTOs.Schedule
         public DayOfWeek NewDay { get; set; }
         public int NewSlotId { get; set; }
         public WeekType NewWeek { get; set; }
+
+        public int? NewSubGroupId { get; set; }
     }
 
 }

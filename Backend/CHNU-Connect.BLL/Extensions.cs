@@ -1,4 +1,4 @@
-﻿using CHNU_Connect.BLL.Services;
+using CHNU_Connect.BLL.Services;
 using CHNU_Connect.BLL.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,7 +8,6 @@ namespace CHNU_Connect.BLL
     {
         public static IServiceCollection AddBusinessLogic(this IServiceCollection services)
         {
-            // Register all service interfaces and implementations
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<IEventService, EventService>();
@@ -24,7 +23,7 @@ namespace CHNU_Connect.BLL
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<ISubjectService, SubjectService>();
             services.AddScoped<IScheduleService, ScheduleService>();
-
+            services.AddScoped<ISubGroupService, SubGroupService>(); // NEW
 
             return services;
         }

@@ -396,6 +396,9 @@ namespace CHNU_Connect.DAL.Data
                 entity.Property(e => e.SlotId)
                     .HasColumnName("slot_id");
 
+                entity.Property(e => e.SubjectName).HasColumnName("subject_name");
+                entity.Property(e => e.TeacherName).HasColumnName("teacher_name");
+
                 entity.Property(e => e.Location)
                     .HasColumnName("location");
 
@@ -405,7 +408,8 @@ namespace CHNU_Connect.DAL.Data
 
                 entity.HasOne(e => e.Subject)
                     .WithMany(s => s.Schedules)
-                    .HasForeignKey(e => e.SubjectId);
+                    .HasForeignKey(e => e.SubjectId)
+                    .IsRequired(false).OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(e => e.SubGroup)
                     .WithMany(sg => sg.Schedules)

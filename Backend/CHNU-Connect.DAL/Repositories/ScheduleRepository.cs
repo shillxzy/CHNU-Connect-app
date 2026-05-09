@@ -47,11 +47,11 @@ namespace CHNU_Connect.DAL.Repositories
         }
 
         public async Task<bool> ExistsConflictAsync(
-            int groupId,
-            int slotId,
-            DayOfWeek day,
-            WeekType week,
-            int? subGroupId)
+    int groupId,
+    int slotId,
+    DayOfWeek day,
+    WeekType week,
+    int? subGroupId)
         {
             return await _dbSet.AnyAsync(s =>
                 s.GroupId == groupId &&
@@ -59,9 +59,37 @@ namespace CHNU_Connect.DAL.Repositories
                 s.Day == day &&
                 s.Week == week &&
                 (
-                    s.SubGroupId == null || subGroupId == null || s.SubGroupId == subGroupId
+                    // 🔥 ЛЕКЦІЯ
+                    (s.SubGroupId == null && subGroupId == null)
+
+                    // 🔥 ПРАКТИКА
+                    || (s.SubGroupId != null && subGroupId != null && s.SubGroupId == subGroupId)
                 )
             );
         }
+
+
+        public async Task<bool> ExistsConflictAsyncExcludingId(
+    int id,
+    int groupId,
+    int slotId,
+    DayOfWeek day,
+    WeekType week,
+    int? subGroupId)
+        {
+            return await _dbSet.AnyAsync(s =>
+                s.Id != id &&
+                s.GroupId == groupId &&
+                s.SlotId == slotId &&
+                s.Day == day &&
+                s.Week == week &&
+                (
+                    (s.SubGroupId == null && subGroupId == null)
+                    || (s.SubGroupId != null && subGroupId != null && s.SubGroupId == subGroupId)
+                )
+            );
+        }
+
+
     }
 }

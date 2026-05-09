@@ -13,6 +13,7 @@ namespace CHNU_Connect.DAL.Entities
         public string Name { get; set; } = null!;
         // Наприклад: 144(1)
 
+
         public int GroupId { get; set; }
         public Group? Group { get; set; }
 

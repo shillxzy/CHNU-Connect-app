@@ -1,4 +1,5 @@
 using CHNU_Connect.BLL.DTOs.Group;
+using CHNU_Connect.BLL.DTOs.SubGroup;
 using CHNU_Connect.BLL.DTOs.User;
 using CHNU_Connect.BLL.Services.Interfaces;
 using CHNU_Connect.DAL.Entities;
@@ -12,22 +13,29 @@ namespace CHNU_Connect.BLL.Services
         private readonly IGroupRepository _groupRepo;
         private readonly IGroupMemberRepository _memberRepo;
         private readonly IUserRepository _userRepo;
+        private readonly ISubGroupRepository _subGroupRepo;
+
 
 
         public GroupService(
-     IGroupRepository groupRepo,
-     IGroupMemberRepository memberRepo,
-     IUserRepository userRepo)
+    IGroupRepository groupRepo,
+    IGroupMemberRepository memberRepo,
+    IUserRepository userRepo,
+    ISubGroupRepository subGroupRepo)
         {
             _groupRepo = groupRepo;
             _memberRepo = memberRepo;
             _userRepo = userRepo;
+            _subGroupRepo = subGroupRepo;
         }
+
 
 
         public async Task<GroupDto> CreateGroupAsync(CreateGroupDto dto)
         {
             var entity = dto.Adapt<Group>();
+
+
 
             await _groupRepo.InsertAsync(entity);
             await _groupRepo.SaveAsync();
@@ -41,6 +49,10 @@ namespace CHNU_Connect.BLL.Services
             if (group == null) return null;
 
             var dto = group.Adapt<GroupDto>();
+
+            // 👇 SUBGROUPS (ОЦЕ ТИ ДОДАЄШ)
+            var subGroups = await _subGroupRepo.GetByGroupIdAsync(id);
+            dto.SubGroups = subGroups.Adapt<List<SubGroupDto>>();
 
             // 👇 curator
             if (group.CuratorId != null)
@@ -65,6 +77,7 @@ namespace CHNU_Connect.BLL.Services
 
             return dto;
         }
+
 
 
         public async Task<IEnumerable<GroupDto>> GetAllAsync()

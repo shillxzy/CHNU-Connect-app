@@ -2,34 +2,27 @@ import { useState } from 'react';
 import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
 import './Schedule.css';
 
+// .NET DayOfWeek: Sunday=0, Monday=1, ..., Friday=5
+// Grid dayIndex:  0=Пн, 1=Вт, 2=Ср, 3=Чт, 4=Пт
+// Конвертація: dotNetDay = gridDayIndex + 1
+
 const DAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт'];
 
 const WEEKS = [
-  { id: 1, label: '1-й тиж.' },
-  { id: 2, label: '2-й тиж.' },
+  { id: 1, label: 'Чисельник' },
+  { id: 2, label: 'Знаменник' },
 ];
 
-const SUBGROUPS = [1, 2, 3];
-
-const PAIRS = [
-  { number: 1, time: '8:20-9:40' },
-  { number: 2, time: '9:50-11:10' },
-  { number: 3, time: '11:30-12:50' },
-  { number: 4, time: '13:00-14:20' },
-  { number: 5, time: '14:40-16:00' },
-  { number: 6, time: '16:10-17:30' },
-];
-
-/* ================= LESSON ================= */
+/* ================= LESSON CARD ================= */
 
 function Lesson({ lesson, onMenu }) {
-  const { setNodeRef, listeners, attributes, transform } = useDraggable({
+  const { setNodeRef, listeners, attributes, transform, isDragging } = useDraggable({
     id: lesson.id,
     data: lesson,
   });
 
   const style = transform
-    ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
+    ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`, zIndex: 999, opacity: 0.85 }
     : undefined;
 
   const typeClass = lesson.type === 0 ? 'lecture' : 'practice';
@@ -44,12 +37,17 @@ function Lesson({ lesson, onMenu }) {
         e.preventDefault();
         onMenu(lesson, e.clientX, e.clientY);
       }}
-      className={`chnu-schedule-lesson ${typeClass}`}
+      className={`chnu-schedule-lesson ${typeClass} ${isDragging ? 'dragging' : ''}`}
     >
       <div className="chnu-schedule-lesson-inner">
         <div className="chnu-schedule-title">{lesson.subjectName}</div>
         <div className="chnu-schedule-meta">👤 {lesson.teacherName}</div>
-        <div className="chnu-schedule-meta">📍 {lesson.location}</div>
+        {lesson.location && (
+          <div className="chnu-schedule-meta">📍 {lesson.location}</div>
+        )}
+        <div className="chnu-schedule-badge">
+          {lesson.type === 0 ? 'Лекція' : 'Практика'}
+        </div>
       </div>
     </div>
   );
@@ -68,58 +66,50 @@ function Cell({ id, lesson, onCreate, onMenu, isFull }) {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      {lesson && <Lesson lesson={lesson} onMenu={onMenu} />}
-
-      {!lesson && hover && (
-        <button className="chnu-schedule-plus" onClick={() => onCreate(id)}>
-          +
-        </button>
+      {lesson ? (
+        <Lesson lesson={lesson} onMenu={onMenu} />
+      ) : (
+        hover && (
+          <button className="chnu-schedule-plus" onClick={() => onCreate(id)}>
+            +
+          </button>
+        )
       )}
     </div>
   );
 }
 
-/* ================= HELPERS (ГОЛОВНЕ ВИПРАВЛЕННЯ) ================= */
+/* ================= HELPERS ================= */
 
-function getLecture(schedule, dayIndex, pairNumber, weekId) {
-  return schedule.find((l) => {
-    if (l.type !== 0) {
-      return false;
-    }
-    if (l.day !== dayIndex) {
-      return false;
-    }
-    if (l.pairNumber !== pairNumber) {
-      return false;
-    }
-
-    return l.isEveryWeek || l.week === weekId;
-  });
+function getLecture(schedule, dayIndex, slotId, weekId) {
+  return schedule.find(
+    (l) =>
+      l.type === 0 &&
+      l.day === dayIndex + 1 &&
+      l.slotId === slotId &&
+      l.week === weekId,
+  );
 }
 
-function getPractice(schedule, dayIndex, pairNumber, subgroup, weekId) {
-  return schedule.find((l) => {
-    if (l.type !== 1) {
-      return false;
-    }
-    if (l.day !== dayIndex) {
-      return false;
-    }
-    if (l.pairNumber !== pairNumber) {
-      return false;
-    }
-    if (l.subGroupId !== subgroup) {
-      return false;
-    }
-
-    return l.isEveryWeek || l.week === weekId;
-  });
+function getPractice(schedule, dayIndex, slotId, subGroupId, weekId) {
+  return schedule.find(
+    (l) =>
+      l.type === 1 &&
+      l.day === dayIndex + 1 &&
+      l.slotId === slotId &&
+      l.subGroupId === Number(subGroupId) &&
+      l.week === weekId,
+  );
 }
+
+const fmt = (t) => (t ? String(t).slice(0, 5) : '');
 
 /* ================= MAIN ================= */
 
 export default function ScheduleTable({
-  schedule = [],
+  schedule  = [],
+  subGroups = [],
+  slots     = [],
   onCreate,
   onMove,
   onDelete,
@@ -127,113 +117,102 @@ export default function ScheduleTable({
   const [menu, setMenu] = useState(null);
 
   const handleDragEnd = ({ active, over }) => {
-    if (!over) {
-      return;
-    }
-
+    if (!over) {return;}
     const lesson = active.data.current;
-    const [day, pair, subgroup, week] = over.id.split('-');
-
+    const [dayStr, slotIdStr, subgroup, weekStr] = over.id.split('-');
     onMove({
       ...lesson,
-      day: Number(day),
-      pairNumber: Number(pair),
+      day:        Number(dayStr),
+      slotId:     Number(slotIdStr),
       subGroupId: subgroup === 'all' ? null : Number(subgroup),
-      week: Number(week),
-      isEveryWeek: lesson.isEveryWeek,
+      week:       Number(weekStr),
     });
   };
+
+  if (slots.length === 0) {
+    return (
+      <div style={{ padding: '20px', color: '#6c757d', textAlign: 'center' }}>
+        Слоти ще не завантажені. Спочатку натисніть «Автозаповнити 7 пар у БД».
+      </div>
+    );
+  }
 
   return (
     <div className="chnu-schedule-root">
       <DndContext onDragEnd={handleDragEnd}>
-        {/* HEADER */}
+
+        {/* ===== HEADER ===== */}
         <div className="chnu-schedule-header">
           <div className="chnu-schedule-header-corner">
-            <div className="col-pair">Пари</div>
+            <div className="col-pair">Пара</div>
             <div className="col-week">Тиждень</div>
           </div>
-
           <div className="chnu-schedule-header-days">
             {DAYS.map((d) => (
               <div key={d} className="chnu-schedule-header-day">
                 <div className="day-name">{d}</div>
                 <div className="subgroups-row">
-                  {SUBGROUPS.map((sg) => (
-                    <div key={sg} className="subgroup-name">
-                      {sg}
-                    </div>
-                  ))}
+                  {subGroups.length > 0 ? (
+                    subGroups.map((sg) => (
+                      <div key={sg.id} className="subgroup-name">{sg.name}</div>
+                    ))
+                  ) : (
+                    <div className="subgroup-name">Вся група</div>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* BODY */}
+        {/* ===== BODY ===== */}
         <div className="chnu-schedule-body">
-          {PAIRS.map((p) => (
-            <div key={p.number} className="chnu-schedule-pair-container">
+          {slots.map((slot) => (
+            <div key={slot.id} className="chnu-schedule-pair-container">
               <div className="chnu-schedule-time-col">
-                <div className="pair-number">{p.number}</div>
-                <div className="pair-time">{p.time}</div>
+                <div className="pair-number">{slot.pairNumber}</div>
+                <div className="pair-time">{fmt(slot.startTime)}–{fmt(slot.endTime)}</div>
               </div>
 
               <div className="chnu-schedule-weeks-container">
                 {WEEKS.map((w) => (
                   <div key={w.id} className="chnu-schedule-week-row">
                     <div className="chnu-schedule-week-label">{w.label}</div>
-
                     <div className="chnu-schedule-days-container">
                       {DAYS.map((_, dayIndex) => {
-                        const lecture = getLecture(
-                          schedule,
-                          dayIndex,
-                          p.number,
-                          w.id,
-                        );
-
+                        const lecture = getLecture(schedule, dayIndex, slot.id, w.id);
                         return (
-                          <div
-                            key={dayIndex}
-                            className="chnu-schedule-day-cells"
-                          >
-                            {/* ===== LECTURE (1 на день) ===== */}
+                          <div key={dayIndex} className="chnu-schedule-day-cells">
                             {lecture ? (
                               <Cell
-                                id={`${dayIndex}-${p.number}-all-${w.id}`}
+                                id={`${dayIndex}-${slot.id}-all-${w.id}`}
                                 lesson={lecture}
                                 onCreate={onCreate}
-                                onMenu={(lesson, x, y) =>
-                                  setMenu({ lesson, x, y })
-                                }
+                                onMenu={(l, x, y) => setMenu({ lesson: l, x, y })}
                                 isFull
                               />
-                            ) : (
-                              /* ===== PRACTICES (3 підгрупи) ===== */
-                              SUBGROUPS.map((sg) => {
-                                const id = `${dayIndex}-${p.number}-${sg}-${w.id}`;
-
-                                const practice = getPractice(
-                                  schedule,
-                                  dayIndex,
-                                  p.number,
-                                  sg,
-                                  w.id,
-                                );
-
+                            ) : subGroups.length > 0 ? (
+                              subGroups.map((sg) => {
+                                const cellId   = `${dayIndex}-${slot.id}-${sg.id}-${w.id}`;
+                                const practice = getPractice(schedule, dayIndex, slot.id, sg.id, w.id);
                                 return (
                                   <Cell
-                                    key={id}
-                                    id={id}
+                                    key={cellId}
+                                    id={cellId}
                                     lesson={practice}
                                     onCreate={onCreate}
-                                    onMenu={(lesson, x, y) =>
-                                      setMenu({ lesson, x, y })
-                                    }
+                                    onMenu={(l, x, y) => setMenu({ lesson: l, x, y })}
                                   />
                                 );
                               })
+                            ) : (
+                              <Cell
+                                id={`${dayIndex}-${slot.id}-all-${w.id}`}
+                                lesson={undefined}
+                                onCreate={onCreate}
+                                onMenu={(l, x, y) => setMenu({ lesson: l, x, y })}
+                                isFull
+                              />
                             )}
                           </div>
                         );
@@ -246,22 +225,18 @@ export default function ScheduleTable({
           ))}
         </div>
 
-        {/* CONTEXT MENU */}
+        {/* ===== CONTEXT MENU ===== */}
         {menu && (
-          <div
-            className="chnu-schedule-context"
-            style={{ top: menu.y, left: menu.x }}
-          >
-            <div
-              onClick={() => {
-                onDelete(menu.lesson);
-                setMenu(null);
-              }}
-            >
-              Видалити
+          <>
+            <div style={{ position: 'fixed', inset: 0, zIndex: 9998 }} onClick={() => setMenu(null)} />
+            <div className="chnu-schedule-context" style={{ top: menu.y, left: menu.x }}>
+              <div onClick={() => { onDelete(menu.lesson); setMenu(null); }}>
+                🗑 Видалити
+              </div>
             </div>
-          </div>
+          </>
         )}
+
       </DndContext>
     </div>
   );

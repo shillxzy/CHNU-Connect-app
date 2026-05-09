@@ -1,4 +1,5 @@
-﻿using CHNU_Connect.BLL.DTOs.User;
+﻿using CHNU_Connect.BLL.DTOs.SubGroup;
+using CHNU_Connect.BLL.DTOs.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,9 @@ namespace CHNU_Connect.BLL.DTOs.Group
 
         public int CreatorId { get; set; }
         public DateTime CreatedAt { get; set; }
+
+        public List<SubGroupDto> SubGroups { get; set; } = new();
+
     }
 
 }

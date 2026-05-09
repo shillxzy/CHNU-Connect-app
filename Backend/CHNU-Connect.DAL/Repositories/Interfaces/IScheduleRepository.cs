@@ -20,5 +20,14 @@ namespace CHNU_Connect.DAL.Repositories.Interfaces
             DayOfWeek day,
             WeekType week,
             int? subGroupId);
+
+        Task<bool> ExistsConflictAsyncExcludingId(
+    int id,
+    int groupId,
+    int slotId,
+    DayOfWeek day,
+    WeekType week,
+    int? subGroupId);
+
     }
 }

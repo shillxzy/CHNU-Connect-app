@@ -21,8 +21,8 @@ namespace CHNU_Connect.DAL.Entities
         public int GroupId { get; set; }
         public Group Group { get; set; } = null!;
 
-        public int SubjectId { get; set; }
-        public Subject Subject { get; set; } = null!;
+        public int? SubjectId { get; set; }
+        public Subject? Subject { get; set; }
 
         public int? SubGroupId { get; set; } // null = лекція
         public SubGroup? SubGroup { get; set; }
@@ -35,7 +35,10 @@ namespace CHNU_Connect.DAL.Entities
         public int SlotId { get; set; }
         public LessonSlot Slot { get; set; } = null!;
 
-        public string? Location { get; set; }
+        // Модельки 
+        public string SubjectName { get; set; }
+        public string TeacherName { get; set; }
+        public string Location { get; set; }
     }
 
 }
