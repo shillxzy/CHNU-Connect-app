@@ -317,3 +317,24 @@
   background: #f1f1f1;
   border-radius: 4px;
 }
+
+.chnu-schedule-badges {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+ 
+.chnu-schedule-badge {
+  font-size: 10px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 4px;
+  padding: 1px 5px;
+  display: inline-block;
+}
+ 
+.chnu-schedule-badge.every-week {
+  background: rgba(255, 220, 0, 0.35);
+  color: #fff;
+  font-weight: 600;
+}

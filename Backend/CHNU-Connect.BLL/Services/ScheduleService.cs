@@ -75,6 +75,7 @@ namespace CHNU_Connect.BLL.Services
                 SubGroupId = dto.SubGroupId,
                 Type = dto.Type,
                 Week = dto.Week,
+                IsEveryWeek = dto.IsEveryWeek, // ✅ БУВ ВІДСУТНІЙ
                 Day = dto.Day,
                 SlotId = dto.SlotId,
                 SubjectName = dto.SubjectName ?? string.Empty,
@@ -82,10 +83,20 @@ namespace CHNU_Connect.BLL.Services
                 Location = dto.Location ?? string.Empty,
             };
 
-            var conflict = await _scheduleRepo.ExistsConflictAsync(
-                entity.GroupId, entity.SlotId, entity.Day, entity.Week, entity.SubGroupId);
-
-            if (conflict) throw new Exception("Schedule conflict detected");
+            if (!dto.IsEveryWeek)
+            {
+                var conflict = await _scheduleRepo.ExistsConflictAsync(
+                    entity.GroupId, entity.SlotId, entity.Day, entity.Week, entity.SubGroupId);
+                if (conflict) throw new Exception("Schedule conflict detected");
+            }
+            else
+            {
+                var c1 = await _scheduleRepo.ExistsConflictAsync(
+                    entity.GroupId, entity.SlotId, entity.Day, WeekType.First, entity.SubGroupId);
+                var c2 = await _scheduleRepo.ExistsConflictAsync(
+                    entity.GroupId, entity.SlotId, entity.Day, WeekType.Second, entity.SubGroupId);
+                if (c1 || c2) throw new Exception("Schedule conflict detected (every week)");
+            }
 
             await _scheduleRepo.InsertAsync(entity);
             await _scheduleRepo.SaveAsync();
@@ -144,6 +155,7 @@ namespace CHNU_Connect.BLL.Services
             SubGroupName = s.SubGroup?.Name,
             Type = s.Type,
             Week = s.Week,
+            IsEveryWeek = s.IsEveryWeek, // ✅ БУВ ВІДСУТНІЙ
             Day = s.Day,
             SlotId = s.SlotId,
             PairNumber = s.Slot?.PairNumber ?? 0,

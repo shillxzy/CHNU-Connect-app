@@ -2,23 +2,23 @@ import { useState } from 'react';
 import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
 import './Schedule.css';
 
-// .NET DayOfWeek: Sunday=0, Monday=1, ..., Friday=5
-// Grid dayIndex:  0=Пн, 1=Вт, 2=Ср, 3=Чт, 4=Пт
-// Конвертація: dotNetDay = gridDayIndex + 1
+// .NET DayOfWeek: Sunday=0, Monday=1...Friday=5
+// Grid dayIndex: 0=Пн..4=Пт → dotNetDay = gridDayIndex + 1
 
 const DAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт'];
 
 const WEEKS = [
-  { id: 1, label: 'Чисельник' },
-  { id: 2, label: 'Знаменник' },
+  { id: 1, label: '1-й тиждень' },
+  { id: 2, label: '2-й тиждень' },
 ];
 
 /* ================= LESSON CARD ================= */
 
-function Lesson({ lesson, onMenu }) {
+function Lesson({ lesson, onMenu, isReadonly }) {
   const { setNodeRef, listeners, attributes, transform, isDragging } = useDraggable({
     id: lesson.id,
     data: lesson,
+    disabled: isReadonly, // ✅ readonly — drag вимкнено
   });
 
   const style = transform
@@ -26,14 +26,16 @@ function Lesson({ lesson, onMenu }) {
     : undefined;
 
   const typeClass = lesson.type === 0 ? 'lecture' : 'practice';
+  const everyWeekBadge = lesson.isEveryWeek;
 
   return (
     <div
       ref={setNodeRef}
-      {...listeners}
-      {...attributes}
-      style={style}
+      {...(isReadonly ? {} : listeners)}
+      {...(isReadonly ? {} : attributes)}
+      style={{ ...style, cursor: isReadonly ? 'default' : 'grab' }}
       onContextMenu={(e) => {
+        if (isReadonly) {return;}
         e.preventDefault();
         onMenu(lesson, e.clientX, e.clientY);
       }}
@@ -45,8 +47,13 @@ function Lesson({ lesson, onMenu }) {
         {lesson.location && (
           <div className="chnu-schedule-meta">📍 {lesson.location}</div>
         )}
-        <div className="chnu-schedule-badge">
-          {lesson.type === 0 ? 'Лекція' : 'Практика'}
+        <div className="chnu-schedule-badges">
+          <span className="chnu-schedule-badge">
+            {lesson.type === 0 ? 'Лекція' : 'Практика'}
+          </span>
+          {everyWeekBadge && (
+            <span className="chnu-schedule-badge every-week">Щотижня</span>
+          )}
         </div>
       </div>
     </div>
@@ -55,8 +62,8 @@ function Lesson({ lesson, onMenu }) {
 
 /* ================= CELL ================= */
 
-function Cell({ id, lesson, onCreate, onMenu, isFull }) {
-  const { setNodeRef, isOver } = useDroppable({ id });
+function Cell({ id, lesson, onCreate, onMenu, isFull, isReadonly }) {
+  const { setNodeRef, isOver } = useDroppable({ id, disabled: isReadonly });
   const [hover, setHover] = useState(false);
 
   return (
@@ -67,9 +74,9 @@ function Cell({ id, lesson, onCreate, onMenu, isFull }) {
       onMouseLeave={() => setHover(false)}
     >
       {lesson ? (
-        <Lesson lesson={lesson} onMenu={onMenu} />
+        <Lesson lesson={lesson} onMenu={onMenu} isReadonly={isReadonly} />
       ) : (
-        hover && (
+        !isReadonly && hover && (
           <button className="chnu-schedule-plus" onClick={() => onCreate(id)}>
             +
           </button>
@@ -81,13 +88,14 @@ function Cell({ id, lesson, onCreate, onMenu, isFull }) {
 
 /* ================= HELPERS ================= */
 
+// isEveryWeek — пара показується в обох тижнях
 function getLecture(schedule, dayIndex, slotId, weekId) {
   return schedule.find(
     (l) =>
       l.type === 0 &&
       l.day === dayIndex + 1 &&
       l.slotId === slotId &&
-      l.week === weekId,
+      (l.isEveryWeek || l.week === weekId),
   );
 }
 
@@ -98,7 +106,7 @@ function getPractice(schedule, dayIndex, slotId, subGroupId, weekId) {
       l.day === dayIndex + 1 &&
       l.slotId === slotId &&
       l.subGroupId === Number(subGroupId) &&
-      l.week === weekId,
+      (l.isEveryWeek || l.week === weekId),
   );
 }
 
@@ -113,11 +121,13 @@ export default function ScheduleTable({
   onCreate,
   onMove,
   onDelete,
+  onEdit,
+  isReadonly = false, // ✅ prop для студентів/викладачів
 }) {
   const [menu, setMenu] = useState(null);
 
   const handleDragEnd = ({ active, over }) => {
-    if (!over) {return;}
+    if (!over || isReadonly) {return;}
     const lesson = active.data.current;
     const [dayStr, slotIdStr, subgroup, weekStr] = over.id.split('-');
     onMove({
@@ -132,7 +142,9 @@ export default function ScheduleTable({
   if (slots.length === 0) {
     return (
       <div style={{ padding: '20px', color: '#6c757d', textAlign: 'center' }}>
-        Слоти ще не завантажені. Спочатку натисніть «Автозаповнити 7 пар у БД».
+        {isReadonly
+          ? 'Розклад ще не налаштований.'
+          : 'Слоти не завантажені. Натисніть «Автозаповнити 7 пар у БД».'}
       </div>
     );
   }
@@ -141,7 +153,7 @@ export default function ScheduleTable({
     <div className="chnu-schedule-root">
       <DndContext onDragEnd={handleDragEnd}>
 
-        {/* ===== HEADER ===== */}
+        {/* HEADER */}
         <div className="chnu-schedule-header">
           <div className="chnu-schedule-header-corner">
             <div className="col-pair">Пара</div>
@@ -165,7 +177,7 @@ export default function ScheduleTable({
           </div>
         </div>
 
-        {/* ===== BODY ===== */}
+        {/* BODY */}
         <div className="chnu-schedule-body">
           {slots.map((slot) => (
             <div key={slot.id} className="chnu-schedule-pair-container">
@@ -190,6 +202,7 @@ export default function ScheduleTable({
                                 onCreate={onCreate}
                                 onMenu={(l, x, y) => setMenu({ lesson: l, x, y })}
                                 isFull
+                                isReadonly={isReadonly}
                               />
                             ) : subGroups.length > 0 ? (
                               subGroups.map((sg) => {
@@ -202,6 +215,7 @@ export default function ScheduleTable({
                                     lesson={practice}
                                     onCreate={onCreate}
                                     onMenu={(l, x, y) => setMenu({ lesson: l, x, y })}
+                                    isReadonly={isReadonly}
                                   />
                                 );
                               })
@@ -212,6 +226,7 @@ export default function ScheduleTable({
                                 onCreate={onCreate}
                                 onMenu={(l, x, y) => setMenu({ lesson: l, x, y })}
                                 isFull
+                                isReadonly={isReadonly}
                               />
                             )}
                           </div>
@@ -225,12 +240,29 @@ export default function ScheduleTable({
           ))}
         </div>
 
-        {/* ===== CONTEXT MENU ===== */}
-        {menu && (
+        {/* CONTEXT MENU — тільки для адміна */}
+        {menu && !isReadonly && (
           <>
-            <div style={{ position: 'fixed', inset: 0, zIndex: 9998 }} onClick={() => setMenu(null)} />
+            <div
+              style={{ position: 'fixed', inset: 0, zIndex: 9998 }}
+              onClick={() => setMenu(null)}
+            />
             <div className="chnu-schedule-context" style={{ top: menu.y, left: menu.x }}>
-              <div onClick={() => { onDelete(menu.lesson); setMenu(null); }}>
+              <div
+                onClick={() => {
+                  onEdit && onEdit(menu.lesson);
+                  setMenu(null);
+                }}
+              >
+                ✏️ Редагувати
+              </div>
+              <div
+                onClick={() => {
+                  onDelete(menu.lesson);
+                  setMenu(null);
+                }}
+                style={{ color: '#dc3545' }}
+              >
                 🗑 Видалити
               </div>
             </div>

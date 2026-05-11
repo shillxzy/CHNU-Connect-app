@@ -2,33 +2,52 @@ import { useState, useEffect } from 'react';
 import './LessonModal.css';
 import { LessonType } from './scheduleEnums';
 
-export default function LessonModal({ isOpen, onClose, onSave, cell }) {
+export default function LessonModal({ isOpen, onClose, onSave, cell, initialData = null }) {
   const [form, setForm] = useState({
     subjectName: '',
     teacherName: '',
     location:    '',
     type:        LessonType.Lecture,
+    isEveryWeek: false,
   });
 
   useEffect(() => {
     if (isOpen) {
-      setForm({
-        subjectName: '',
-        teacherName: '',
-        location:    '',
-        type:        LessonType.Lecture,
-      });
+      if (initialData) {
+        setForm({
+          subjectName: initialData.subjectName ?? '',
+          teacherName: initialData.teacherName ?? '',
+          location:    initialData.location    ?? '',
+          type:        initialData.type        ?? LessonType.Lecture,
+          isEveryWeek: initialData.isEveryWeek ?? false,
+        });
+      } else {
+        setForm({
+          subjectName: '',
+          teacherName: '',
+          location:    '',
+          type:        LessonType.Lecture,
+          isEveryWeek: false,
+        });
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, initialData]);
 
   if (!isOpen) {return null;}
 
-  const handleSubmit = () => {
+const handleSubmit = () => {
     if (!form.subjectName.trim()) { alert('Введіть назву дисципліни'); return; }
     if (!form.teacherName.trim()) { alert('Введіть ПІБ викладача');    return; }
-    onSave({ ...form, ...cell });
+    
+    console.log('FORM:', form);           // ← додай
+    console.log('CELL:', cell);           // ← додай
+    console.log('MERGED:', { ...cell, ...form }); // ← додай
+    
+    onSave({ ...cell, ...form });
     onClose();
-  };
+};
+
+  const isEdit = !!initialData;
 
   return (
     <div
@@ -36,7 +55,7 @@ export default function LessonModal({ isOpen, onClose, onSave, cell }) {
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div className="modal">
-        <h3>Нова пара</h3>
+        <h3>{isEdit ? 'Редагувати пару' : 'Нова пара'}</h3>
 
         <input
           placeholder="Назва дисципліни *"
@@ -65,8 +84,17 @@ export default function LessonModal({ isOpen, onClose, onSave, cell }) {
           <option value={LessonType.Practice}>Практика (для підгрупи)</option>
         </select>
 
+        <label className="modal-checkbox">
+          <input
+            type="checkbox"
+            checked={form.isEveryWeek}
+            onChange={(e) => setForm({ ...form, isEveryWeek: e.target.checked })}
+          />
+          <span>Щотижня (показувати в обох тижнях)</span>
+        </label>
+
         <div className="modal-actions">
-          <button onClick={handleSubmit}>Зберегти</button>
+          <button onClick={handleSubmit}>{isEdit ? 'Зберегти зміни' : 'Зберегти'}</button>
           <button onClick={onClose}>Скасувати</button>
         </div>
       </div>

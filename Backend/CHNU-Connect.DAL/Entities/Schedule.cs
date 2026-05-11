@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace CHNU_Connect.DAL.Entities
 {
@@ -24,21 +24,22 @@ namespace CHNU_Connect.DAL.Entities
         public int? SubjectId { get; set; }
         public Subject? Subject { get; set; }
 
-        public int? SubGroupId { get; set; } // null = лекція
+        public int? SubGroupId { get; set; }
         public SubGroup? SubGroup { get; set; }
 
-        public LessonType Type { get; set; } // 🔥 ключове
-        public WeekType Week { get; set; }   // 🔥 ключове
+        public LessonType Type { get; set; }
+        public WeekType Week { get; set; }
+
+        // ✅ NEW: якщо true — пара щотижня (ігнорує чисельник/знаменник)
+        public bool IsEveryWeek { get; set; } = false;
 
         public DayOfWeek Day { get; set; }
 
         public int SlotId { get; set; }
         public LessonSlot Slot { get; set; } = null!;
 
-        // Модельки 
-        public string SubjectName { get; set; }
-        public string TeacherName { get; set; }
-        public string Location { get; set; }
+        public string SubjectName { get; set; } = string.Empty;
+        public string TeacherName { get; set; } = string.Empty;
+        public string Location { get; set; } = string.Empty;
     }
-
 }

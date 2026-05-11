@@ -420,7 +420,11 @@ namespace CHNU_Connect.DAL.Data
                     .WithMany()
                     .HasForeignKey(e => e.SlotId)
                     .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(e => e.IsEveryWeek).HasColumnName("is_every_week").HasDefaultValue(false);
             });
+
+
 
 
             // ================= LESSON SLOT =================
