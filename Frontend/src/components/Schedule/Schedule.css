@@ -138,12 +138,16 @@
 .chnu-schedule-days-container {
   flex: 1;
   display: flex;
+  table-layout: fixed; 
+  width: 100%;
 }
 
 .chnu-schedule-day-cells {
   flex: 1;
   display: flex;
   border-right: 2px solid #aaa; /* Жирна лінія між днями */
+  min-width: 0;
+  overflow: hidden;
 }
 .chnu-schedule-day-cells:last-child {
   border-right: none;
@@ -151,13 +155,15 @@
 
 /* CELL */
 .chnu-schedule-cell {
-  flex: 1;
+  flex: 1 1 0; 
+  min-width: 0;
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
-  border-right: 1px solid #eee; /* Лінія між підгрупами */
+  border-right: 1px solid #eee;
   padding: 4px;
+  overflow: hidden;
 }
 .chnu-schedule-cell.span-2 {
   grid-row: span 2;
@@ -168,7 +174,9 @@
 }
 
 .chnu-schedule-cell.is-full-width {
-  flex: 3; /* Лекція займає всі 3 підгрупи */
+  flex: 3 3 0; 
+  min-width: 0;
+  padding: 4px 6px;
 }
 
 .chnu-schedule-cell.is-over {
@@ -234,6 +242,13 @@
   margin-bottom: 6px;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Тінь для тексту, щоб краще читалось */
   line-height: 1.2;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 .chnu-schedule-meta {
@@ -243,6 +258,10 @@
   display: flex;
   align-items: center;
   gap: 4px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .chnu-schedule-meta:last-child {

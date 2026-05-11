@@ -299,6 +299,7 @@ export default function GroupEdit() {
 
         <div className="add-subject">
           <input
+            className="add-subject-input"
             placeholder="Назва"
             value={newSubject.name}
             onChange={(e) =>
@@ -307,6 +308,7 @@ export default function GroupEdit() {
           />
 
           <input
+            className="add-subject-input"
             placeholder="Moodle"
             value={newSubject.moodleLink}
             onChange={(e) =>
@@ -314,7 +316,9 @@ export default function GroupEdit() {
             }
           />
 
-          <button onClick={handleAddSubject}>Додати</button>
+          <button className="add-subject-button" onClick={handleAddSubject}>
+            Додати
+          </button>
         </div>
 
         <div className="subjects-list">

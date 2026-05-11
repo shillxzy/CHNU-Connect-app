@@ -110,17 +110,19 @@ textarea {
   margin-bottom: 15px;
 }
 
-.add-subject input {
+.add-subject-input {
   flex: 1;
 }
 
-.add-subject button {
+.add-subject-button {
   background: #4a6cf7;
   color: white;
   border: none;
-  padding: 8px 12px;
+  margin-top: 8px;
+  padding: 0 12px;
   border-radius: 6px;
   cursor: pointer;
+  height: 37px;
 }
 
 .subjects-list {
