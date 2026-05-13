@@ -43,12 +43,15 @@ const Header = () => {
   // Close dropdowns on outside click
   useEffect(() => {
     const handler = (e) => {
-      if (profileRef.current && !profileRef.current.contains(e.target))
-        {setIsProfileOpen(false);}
-      if (notifRef.current && !notifRef.current.contains(e.target))
-        {setIsNotifOpen(false);}
-      if (searchRef.current && !searchRef.current.contains(e.target))
-        {setShowSearchResults(false);}
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setIsProfileOpen(false);
+      }
+      if (notifRef.current && !notifRef.current.contains(e.target)) {
+        setIsNotifOpen(false);
+      }
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setShowSearchResults(false);
+      }
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -91,18 +94,30 @@ const Header = () => {
   };
 
   const getNotifText = (type) => {
-    if (type === 'message') {return 'написав вам повідомлення';}
-    if (type === 'like') {return 'вподобав ваш пост';}
-    if (type === 'comment') {return 'прокоментував ваш пост';}
-    if (type === 'event') {return 'запросив на подію';}
+    if (type === 'message') {
+      return 'написав вам повідомлення';
+    }
+    if (type === 'like') {
+      return 'вподобав ваш пост';
+    }
+    if (type === 'comment') {
+      return 'прокоментував ваш пост';
+    }
+    if (type === 'event') {
+      return 'запросив на подію';
+    }
     return 'надіслав сповіщення';
   };
 
   const handleNotifClick = (n) => {
     setIsNotifOpen(false);
-    if (n.type === 'message') {navigate(`/chats/${n.entityId}`);}
-    else if (n.type === 'event') {navigate(`/events/${n.entityId}`);}
-    else if (n.entityId) {navigate(`/posts/${n.entityId}`);}
+    if (n.type === 'message') {
+      navigate(`/chats/${n.entityId}`);
+    } else if (n.type === 'event') {
+      navigate(`/events/${n.entityId}`);
+    } else if (n.entityId) {
+      navigate(`/posts/${n.entityId}`);
+    }
   };
 
   const handleLogout = () => logout();
@@ -158,7 +173,18 @@ const Header = () => {
 
         {/* ===== SEARCH ===== */}
         <div className="search-wrapper" ref={searchRef}>
-          <img src={SearchIcon} alt="Search" className="search-icon" />
+          <img
+            src={SearchIcon}
+            alt="Search"
+            className="search-icon"
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              setShowSearchResults(false);
+              navigate(
+                `/search${searchQuery.trim() ? `?q=${encodeURIComponent(searchQuery.trim())}` : ''}`,
+              );
+            }}
+          />
           <input
             type="text"
             placeholder="Пошук користувачів..."
