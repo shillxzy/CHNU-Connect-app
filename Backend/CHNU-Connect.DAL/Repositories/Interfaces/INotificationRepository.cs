@@ -1,5 +1,4 @@
-﻿using CHNU_Connect.DAL.Entities;
-
+using CHNU_Connect.DAL.Entities;
 
 namespace CHNU_Connect.DAL.Repositories.Interfaces
 {
@@ -8,5 +7,6 @@ namespace CHNU_Connect.DAL.Repositories.Interfaces
         Task InsertAsync(Notification notification);
         Task<IEnumerable<Notification>> GetUnreadByUserIdAsync(int userId);
         Task MarkAsReadAsync(int notificationId);
+        Task MarkAllAsReadAsync(int userId); // NEW
     }
 }

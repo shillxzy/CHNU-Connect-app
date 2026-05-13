@@ -1,39 +1,60 @@
-﻿using CHNU_Connect.BLL.Services.Interfaces;
+using CHNU_Connect.BLL.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace CHNU_Connect.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class NotificationController : ControllerBase
     {
-        private readonly INotificationService _notificationService;
+        private readonly INotificationService _service;
 
-        public NotificationController(INotificationService notificationService)
+        public NotificationController(INotificationService service)
         {
-            _notificationService = notificationService;
+            _service = service;
         }
 
-        [HttpGet("unread/{userId}")]
-        public async Task<IActionResult> GetUnreadCount(int userId)
+        // GET /api/Notification/user/{userId} — список непрочитаних
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetUnread(int userId)
         {
-            var count = await _notificationService.GetUnreadCountAsync(userId);
+            var list = await _service.GetUnreadNotificationsAsync(userId);
+            return Ok(list);
+        }
+
+        // GET /api/Notification/count/{userId} — кількість непрочитаних
+        [HttpGet("count/{userId}")]
+        public async Task<IActionResult> GetCount(int userId)
+        {
+            var count = await _service.GetUnreadCountAsync(userId);
             return Ok(count);
         }
 
-        [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetUnreadNotifications(int userId)
+        // POST /api/Notification/{id}/read — позначити одну як прочитану
+        [HttpPost("{id}/read")]
+        public async Task<IActionResult> MarkAsRead(int id)
         {
-            var notifications = await _notificationService.GetUnreadNotificationsAsync(userId);
-            return Ok(notifications);
+            await _service.MarkNotificationAsReadAsync(id);
+            return NoContent();
         }
 
-        [HttpPost("{notificationId}/read")]
-        public async Task<IActionResult> MarkAsRead(int notificationId)
+        // POST /api/Notification/read-all — позначити всі як прочитані
+        [HttpPost("read-all")]
+        public async Task<IActionResult> MarkAllAsRead()
         {
-            await _notificationService.MarkNotificationAsReadAsync(notificationId);
+            var userId = GetUserId();
+            if (userId == null) return Unauthorized();
+            await _service.MarkAllAsReadAsync(userId.Value);
             return NoContent();
+        }
+
+        private int? GetUserId()
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return int.TryParse(claim, out var id) ? id : null;
         }
     }
 }

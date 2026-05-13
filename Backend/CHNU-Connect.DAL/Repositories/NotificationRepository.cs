@@ -1,10 +1,7 @@
-﻿using CHNU_Connect.DAL.Data;
+using CHNU_Connect.DAL.Data;
 using CHNU_Connect.DAL.Entities;
 using CHNU_Connect.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CHNU_Connect.DAL.Repositories
 {
@@ -33,15 +30,22 @@ namespace CHNU_Connect.DAL.Repositories
 
         public async Task MarkAsReadAsync(int notificationId)
         {
-            var notification = await _context.Notifications
-                .FirstOrDefaultAsync(n => n.Id == notificationId);
-
-            if (notification != null)
+            var n = await _context.Notifications.FirstOrDefaultAsync(x => x.Id == notificationId);
+            if (n != null)
             {
-                notification.IsRead = true;
-                _context.Notifications.Update(notification);
+                n.IsRead = true;
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task MarkAllAsReadAsync(int userId)
+        {
+            var list = await _context.Notifications
+                .Where(n => n.UserId == userId && !n.IsRead)
+                .ToListAsync();
+
+            foreach (var n in list) n.IsRead = true;
+            await _context.SaveChangesAsync();
         }
     }
 }

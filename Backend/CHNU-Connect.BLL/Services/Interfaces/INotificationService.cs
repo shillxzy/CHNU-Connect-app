@@ -1,10 +1,4 @@
-﻿using CHNU_Connect.BLL.DTOs.Notification;
-using CHNU_Connect.DAL.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CHNU_Connect.BLL.DTOs.Notification;
 
 namespace CHNU_Connect.BLL.Services.Interfaces
 {
@@ -13,5 +7,7 @@ namespace CHNU_Connect.BLL.Services.Interfaces
         Task<IEnumerable<NotificationDto>> GetUnreadNotificationsAsync(int userId);
         Task<int> GetUnreadCountAsync(int userId);
         Task MarkNotificationAsReadAsync(int notificationId);
+        Task MarkAllAsReadAsync(int userId);                          // NEW
+        Task<NotificationDto> CreateAsync(int userId, string type, int? entityId = null); // NEW
     }
 }
