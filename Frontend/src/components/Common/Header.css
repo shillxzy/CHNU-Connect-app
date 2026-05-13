@@ -105,33 +105,152 @@
   border-color: #2563eb;
 }
 
+/* ===== NOTIFICATIONS BELL ===== */
+.notif-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.notif-btn {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.notif-btn:hover { opacity: 0.75; }
+
+.notif-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.notif-badge {
+  position: absolute;
+  top: -2px;
+  right: -4px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  border: 2px solid #fff;
+  pointer-events: none;
+}
+
+.notif-dropdown {
+  position: absolute;
+  top: 38px;
+  right: 0;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 14px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+  width: 300px;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dropdown-notif-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #111;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.notif-mark-all {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-size: 11px;
+  cursor: pointer;
+  padding: 0;
+}
+.notif-mark-all:hover { text-decoration: underline; }
+
+.dropdown-notif-list {
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.notif-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-bottom: 1px solid #f9f9f9;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.notif-item:hover { background: #f8fafc; }
+
+.notif-body   { flex: 1; font-size: 12px; line-height: 1.4; color: #374151; }
+.notif-actor  { font-weight: 600; color: #111; }
+.notif-action { color: #6b7280; }
+.notif-time   { font-size: 10px; color: #9ca3af; white-space: nowrap; margin-left: 4px; }
+
+.notif-empty {
+  padding: 20px 16px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+/* ===== PROFILE ===== */
 .profile-wrapper {
   position: relative;
   display: inline-block;
   cursor: pointer;
 }
 
+.profile-icon-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
 .profile-dropdown {
   position: absolute;
-  top: 40px; /* трохи нижче іконки */
+  top: 40px;
   right: 0;
   background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  min-width: 160px;
-  z-index: 100;
+  border-radius: 14px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+  width: 180px;
+  z-index: 200;
   display: none;
   flex-direction: column;
-  padding: 8px 0;
+  overflow: hidden;
 }
 
-.profile-dropdown.active {
-  display: flex;
+.profile-dropdown.active { display: flex; }
+
+.dropdown-divider {
+  height: 1px;
+  background: #f0f0f0;
+  margin: 4px 0;
 }
 
 .profile-dropdown a,
-.profile-dropdown button {
+.profile-dropdown > button {
   padding: 10px 16px;
   text-align: left;
   text-decoration: none;
@@ -142,16 +261,11 @@
   width: 100%;
   cursor: pointer;
   transition: background 0.2s ease;
+  display: block;
 }
 
 .profile-dropdown a:hover,
-.profile-dropdown button:hover {
-  background: #f1f1f1;
-}
-
-.profile-dropdown button {
-  text-align: left;
-}
+.profile-dropdown > button:hover { background: #f1f1f1; }
 
 @media (max-width: 880px) {
   .header {
@@ -168,106 +282,38 @@
 }
 
 
-/* ===== NOTIFICATION BELL ===== */
-.notif-wrapper {
+/* Search wrapper */
+.search-wrapper {
   position: relative;
-}
-
-.notif-btn {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  position: relative;
-  padding: 4px 8px;
-  border-radius: 8px;
-  transition: background 0.15s;
-}
-
-.notif-btn:hover { background: #f0f0f0; }
-
-.notif-badge {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  background: #ef4444;
-  color: white;
-  font-size: 10px;
-  font-weight: 700;
-  min-width: 18px;
-  height: 18px;
-  border-radius: 9px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 0 4px;
-  border: 2px solid #fff;
 }
 
-.notif-dropdown {
+.search-results {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 6px);
+  left: 0;
   right: 0;
-  width: 320px;
   background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-  z-index: 1000;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  z-index: 300;
   overflow: hidden;
 }
 
-.notif-header {
+.search-result-item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
-  border-bottom: 1px solid #f0f0f0;
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.notif-mark-all {
-  background: none;
-  border: none;
-  color: #2563eb;
-  font-size: 12px;
+  gap: 10px;
+  padding: 8px 14px;
   cursor: pointer;
-  padding: 0;
-}
-
-.notif-mark-all:hover { text-decoration: underline; }
-
-.notif-list { max-height: 360px; overflow-y: auto; }
-
-.notif-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  border-bottom: 1px solid #f9f9f9;
-  font-size: 13px;
   transition: background 0.1s;
 }
+.search-result-item:hover { background: #f4f6f8; }
 
-.notif-item:hover { background: #f8fafc; }
-
-.notif-text  { flex: 1; }
-.notif-time  { color: #9ca3af; font-size: 11px; margin-left: 8px; white-space: nowrap; }
-
-.notif-empty {
-  padding: 24px;
-  text-align: center;
-  color: #9ca3af;
+.search-result-name {
   font-size: 13px;
-}
-
-/* Прибрати старий badge */
-.notification-badge-header { display: none; }
-
-
-.notif-icon {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
+  font-weight: 500;
+  color: #111;
 }

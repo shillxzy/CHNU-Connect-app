@@ -137,9 +137,9 @@ namespace CHNU_Connect.API.Controllers
                 if (eventEntity == null)
                     return NotFound(new { message = "Event not found." });
 
-                // Check if user is the creator
-                if (eventEntity.CreatedById != currentUserId.Value)
-                    return Forbid("You can only edit events you created.");
+                var isAdmin = User.IsInRole("admin") || User.IsInRole("superAdmin");
+                if (eventEntity.CreatedById != currentUserId.Value && !isAdmin)
+                    return StatusCode(403, new { message = "You can only edit events you created." });
 
                 var updatedEvent = await _eventService.UpdateEventAsync(id, request);
                 
@@ -166,9 +166,9 @@ namespace CHNU_Connect.API.Controllers
                 if (eventEntity == null)
                     return NotFound(new { message = "Event not found." });
 
-                // Check if user is the creator
-                if (eventEntity.CreatedById != currentUserId.Value)
-                    return Forbid("You can only delete events you created.");
+                var isAdmin = User.IsInRole("admin") || User.IsInRole("superAdmin");
+                if (eventEntity.CreatedById != currentUserId.Value && !isAdmin)
+                    return StatusCode(403, new { message = "You can only delete events you created." });
 
                 var success = await _eventService.DeleteEventAsync(id);
                 if (!success)

@@ -1,5 +1,6 @@
 using CHNU_Connect.BLL.DTOs.AdminAction;
 using CHNU_Connect.BLL.DTOs.User;
+using CHNU_Connect.DAL.Entities;
 using CHNU_Connect.BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -227,6 +228,21 @@ namespace CHNU_Connect.API.Controllers
             {
                 _logger.LogError(ex, "Error getting user: {UserId}", id);
                 return StatusCode(500, new { message = "An error occurred while retrieving the user." });
+            }
+        }
+
+        [HttpPut("users/{id}")]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateProfileDto dto)
+        {
+            try
+            {
+                await _userService.UpdateProfileAsync(id, dto);
+                return Ok(new { message = "User updated successfully." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating user: {UserId}", id);
+                return StatusCode(500, new { message = "An error occurred while updating the user." });
             }
         }
 

@@ -92,6 +92,14 @@ namespace CHNU_Connect.API.Controllers
             return Ok(new { message = "Photo deleted successfully." });
         }
 
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchUsers([FromQuery] string q)
+        {
+            if (string.IsNullOrWhiteSpace(q)) return Ok(Array.Empty<object>());
+            var users = await _userService.SearchAsync(q);
+            return Ok(users);
+        }
+
         [HttpGet("all")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetAllUsers()

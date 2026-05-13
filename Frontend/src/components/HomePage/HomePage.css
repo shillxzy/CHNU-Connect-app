@@ -28,6 +28,12 @@ body {
 /* --- Головний Контейнер --- */
 .app-container {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content-area {
+  flex: 1;
 }
 
 /* --- Основний Контент (Layout) --- */

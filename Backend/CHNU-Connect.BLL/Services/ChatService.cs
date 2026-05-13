@@ -118,11 +118,32 @@ namespace CHNU_Connect.BLL.Services
             }
 
             // -------------------- GROUP CHAT --------------------
-            var groupChat = dto.Adapt<CHNU_Connect.DAL.Entities.Chat>();
+            if (dto.MemberIds == null || dto.MemberIds.Count == 0)
+                throw new InvalidOperationException("Group chat must have at least one member");
+
+            var groupChat = new CHNU_Connect.DAL.Entities.Chat
+            {
+                Type = "group",
+                Title = dto.Title,
+                CreatedBy = dto.CreatedBy,
+                CreatedAt = DateTime.UtcNow
+            };
+
             await _unitOfWork.ChatRepository.InsertAsync(groupChat);
             await _unitOfWork.SaveChangesAsync();
 
-            // Підвантажуємо Members, якщо потрібні
+            foreach (var uid in dto.MemberIds)
+            {
+                await _unitOfWork.ChatMemberRepository.InsertAsync(
+                    new CHNU_Connect.DAL.Entities.ChatMember
+                    {
+                        ChatId = groupChat.Id,
+                        UserId = uid
+                    });
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
             groupChat.Members = await _unitOfWork.ChatMemberRepository
                 .GetMembersByChatIdAsync(groupChat.Id);
 
@@ -159,21 +180,6 @@ namespace CHNU_Connect.BLL.Services
             await _unitOfWork.ChatMessageRepository.InsertAsync(message);
             await _unitOfWork.SaveChangesAsync();
 
-            var members = await _unitOfWork.ChatMemberRepository
-                .GetMembersByChatIdAsync(dto.ChatId);
-
-            foreach (var member in members.Where(m => m.UserId != dto.SenderId))
-            {
-                await _unitOfWork.NotificationRepository.InsertAsync(
-                    new CHNU_Connect.DAL.Entities.Notification
-                    {
-                        UserId = member.UserId,
-                        Type = "message",
-                        EntityId = message.Id
-                    });
-            }
-
-            await _unitOfWork.SaveChangesAsync();
             return message.Adapt<ChatMessageDto>();
         }
 

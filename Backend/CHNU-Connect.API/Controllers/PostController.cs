@@ -127,8 +127,9 @@ namespace CHNU_Connect.API.Controllers
                 if (post == null)
                     return NotFound(new { message = "Post not found." });
 
-                if (post.UserId != currentUserId.Value)
-                    return Forbid("You can only edit your own posts.");
+                var isAdmin = User.IsInRole("admin") || User.IsInRole("superAdmin");
+                if (post.UserId != currentUserId.Value && !isAdmin)
+                    return StatusCode(403, new { message = "You can only edit your own posts." });
 
                 var updatedPost = await _postService.UpdatePostAsync(id, request, currentUserId);
 
@@ -157,8 +158,9 @@ namespace CHNU_Connect.API.Controllers
                 if (post == null)
                     return NotFound(new { message = "Post not found." });
 
-                if (post.UserId != currentUserId.Value)
-                    return Forbid("You can only delete your own posts.");
+                var isAdmin = User.IsInRole("admin") || User.IsInRole("superAdmin");
+                if (post.UserId != currentUserId.Value && !isAdmin)
+                    return StatusCode(403, new { message = "You can only delete your own posts." });
 
                 var success = await _postService.DeletePostAsync(id);
 

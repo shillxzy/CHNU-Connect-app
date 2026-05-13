@@ -25,6 +25,15 @@ namespace CHNU_Connect.DAL.Repositories
         {
             return await _dbSet.AnyAsync(u => u.Email == email);
         }
+
+        public async Task<IEnumerable<User>> SearchByNameAsync(string query)
+        {
+            var q = query.ToLower();
+            return await _dbSet
+                .Where(u => u.FullName != null && u.FullName.ToLower().Contains(q))
+                .Take(10)
+                .ToListAsync();
+        }
     }
 
 }

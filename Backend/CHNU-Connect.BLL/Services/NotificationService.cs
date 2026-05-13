@@ -36,27 +36,31 @@ namespace CHNU_Connect.BLL.Services.Interfaces
             await _repo.MarkAllAsReadAsync(userId);
         }
 
-        public async Task<NotificationDto> CreateAsync(int userId, string type, int? entityId = null)
-        {
-            var entity = new Notification
-            {
-                UserId    = userId,
-                Type      = type,
-                EntityId  = entityId,
-                IsRead    = false,
-                CreatedAt = DateTime.UtcNow,
-            };
-            await _repo.InsertAsync(entity);
-            return ToDto(entity);
-        }
+		public async Task<NotificationDto> CreateAsync(int userId, string type, int? entityId = null, int? actorId = null)
+		{
+			var entity = new Notification
+			{
+				UserId = userId,
+				Type = type,
+				EntityId = entityId,
+				ActorId = actorId,
+				IsRead = false,
+				CreatedAt = DateTime.UtcNow,
+			};
+			await _repo.InsertAsync(entity);
+			return ToDto(entity);
+		}
 
-        private static NotificationDto ToDto(Notification n) => new()
-        {
-            Id        = n.Id,
-            Type      = n.Type,
-            EntityId  = n.EntityId,
-            IsRead    = n.IsRead,
-            CreatedAt = n.CreatedAt,
-        };
-    }
+		private static NotificationDto ToDto(Notification n) => new()
+		{
+			Id = n.Id,
+			Type = n.Type,
+			EntityId = n.EntityId,
+			IsRead = n.IsRead,
+			CreatedAt = n.CreatedAt,
+			ActorId = n.ActorId,
+			ActorName = n.Actor?.FullName,
+			ActorAvatar = n.Actor?.PhotoUrl,
+		};
+	}
 }

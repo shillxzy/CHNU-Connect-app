@@ -240,6 +240,11 @@ namespace CHNU_Connect.DAL.Data
                       .WithMany()
                       .HasForeignKey(e => e.UserId)
                       .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Actor)
+                      .WithMany()
+                      .HasForeignKey(e => e.ActorId)
+                      .OnDelete(DeleteBehavior.SetNull);
             });
 
             // ================= GROUP =================

@@ -147,6 +147,12 @@ namespace CHNU_Connect.BLL.Services
         }
 
 
+        public async Task<IEnumerable<UserDto>> SearchAsync(string query)
+        {
+            var users = await _userRepository.SearchByNameAsync(query);
+            return users.Adapt<IEnumerable<UserDto>>();
+        }
+
         public async Task UpdatePhotoAsync(int userId, string? photoUrl)
         {
             var user = await _userRepository.GetByIdAsync(userId);

@@ -1,29 +1,54 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useRef,
+  useCallback,
+} from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { CHNUConnectIcon, UserIcon, SearchIcon } from '../Icons';
-import { getProfile } from '../../api/userAPI';
-import { getUnreadNotifications, markAllNotificationsAsRead } from '../../api/notificationAPI';
-import AuthContext from '../../context/AuthContext';
-import './Header.css';
 import notificationIcon from '../Icons/notification.png';
+import { getProfile, searchUsers } from '../../api/userAPI';
+import {
+  getUnreadNotifications,
+  markAllNotificationsAsRead,
+} from '../../api/notificationAPI';
+import AuthContext from '../../context/AuthContext';
+import Avatar from '../Avatar/Avatar';
+import './Header.css';
 
 const Header = () => {
   const navigate = useNavigate();
-  const { unreadCount, setUnreadCount, logout, user: ctxUser } = useContext(AuthContext);
+  const {
+    unreadCount,
+    setUnreadCount,
+    logout,
+    user: ctxUser,
+    role,
+  } = useContext(AuthContext);
 
-  const [isProfileOpen,      setIsProfileOpen]      = useState(false);
-  const [isNotifOpen,        setIsNotifOpen]         = useState(false);
-  const [user,               setUser]               = useState(null);
-  const [notifications,      setNotifications]      = useState([]);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [notifications, setNotifications] = useState([]);
 
-  const notifRef  = useRef(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+
   const profileRef = useRef(null);
+  const notifRef = useRef(null);
+  const searchRef = useRef(null);
 
-  // Закрити дропдауни при кліку поза ними
+  // Close dropdowns on outside click
   useEffect(() => {
     const handler = (e) => {
-      if (notifRef.current  && !notifRef.current.contains(e.target))  {setIsNotifOpen(false);}
-      if (profileRef.current && !profileRef.current.contains(e.target)) {setIsProfileOpen(false);}
+      if (profileRef.current && !profileRef.current.contains(e.target))
+        {setIsProfileOpen(false);}
+      if (notifRef.current && !notifRef.current.contains(e.target))
+        {setIsNotifOpen(false);}
+      if (searchRef.current && !searchRef.current.contains(e.target))
+        {setShowSearchResults(false);}
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -36,38 +61,75 @@ const Header = () => {
   }, []);
 
   const openNotifications = async () => {
-    setIsNotifOpen((prev) => !prev);
-    if (!isNotifOpen && user?.id) {
+    const opening = !isNotifOpen;
+    setIsNotifOpen(opening);
+    setIsProfileOpen(false);
+    if (opening && user?.id) {
       try {
         const res = await getUnreadNotifications(user.id);
         setNotifications(res.data || []);
-      } catch { /* empty */ }
+      } catch {
+        /* empty */
+      }
     }
   };
 
-  const handleMarkAllRead = async () => {
+  const openProfile = () => {
+    setIsProfileOpen((prev) => !prev);
+    setIsNotifOpen(false);
+  };
+
+  const handleMarkAllRead = async (e) => {
+    e.stopPropagation();
     try {
       await markAllNotificationsAsRead();
       setUnreadCount(0);
       setNotifications([]);
-      setIsNotifOpen(false);
-    } catch { /* empty */ }
+    } catch {
+      /* empty */
+    }
   };
 
-  const getNotifLabel = (type) => {
-    if (type === 'message')    {return '💬 Нове повідомлення';}
-    if (type === 'like')       {return '❤️ Хтось вpodобав ваш пост';}
-    if (type === 'comment')    {return '💬 Новий коментар';}
-    if (type === 'event')      {return '📅 Нова подія';}
-    return '🔔 Сповіщення';
+  const getNotifText = (type) => {
+    if (type === 'message') {return 'написав вам повідомлення';}
+    if (type === 'like') {return 'вподобав ваш пост';}
+    if (type === 'comment') {return 'прокоментував ваш пост';}
+    if (type === 'event') {return 'запросив на подію';}
+    return 'надіслав сповіщення';
   };
 
-  // Вихід з облікового запису
-  const handleLogout = () => {
-    logout();
+  const handleNotifClick = (n) => {
+    setIsNotifOpen(false);
+    if (n.type === 'message') {navigate(`/chats/${n.entityId}`);}
+    else if (n.type === 'event') {navigate(`/events/${n.entityId}`);}
+    else if (n.entityId) {navigate(`/posts/${n.entityId}`);}
   };
 
-  const navIsActive = (ctx) => ctx.isActive ? 'nav-link active' : 'nav-link';
+  const handleLogout = () => logout();
+
+  // Debounced search
+  const searchTimeout = useRef(null);
+  const handleSearchChange = useCallback((e) => {
+    const q = e.target.value;
+    setSearchQuery(q);
+    clearTimeout(searchTimeout.current);
+    if (!q.trim()) {
+      setSearchResults([]);
+      setShowSearchResults(false);
+      return;
+    }
+    searchTimeout.current = setTimeout(async () => {
+      try {
+        const res = await searchUsers(q);
+        setSearchResults(res.data || []);
+        setShowSearchResults(true);
+      } catch {
+        /* empty */
+      }
+    }, 300);
+  }, []);
+
+  const navIsActive = (ctx) => (ctx.isActive ? 'nav-link active' : 'nav-link');
 
   return (
     <header className="header">
@@ -80,41 +142,114 @@ const Header = () => {
 
       <div className="header-right">
         <nav className="header-nav">
-          <NavLink to="/"       className={navIsActive} end>Головна</NavLink>
-          <NavLink to="/events" className={navIsActive}>Події</NavLink>
-          <NavLink to="/groups" className={navIsActive}>Групи</NavLink>
-          <NavLink to="/about"  className={navIsActive}>Про Нас</NavLink>
+          <NavLink to="/" className={navIsActive} end>
+            Головна
+          </NavLink>
+          <NavLink to="/events" className={navIsActive}>
+            Події
+          </NavLink>
+          <NavLink to="/groups" className={navIsActive}>
+            Групи
+          </NavLink>
+          <NavLink to="/about" className={navIsActive}>
+            Про Нас
+          </NavLink>
         </nav>
+
+        {/* ===== SEARCH ===== */}
+        <div className="search-wrapper" ref={searchRef}>
+          <img src={SearchIcon} alt="Search" className="search-icon" />
+          <input
+            type="text"
+            placeholder="Пошук користувачів..."
+            className="search-input"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            onFocus={() =>
+              searchResults.length > 0 && setShowSearchResults(true)
+            }
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && searchQuery.trim()) {
+                setShowSearchResults(false);
+                navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+              }
+            }}
+          />
+          {showSearchResults && searchResults.length > 0 && (
+            <div className="search-results">
+              {searchResults.map((u) => (
+                <div
+                  key={u.id}
+                  className="search-result-item"
+                  onMouseDown={() => {
+                    setShowSearchResults(false);
+                    setSearchQuery('');
+                    navigate(`/profile/${encodeURIComponent(u.fullName)}`);
+                  }}
+                >
+                  <Avatar photoUrl={u.photoUrl} size={28} />
+                  <span className="search-result-name">
+                    {u.fullName || u.email}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         {/* ===== NOTIFICATIONS BELL ===== */}
         <div className="notif-wrapper" ref={notifRef}>
           <button className="notif-btn" onClick={openNotifications}>
-            <img src={notificationIcon} alt="Notifications" className="notif-icon" />
+            <img
+              src={notificationIcon}
+              alt="Notifications"
+              className="notif-icon"
+            />
             {unreadCount > 0 && (
-              <span className="notif-badge">{unreadCount > 99 ? '99+' : unreadCount}</span>
+              <span className="notif-badge">
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
             )}
           </button>
 
           {isNotifOpen && (
             <div className="notif-dropdown">
-              <div className="notif-header">
+              <div className="dropdown-notif-header">
                 <span>Сповіщення</span>
                 {notifications.length > 0 && (
-                  <button className="notif-mark-all" onClick={handleMarkAllRead}>
+                  <button
+                    className="notif-mark-all"
+                    onClick={handleMarkAllRead}
+                  >
                     Прочитати всі
                   </button>
                 )}
               </div>
 
-              <div className="notif-list">
+              <div className="dropdown-notif-list">
                 {notifications.length === 0 ? (
                   <div className="notif-empty">Немає нових сповіщень</div>
                 ) : (
-                  notifications.slice(0, 10).map((n) => (
-                    <div key={n.id} className="notif-item">
-                      <span className="notif-text">{getNotifLabel(n.type)}</span>
+                  notifications.slice(0, 6).map((n) => (
+                    <div
+                      key={n.id}
+                      className="notif-item"
+                      onClick={() => handleNotifClick(n)}
+                    >
+                      <Avatar photoUrl={n.actorAvatar} size={30} />
+                      <div className="notif-body">
+                        <span className="notif-actor">
+                          {n.actorName || 'Хтось'}
+                        </span>{' '}
+                        <span className="notif-action">
+                          {getNotifText(n.type)}
+                        </span>
+                      </div>
                       <span className="notif-time">
-                        {new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {new Date(n.createdAt).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
                       </span>
                     </div>
                   ))
@@ -125,22 +260,54 @@ const Header = () => {
         </div>
 
         {/* ===== PROFILE ===== */}
-        <div className="profile-wrapper" ref={profileRef} onClick={() => setIsProfileOpen((p) => !p)}>
-          <img src={UserIcon} alt="User" className="user-icon" />
+        <div className="profile-wrapper" ref={profileRef} onClick={openProfile}>
+          <div className="profile-icon-wrap">
+            <img src={UserIcon} alt="User" className="user-icon" />
+          </div>
 
           <div className={`profile-dropdown ${isProfileOpen ? 'active' : ''}`}>
-            <button onClick={(e) => { e.stopPropagation(); navigate(`/profile/${encodeURIComponent(user?.fullName)}`); }}>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/profile/${encodeURIComponent(user?.fullName)}`);
+                setIsProfileOpen(false);
+              }}
+            >
               Профіль
             </button>
-            <Link to="/settings" onClick={(e) => e.stopPropagation()}>Налаштування</Link>
-            <button onClick={(e) => { e.stopPropagation(); handleLogout(); }}>Вихід</button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate('/chats');
+                setIsProfileOpen(false);
+              }}
+            >
+              Повідомлення
+            </button>
+            <Link to="/settings" onClick={(e) => e.stopPropagation()}>
+              Налаштування
+            </Link>
+            {(role === 'admin' || role === 'superAdmin') && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate('/admin-panel');
+                  setIsProfileOpen(false);
+                }}
+              >
+                Адмін панель
+              </button>
+            )}
+            <div className="dropdown-divider" />
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleLogout();
+              }}
+            >
+              Вихід
+            </button>
           </div>
-        </div>
-
-        {/* ===== SEARCH ===== */}
-        <div className="search-container">
-          <img src={SearchIcon} alt="Search" className="search-icon" />
-          <input type="text" placeholder="Пошук..." className="search-input" />
         </div>
       </div>
     </header>

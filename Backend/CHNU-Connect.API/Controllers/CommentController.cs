@@ -103,8 +103,9 @@ namespace CHNU_Connect.API.Controllers
                 if (comment == null)
                     return NotFound(new { message = "Comment not found." });
 
-                if (comment.UserId != currentUserId.Value)
-                    return Forbid("You can only edit your own comments.");
+                var isAdmin = User.IsInRole("admin") || User.IsInRole("superAdmin");
+                if (comment.UserId != currentUserId.Value && !isAdmin)
+                    return StatusCode(403, new { message = "You can only edit your own comments." });
 
                 var updatedComment = await _commentService.UpdateCommentAsync(id, request);
 
@@ -131,8 +132,9 @@ namespace CHNU_Connect.API.Controllers
                 if (comment == null)
                     return NotFound(new { message = "Comment not found." });
 
-                if (comment.UserId != currentUserId.Value)
-                    return Forbid("You can only delete your own comments.");
+                var isAdmin = User.IsInRole("admin") || User.IsInRole("superAdmin");
+                if (comment.UserId != currentUserId.Value && !isAdmin)
+                    return StatusCode(403, new { message = "You can only delete your own comments." });
 
                 var success = await _commentService.DeleteCommentAsync(id);
                 if (!success)

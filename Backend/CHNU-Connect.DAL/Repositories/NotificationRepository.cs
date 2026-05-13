@@ -20,15 +20,16 @@ namespace CHNU_Connect.DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Notification>> GetUnreadByUserIdAsync(int userId)
-        {
-            return await _context.Notifications
-                .Where(n => n.UserId == userId && !n.IsRead)
-                .OrderByDescending(n => n.CreatedAt)
-                .ToListAsync();
-        }
+		public async Task<IEnumerable<Notification>> GetUnreadByUserIdAsync(int userId)
+		{
+			return await _context.Notifications
+				.Include(n => n.Actor)
+				.Where(n => n.UserId == userId && !n.IsRead)
+				.OrderByDescending(n => n.CreatedAt)
+				.ToListAsync();
+		}
 
-        public async Task MarkAsReadAsync(int notificationId)
+		public async Task MarkAsReadAsync(int notificationId)
         {
             var n = await _context.Notifications.FirstOrDefaultAsync(x => x.Id == notificationId);
             if (n != null)

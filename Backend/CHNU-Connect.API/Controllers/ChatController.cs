@@ -50,6 +50,13 @@ namespace CHNU_Connect.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateChat([FromBody] CreateChatDto dto)
         {
+            if (dto.Type == "group")
+            {
+                var role = User.FindFirst("role")?.Value
+                        ?? User.FindFirst(ClaimTypes.Role)?.Value;
+                if (role != "teacher" && role != "admin" && role != "superAdmin")
+                    return Forbid();
+            }
             var chat = await _chatService.CreateChatAsync(dto);
             return CreatedAtAction(nameof(GetChat), new { chatId = chat.Id }, chat);
         }
@@ -91,11 +98,11 @@ namespace CHNU_Connect.API.Controllers
             {
                 foreach (var member in chat.Members.Where(m => m.UserId != dto.SenderId))
                 {
-                    var notification = await _notificationService.CreateAsync(
-                        member.UserId, "message", message.Id);
+					var notification = await _notificationService.CreateAsync(
+	                    member.UserId, "message", chatId, actorId: dto.SenderId);
 
-                    // Push через SignalR якщо юзер онлайн
-                    await _hubContext.Clients
+					// Push через SignalR якщо юзер онлайн
+					await _hubContext.Clients
                         .Group($"user-{member.UserId}")
                         .SendAsync("ReceiveNotification", notification);
                 }
