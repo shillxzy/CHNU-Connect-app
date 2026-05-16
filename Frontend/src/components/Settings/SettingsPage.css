@@ -1,0 +1,226 @@
+.st-wrap {
+  max-width: 680px;
+  margin: 32px auto;
+  padding: 0 16px;
+}
+
+.st-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.st-title {
+  font-size: 22px;
+  font-weight: 600;
+  padding: 24px 28px 0;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+/* ─── Tabs ─── */
+.st-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 16px 28px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.st-tab {
+  padding: 9px 18px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+  border-radius: 4px 4px 0 0;
+}
+
+.st-tab:hover {
+  color: #374151;
+}
+
+.st-tab.active {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+}
+
+.st-tab.danger.active {
+  color: #dc2626;
+  border-bottom-color: #dc2626;
+}
+
+/* ─── Section ─── */
+.st-section {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.st-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 4px;
+}
+
+.st-danger-title {
+  color: #dc2626;
+}
+
+/* ─── Photo row ─── */
+.st-photo-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.st-photo-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ─── Fields ─── */
+.st-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.st-field label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.st-field input,
+.st-field select,
+.st-field textarea {
+  padding: 9px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #111827;
+  background: #f9fafb;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.st-field input:focus,
+.st-field select:focus,
+.st-field textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  background: #fff;
+}
+
+.st-field textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+/* ─── Danger card ─── */
+.st-danger-card {
+  background: #fff5f5;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.st-danger-desc {
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ─── Buttons ─── */
+.st-actions {
+  display: flex;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.st-btn {
+  padding: 9px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+}
+
+.st-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.st-btn-primary {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
+
+.st-btn-primary:hover:not(:disabled) {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.st-btn-secondary {
+  background: #fff;
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+.st-btn-secondary:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+.st-btn-ghost {
+  background: transparent;
+  color: #6b7280;
+  border-color: transparent;
+  padding: 9px 12px;
+}
+
+.st-btn-ghost:hover:not(:disabled) {
+  color: #374151;
+  background: #f3f4f6;
+}
+
+.st-btn-danger {
+  background: #dc2626;
+  color: #fff;
+  border-color: #dc2626;
+}
+
+.st-btn-danger:hover:not(:disabled) {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+/* ─── Feedback ─── */
+.st-success {
+  font-size: 13px;
+  color: #16a34a;
+  margin: 0;
+}
+
+.st-error {
+  font-size: 13px;
+  color: #dc2626;
+  margin: 0;
+}

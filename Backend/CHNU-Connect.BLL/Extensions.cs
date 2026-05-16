@@ -23,7 +23,8 @@ namespace CHNU_Connect.BLL
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<ISubjectService, SubjectService>();
             services.AddScoped<IScheduleService, ScheduleService>();
-            services.AddScoped<ISubGroupService, SubGroupService>(); // NEW
+            services.AddScoped<ISubGroupService, SubGroupService>();
+            services.AddScoped<IAdminPermissionService, AdminPermissionService>();
 
             return services;
         }

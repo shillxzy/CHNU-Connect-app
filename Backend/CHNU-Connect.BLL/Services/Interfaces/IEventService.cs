@@ -10,8 +10,8 @@ namespace CHNU_Connect.BLL.Services.Interfaces
     public interface IEventService
     {
         Task<EventDto> CreateEventAsync(CreateEventDto dto);
-        Task<EventDto?> GetByIdAsync(int id);
-        Task<IEnumerable<EventDto>> GetAllAsync();
+        Task<EventDto?> GetByIdAsync(int id, int? currentUserId = null);
+        Task<IEnumerable<EventDto>> GetAllAsync(int? currentUserId = null);
         Task<IEnumerable<EventDto>> GetByCreatorIdAsync(int creatorId);
         Task<IEnumerable<EventDto>> GetPublicEventsAsync();
         Task<EventDto> UpdateEventAsync(int id, CreateEventDto dto);

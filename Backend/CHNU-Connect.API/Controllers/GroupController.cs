@@ -61,6 +61,16 @@ public class GroupController : ControllerBase
         return Ok(groups);
     }
 
+    [HttpGet("curated")]
+    public async Task<IActionResult> CuratedGroups()
+    {
+        var userId = GetUserId();
+        if (userId == null) return Unauthorized();
+
+        var groups = await _groupService.GetCuratedGroupsAsync(userId.Value);
+        return Ok(groups);
+    }
+
     [HttpPost]
     [Authorize(Roles = "admin,superAdmin")]
     public async Task<IActionResult> Create(CreateGroupDto dto)

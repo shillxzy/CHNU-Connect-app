@@ -1,6 +1,6 @@
-import { useEffect, useState, React } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getEventById, joinEvent } from '../../api/eventAPI';
+import { getEventById, joinEvent, leaveEvent } from '../../api/eventAPI';
 import './Events.css';
 import Loading from '../Loading/Loading';
 
@@ -10,47 +10,56 @@ export default function EventDetails() {
 
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [joining, setJoining] = useState(false);
   const [error, setError] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [feedback, setFeedback] = useState(null);
 
   useEffect(() => {
-    const fetchEvent = async () => {
-      try {
-        const response = await getEventById(id);
-        setEvent(response.data);
-      } catch (err) {
-        console.error('Error loading event:', err);
-        setError(err.response?.data?.message || 'Помилка завантаження події');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEvent();
+    getEventById(id)
+      .then((res) => setEvent(res.data))
+      .catch((err) =>
+        setError(err.response?.data?.message || 'Помилка завантаження події'),
+      )
+      .finally(() => setLoading(false));
   }, [id]);
 
-  const handleJoin = async () => {
+  const handleToggle = async () => {
+    setBusy(true);
+    setFeedback(null);
     try {
-      setJoining(true);
-      await joinEvent(id);
-      alert('Ви успішно приєдналися до події');
+      if (event.isJoinedByCurrentUser) {
+        await leaveEvent(id);
+        setEvent((prev) => ({
+          ...prev,
+          isJoinedByCurrentUser: false,
+          participantCount: Math.max(0, prev.participantCount - 1),
+        }));
+        setFeedback({ type: 'info', text: 'Ви покинули подію' });
+      } else {
+        await joinEvent(id);
+        setEvent((prev) => ({
+          ...prev,
+          isJoinedByCurrentUser: true,
+          participantCount: prev.participantCount + 1,
+        }));
+        setFeedback({
+          type: 'success',
+          text: 'Ви успішно приєдналися до події',
+        });
+      }
     } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.message || 'Не вдалося приєднатися');
+      setFeedback({
+        type: 'error',
+        text: err.response?.data?.message || 'Помилка',
+      });
     } finally {
-      setJoining(false);
+      setBusy(false);
     }
   };
 
-  if (loading) {
-    return <Loading />;
-  }
-  if (error) {
-    return <p>Помилка: {error}</p>;
-  }
-  if (!event) {
-    return <p>Подію не знайдено</p>;
-  }
+  if (loading) {return <Loading />;}
+  if (error) {return <p>Помилка: {error}</p>;}
+  if (!event) {return <p>Подію не знайдено</p>;}
 
   return (
     <div className="events-page">
@@ -63,44 +72,48 @@ export default function EventDetails() {
             <h1 className="page-title">{event.title}</h1>
           </div>
 
-          <div className="event-card">
+          <div className="event-card event-card--detail">
             <div className="event-info">
-              <div className="event-field">
-                <strong>Назва:</strong> {event.title}
-              </div>
-
-              <div className="event-field">
-                <strong>Опис:</strong> {event.description}
-              </div>
-
+              {event.description && (
+                <div className="event-field">
+                  <strong>Опис:</strong> {event.description}
+                </div>
+              )}
               <div className="event-field">
                 <strong>Початок:</strong>{' '}
-                {new Date(event.startTime).toLocaleString()}
+                {new Date(event.startTime).toLocaleString('uk-UA')}
               </div>
-
               <div className="event-field">
                 <strong>Завершення:</strong>{' '}
-                {new Date(event.endTime).toLocaleString()}
+                {new Date(event.endTime).toLocaleString('uk-UA')}
               </div>
-
               <div className="event-field">
-                <strong>Створено:</strong>{' '}
-                {new Date(event.createdAt).toLocaleString()}
+                <strong>Тип:</strong> {event.isPublic ? 'Публічна' : 'Приватна'}
               </div>
-
               <div className="event-field">
-                <strong>Тип події:</strong>{' '}
-                {event.isPublic ? 'Публічна' : 'Приватна'}
+                <strong>Учасників:</strong> {event.participantCount}
               </div>
             </div>
 
+            {feedback && (
+              <p className={`ev-feedback ev-feedback--${feedback.type}`}>
+                {feedback.text}
+              </p>
+            )}
+
             <div className="event-actions">
               <button
-                className="btn-participate"
-                onClick={handleJoin}
-                disabled={joining}
+                className={
+                  event.isJoinedByCurrentUser ? 'btn-leave' : 'btn-participate'
+                }
+                onClick={handleToggle}
+                disabled={busy}
               >
-                {joining ? 'Приєднання...' : 'Взяти участь'}
+                {busy
+                  ? '...'
+                  : event.isJoinedByCurrentUser
+                    ? 'Покинути подію'
+                    : 'Взяти участь'}
               </button>
             </div>
           </div>

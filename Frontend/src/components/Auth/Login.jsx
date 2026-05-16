@@ -50,7 +50,13 @@ export default function Login() {
       navigate('/');
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.message || 'Сталася помилка під час входу');
+      if (err.response?.status === 403) {
+        setError('Ваш акаунт заблоковано. Зверніться до адміністратора.');
+      } else {
+        setError(
+          err.response?.data?.message || 'Сталася помилка під час входу',
+        );
+      }
     } finally {
       setLoading(false);
     }

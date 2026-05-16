@@ -151,7 +151,7 @@ namespace CHNU_Connect.BLL.Configuration
             TypeAdapterConfig<CreateAdminActionDto, AdminAction>
                 .NewConfig()
                 .Map(dest => dest.AdminId, src => src.AdminId)
-                .Map(dest => dest.TargetUserId, src => src.TargetId)
+                .Map(dest => dest.TargetUserId, src => src.TargetUserId)
                 .Map(dest => dest.Action, src => src.Action)
                 .Map(dest => dest.Reason, src => src.Reason);
 

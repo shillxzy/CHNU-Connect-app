@@ -1,4 +1,5 @@
 using CHNU_Connect.BLL.DTOs.AdminAction;
+using CHNU_Connect.BLL.DTOs.AdminPermission;
 using CHNU_Connect.BLL.DTOs.User;
 using CHNU_Connect.DAL.Entities;
 using CHNU_Connect.BLL.Services.Interfaces;
@@ -10,22 +11,89 @@ namespace CHNU_Connect.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin,superAdmin")]
     public class AdminController : ControllerBase
     {
         private readonly IAdminActionService _adminActionService;
         private readonly IUserService _userService;
+        private readonly IAdminPermissionService _permissionService;
         private readonly ILogger<AdminController> _logger;
 
         public AdminController(
-            IAdminActionService adminActionService, 
-            IUserService userService, 
+            IAdminActionService adminActionService,
+            IUserService userService,
+            IAdminPermissionService permissionService,
             ILogger<AdminController> logger)
         {
             _adminActionService = adminActionService;
             _userService = userService;
+            _permissionService = permissionService;
             _logger = logger;
         }
+
+        // ==================== PERMISSIONS ====================
+
+        /// <summary>Returns the permission list for the currently logged-in user (any role).</summary>
+        [HttpGet("my-permissions")]
+        [Authorize]
+        public async Task<IActionResult> GetMyPermissions()
+        {
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized();
+
+            var perms = await _permissionService.GetUserPermissionTypesAsync(userId.Value);
+            return Ok(perms);
+        }
+
+        /// <summary>Returns permissions assigned to a given admin user.</summary>
+        [HttpGet("permissions/{userId}")]
+        public async Task<IActionResult> GetUserPermissions(int userId)
+        {
+            var perms = await _permissionService.GetByUserIdAsync(userId);
+            return Ok(perms);
+        }
+
+        /// <summary>Grants a permission to an admin. Only superAdmin can call this.</summary>
+        [HttpPost("permissions/grant")]
+        [Authorize(Roles = "superAdmin")]
+        public async Task<IActionResult> GrantPermission([FromBody] GrantPermissionDto dto)
+        {
+            var grantedBy = GetCurrentUserId();
+            if (grantedBy == null) return Unauthorized();
+
+            try
+            {
+                var result = await _permissionService.GrantAsync(dto.UserId, dto.Type, grantedBy.Value);
+                _logger.LogInformation("Permission {Type} granted to user {UserId} by {GrantedBy}",
+                    dto.Type, dto.UserId, grantedBy);
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        /// <summary>Revokes a permission from an admin. Only superAdmin can call this.</summary>
+        [HttpDelete("permissions/revoke")]
+        [Authorize(Roles = "superAdmin")]
+        public async Task<IActionResult> RevokePermission([FromBody] GrantPermissionDto dto)
+        {
+            try
+            {
+                var success = await _permissionService.RevokeAsync(dto.UserId, dto.Type);
+                if (!success) return NotFound(new { message = "Permission not found." });
+
+                _logger.LogInformation("Permission {Type} revoked from user {UserId}", dto.Type, dto.UserId);
+                return Ok(new { message = "Permission revoked." });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        // ==================== ADMIN ACTIONS ====================
 
         [HttpGet("actions")]
         public async Task<IActionResult> GetAllAdminActions()
@@ -96,19 +164,18 @@ namespace CHNU_Connect.API.Controllers
             try
             {
                 var currentUserId = GetCurrentUserId();
-                if (currentUserId == null)
-                    return Unauthorized();
+                if (currentUserId == null) return Unauthorized();
 
                 request.AdminId = currentUserId.Value;
                 var action = await _adminActionService.CreateAdminActionAsync(request);
-                
-                _logger.LogInformation("Admin action created: {Action} on user: {TargetUserId} by admin: {AdminId}", 
-                    request.Action, request.TargetId, currentUserId);
+
+                _logger.LogInformation("Admin action created: {Action} on user: {TargetUserId} by admin: {AdminId}",
+                    request.Action, request.TargetUserId, currentUserId);
                 return CreatedAtAction(nameof(GetAdminAction), new { id = action.Id }, action);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error creating admin action for user: {UserId}", GetCurrentUserId());
+                _logger.LogError(ex, "Error creating admin action");
                 return StatusCode(500, new { message = "An error occurred while creating the admin action." });
             }
         }
@@ -122,7 +189,7 @@ namespace CHNU_Connect.API.Controllers
                 if (!success)
                     return BadRequest(new { message = "Failed to delete admin action." });
 
-                _logger.LogInformation("Admin action deleted: {ActionId} by admin: {AdminId}", id, GetCurrentUserId());
+                _logger.LogInformation("Admin action deleted: {ActionId}", id);
                 return Ok(new { message = "Admin action deleted successfully." });
             }
             catch (Exception ex)
@@ -132,28 +199,30 @@ namespace CHNU_Connect.API.Controllers
             }
         }
 
+        // ==================== USER MANAGEMENT ====================
+
         [HttpPost("users/{userId}/block")]
         public async Task<IActionResult> BlockUser(int userId, [FromBody] BlockUserDto request)
         {
             try
             {
                 var currentUserId = GetCurrentUserId();
-                if (currentUserId == null)
-                    return Unauthorized();
+                if (currentUserId == null) return Unauthorized();
+
+                if (!await CanManageUsers())
+                    return StatusCode(403, new { message = "You need ManageUsers permission to block users." });
 
                 var success = await _userService.BlockUserAsync(userId);
                 if (!success)
                     return BadRequest(new { message = "Failed to block user." });
 
-                // Log the admin action
-                var adminAction = new CreateAdminActionDto
+                await _adminActionService.CreateAdminActionAsync(new CreateAdminActionDto
                 {
                     AdminId = currentUserId.Value,
-                    TargetId = userId,
+                    TargetUserId = userId,
                     Action = "block_user",
                     Reason = request.Reason
-                };
-                await _adminActionService.CreateAdminActionAsync(adminAction);
+                });
 
                 _logger.LogInformation("User blocked: {UserId} by admin: {AdminId}", userId, currentUserId);
                 return Ok(new { message = "User blocked successfully." });
@@ -171,22 +240,22 @@ namespace CHNU_Connect.API.Controllers
             try
             {
                 var currentUserId = GetCurrentUserId();
-                if (currentUserId == null)
-                    return Unauthorized();
+                if (currentUserId == null) return Unauthorized();
+
+                if (!await CanManageUsers())
+                    return StatusCode(403, new { message = "You need ManageUsers permission to unblock users." });
 
                 var success = await _userService.UnblockUserAsync(userId);
                 if (!success)
                     return BadRequest(new { message = "Failed to unblock user." });
 
-                // Log the admin action
-                var adminAction = new CreateAdminActionDto
+                await _adminActionService.CreateAdminActionAsync(new CreateAdminActionDto
                 {
                     AdminId = currentUserId.Value,
-                    TargetId = userId,
+                    TargetUserId = userId,
                     Action = "unblock_user",
                     Reason = request.Reason
-                };
-                await _adminActionService.CreateAdminActionAsync(adminAction);
+                });
 
                 _logger.LogInformation("User unblocked: {UserId} by admin: {AdminId}", userId, currentUserId);
                 return Ok(new { message = "User unblocked successfully." });
@@ -249,6 +318,9 @@ namespace CHNU_Connect.API.Controllers
         [HttpPost("set-role")]
         public async Task<IActionResult> SetRole([FromBody] ChangeRoleRequest request)
         {
+            if (!await CanManageUsers())
+                return StatusCode(403, new { message = "You need ManageUsers permission to change roles." });
+
             var allowedRoles = new[] { "student", "teacher", "admin" };
 
             if (!allowedRoles.Contains(request.Role.ToLower()))
@@ -262,10 +334,20 @@ namespace CHNU_Connect.API.Controllers
             return Ok("Role successfully updated");
         }
 
+        // ==================== HELPERS ====================
+
         private int? GetCurrentUserId()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return int.TryParse(userIdClaim, out var userId) ? userId : null;
+        }
+
+        private async Task<bool> CanManageUsers()
+        {
+            if (User.IsInRole("superAdmin")) return true;
+            var userId = GetCurrentUserId();
+            if (userId == null) return false;
+            return await _permissionService.HasPermissionAsync(userId.Value, "ManageUsers");
         }
     }
 

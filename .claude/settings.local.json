@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build *)",
+      "Bash(dotnet user-secrets *)",
+      "Bash(dotnet ef *)",
+      "Bash(dotnet tool *)",
+      "PowerShell(dotnet ef migrations *)",
+      "PowerShell(dotnet ef database *)",
+      "PowerShell(Start-Process powershell -ArgumentList \"-NoExit\", \"-Command\", \"Set-Location 'C:\\\\Users\\\\hedge\\\\OneDrive\\\\Desktop\\\\CNU_connect\\\\CHNU-Connect-app\\\\Backend\\\\CHNU-Connect.API'; dotnet run\" -WindowStyle Normal)",
+      "PowerShell(Start-Process powershell -ArgumentList \"-NoExit\", \"-Command\", \"Set-Location 'C:\\\\Users\\\\hedge\\\\OneDrive\\\\Desktop\\\\CNU_connect\\\\CHNU-Connect-app\\\\Frontend'; npm run dev\" -WindowStyle Normal)",
+      "PowerShell(Start-Sleep -Seconds 8; Invoke-WebRequest -Uri \"http://localhost:5173\" -UseBasicParsing -TimeoutSec 5 2>&1 | Select-Object -First 3)",
+      "Bash(python3 *)",
+      "Bash(dotnet run *)",
+      "Bash(npm run *)",
+      "Bash(taskkill *)",
+      "PowerShell(Stop-Process *)",
+      "PowerShell(Get-Process *)",
+      "Bash(git checkout *)",
+      "Bash(git push *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git rm *)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\hedge\\\\OneDrive\\\\Desktop\\\\CNU_connect\\\\CHNU-Connect-app\" -Force | Format-Table Name, @{Name=\"Type\";Expression={if\\($_.PSIsContainer\\){\"Folder\"}else{\"File\"}}} -AutoSize)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\hedge\\\\OneDrive\\\\Desktop\\\\CNU_connect\\\\CHNU-Connect-app\\\\Frontend\" -Recurse -Force | Where-Object { $_.PSIsContainer } | Select-Object FullName | Sort-Object FullName)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\hedge\\\\OneDrive\\\\Desktop\\\\CNU_connect\\\\CHNU-Connect-app\\\\Backend\" -Recurse -Force | Where-Object { $_.PSIsContainer } | Select-Object FullName | Sort-Object FullName)"
+    ]
+  }
+}

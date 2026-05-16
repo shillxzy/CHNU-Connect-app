@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { searchUsers } from '../../api/userAPI';
 import { searchPosts } from '../../api/postAPI';
-import { getAllGroups } from '../../api/groupAPI';
+import { getEvents } from '../../api/eventAPI';
 import Avatar from '../Avatar/Avatar';
 import './SearchPage.css';
 
@@ -12,7 +12,7 @@ export default function SearchPage() {
 
   const [query, setQuery] = useState(searchParams.get('q') || '');
   const [users, setUsers] = useState([]);
-  const [groups, setGroups] = useState([]);
+  const [events, setEvents] = useState([]);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -21,33 +21,33 @@ export default function SearchPage() {
   const runSearch = useCallback(async (q) => {
     if (!q.trim()) {
       setUsers([]);
-      setGroups([]);
+      setEvents([]);
       setPosts([]);
       return;
     }
     setLoading(true);
     try {
-      const [uRes, pRes, gRes] = await Promise.allSettled([
+      const [uRes, pRes, eRes] = await Promise.allSettled([
         searchUsers(q),
         searchPosts(q),
-        getAllGroups(),
+        getEvents(),
       ]);
 
       setUsers(uRes.status === 'fulfilled' ? uRes.value.data || [] : []);
       setPosts(pRes.status === 'fulfilled' ? pRes.value.data || [] : []);
 
-      if (gRes.status === 'fulfilled') {
-        const all = gRes.value.data || [];
+      if (eRes.status === 'fulfilled') {
+        const all = eRes.value.data || [];
         const ql = q.toLowerCase();
-        setGroups(
+        setEvents(
           all.filter(
-            (g) =>
-              (g.name || '').toLowerCase().includes(ql) ||
-              (g.description || '').toLowerCase().includes(ql),
+            (e) =>
+              (e.title || '').toLowerCase().includes(ql) ||
+              (e.description || '').toLowerCase().includes(ql),
           ),
         );
       } else {
-        setGroups([]);
+        setEvents([]);
       }
     } finally {
       setLoading(false);
@@ -67,10 +67,12 @@ export default function SearchPage() {
   // Run search on initial load if q param exists
   useEffect(() => {
     const q = searchParams.get('q') || '';
-    if (q) {runSearch(q);}
+    if (q) {
+      runSearch(q);
+    }
   }, []);
 
-  const total = users.length + groups.length + posts.length;
+  const total = users.length + events.length + posts.length;
 
   return (
     <div className="sp-wrap">
@@ -129,23 +131,33 @@ export default function SearchPage() {
             )}
           </section>
 
-          {/* ── GROUPS ── */}
+          {/* ── EVENTS ── */}
           <section className="sp-section">
-            <h2 className="sp-section-title">Групи ({groups.length})</h2>
-            {groups.length === 0 ? (
+            <h2 className="sp-section-title">Події ({events.length})</h2>
+            {events.length === 0 ? (
               <p className="sp-empty">Нічого не знайдено</p>
             ) : (
               <div className="sp-cards-grid">
-                {groups.map((g) => (
+                {events.map((e) => (
                   <div
-                    key={g.id}
+                    key={e.id}
                     className="sp-card"
-                    onClick={() => navigate('/groups')}
+                    onClick={() => navigate(`/events/${e.id}`)}
                   >
-                    <div className="sp-card-title">{g.name}</div>
-                    <div className="sp-card-sub">
-                      {(g.description || '').slice(0, 100)}
+                    <div className="sp-card-title">{e.title}</div>
+                    <div className="sp-card-meta">
+                      {new Date(e.startTime).toLocaleDateString('uk-UA')}
+                      <span
+                        className={`sp-card-badge ${e.isPublic ? 'sp-card-badge--public' : 'sp-card-badge--private'}`}
+                      >
+                        {e.isPublic ? 'Публічна' : 'Приватна'}
+                      </span>
                     </div>
+                    {e.description && (
+                      <div className="sp-card-sub">
+                        {e.description.slice(0, 100)}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

@@ -32,6 +32,7 @@ namespace CHNU_Connect.DAL.Extensions
             services.AddScoped<Repositories.Interfaces.ISubjectRepository, Repositories.SubjectRepository>();
             services.AddScoped<Repositories.Interfaces.ISubGroupRepository, Repositories.SubGroupRepository>();
             services.AddScoped<Repositories.Interfaces.ILessonSlotRepository, Repositories.LessonSlotRepository>();
+            services.AddScoped<Repositories.Interfaces.IAdminPermissionRepository, Repositories.AdminPermissionRepository>();
         }
 
         public static IServiceCollection AddDataAccessLayer(this IServiceCollection services, IConfiguration configuration)

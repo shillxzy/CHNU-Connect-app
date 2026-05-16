@@ -16,5 +16,7 @@ namespace CHNU_Connect.BLL.DTOs.Event
         public int CreatedById { get; set; }
         public bool IsPublic { get; set; }
         public DateTime CreatedAt { get; set; }
+        public int ParticipantCount { get; set; }
+        public bool IsJoinedByCurrentUser { get; set; }
     }
 }

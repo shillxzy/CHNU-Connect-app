@@ -64,6 +64,45 @@ namespace CHNU_Connect.DAL.Migrations
                     b.ToTable("admin_actions", (string)null);
                 });
 
+            modelBuilder.Entity("CHNU_Connect.DAL.Entities.AdminPermission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("GrantedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("granted_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<int>("GrantedByUserId")
+                        .HasColumnType("integer")
+                        .HasColumnName("granted_by_user_id");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("type");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GrantedByUserId");
+
+                    b.HasIndex("UserId", "Type")
+                        .IsUnique();
+
+                    b.ToTable("admin_permissions", (string)null);
+                });
+
             modelBuilder.Entity("CHNU_Connect.DAL.Entities.Chat", b =>
                 {
                     b.Property<int>("Id")
@@ -850,6 +889,25 @@ namespace CHNU_Connect.DAL.Migrations
                     b.Navigation("Admin");
 
                     b.Navigation("TargetUser");
+                });
+
+            modelBuilder.Entity("CHNU_Connect.DAL.Entities.AdminPermission", b =>
+                {
+                    b.HasOne("CHNU_Connect.DAL.Entities.User", "GrantedBy")
+                        .WithMany()
+                        .HasForeignKey("GrantedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CHNU_Connect.DAL.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GrantedBy");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CHNU_Connect.DAL.Entities.Chat", b =>

@@ -122,6 +122,28 @@
   background-color: #004085;
 }
 
+.btn-participate:disabled,
+.btn-leave:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-leave {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-leave:hover {
+  background-color: #c82333;
+}
+
 .btn-details {
   background-color: #4da3ff;
   color: white;
@@ -382,6 +404,62 @@
 .btn-danger:hover {
   background-color: #c82333;
 }
+
+/* ── event card content ── */
+.event-card--detail {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.ev-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.ev-desc {
+  color: #4b5563;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ev-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.ev-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.ev-badge--public  { background: #dcfce7; color: #16a34a; }
+.ev-badge--private { background: #fee2e2; color: #b91c1c; }
+
+.ev-participants {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* ── feedback message ── */
+.ev-feedback {
+  font-size: 13px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin: 4px 0 0;
+}
+
+.ev-feedback--success { background: #dcfce7; color: #15803d; }
+.ev-feedback--info    { background: #dbeafe; color: #1d4ed8; }
+.ev-feedback--error   { background: #fee2e2; color: #b91c1c; }
 
 @media (max-width: 768px) {
   .form-row {

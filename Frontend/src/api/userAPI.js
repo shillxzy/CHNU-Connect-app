@@ -15,3 +15,5 @@ export const unblockUser = (userId) => api.post(`/User/${userId}/unblock`);
 export const getUserById = (userId) => api.get(`/User/${userId}`);
 export const searchUsers = (q) =>
   api.get(`/User/search?q=${encodeURIComponent(q)}`);
+export const changePassword = (data) => api.put('/User/change-password', data);
+export const deleteAccount = () => api.delete('/User/account');

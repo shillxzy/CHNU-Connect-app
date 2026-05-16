@@ -24,6 +24,11 @@ export const sendMessage = (chatId, data) =>
 export const markMessageRead = (chatId, messageId, userId) =>
   api.post(`/Chat/${chatId}/messages/${messageId}/read/${userId}`);
 
+export const sendFile = (chatId, formData) =>
+  api.post(`/Chat/${chatId}/messages/file`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+
 /**
  * Створює чат між двома користувачами або повертає існуючий.
  */

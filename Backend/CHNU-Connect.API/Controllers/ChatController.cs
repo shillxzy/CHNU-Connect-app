@@ -111,6 +111,55 @@ namespace CHNU_Connect.API.Controllers
             return Ok(message);
         }
 
+        [HttpPost("{chatId}/messages/file")]
+        public async Task<IActionResult> SendFile(int chatId, IFormFile file)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var senderId))
+                return Unauthorized();
+
+            if (file == null || file.Length == 0)
+                return BadRequest(new { message = "No file provided." });
+
+            var messageType = file.ContentType.StartsWith("image/") ? "image" : "file";
+            var ext = Path.GetExtension(file.FileName);
+            var fileName = $"{Guid.NewGuid()}{ext}";
+            var uploadsPath = Path.Combine("wwwroot", "uploads", "chat");
+            Directory.CreateDirectory(uploadsPath);
+            var filePath = Path.Combine(uploadsPath, fileName);
+            using (var stream = System.IO.File.Create(filePath))
+                await file.CopyToAsync(stream);
+
+            var dto = new CreateChatMessageDto
+            {
+                ChatId    = chatId,
+                SenderId  = senderId,
+                Content   = $"/uploads/chat/{fileName}",
+                MessageType = messageType,
+            };
+
+            var message = await _chatService.SendMessageAsync(dto);
+
+            await _hubContext.Clients
+                .Group($"chat-{chatId}")
+                .SendAsync("ReceiveMessage", message);
+
+            var chat = await _chatService.GetChatByIdAsync(chatId);
+            if (chat?.Members != null)
+            {
+                foreach (var member in chat.Members.Where(m => m.UserId != senderId))
+                {
+                    var notification = await _notificationService.CreateAsync(
+                        member.UserId, "message", chatId, actorId: senderId);
+                    await _hubContext.Clients
+                        .Group($"user-{member.UserId}")
+                        .SendAsync("ReceiveNotification", notification);
+                }
+            }
+
+            return Ok(message);
+        }
+
         [HttpPost("{chatId}/messages/{messageId}/read/{userId}")]
         public async Task<IActionResult> MarkMessageAsRead(int chatId, int messageId, int userId)
         {

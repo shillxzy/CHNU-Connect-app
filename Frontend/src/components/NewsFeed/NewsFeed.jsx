@@ -54,24 +54,15 @@ const NewsFeed = () => {
       return;
     }
 
-    console.log(
-      'Toggling like for post:',
-      postId,
-      'currentlyLiked:',
-      currentlyLiked,
-    );
-
     try {
       if (currentlyLiked) {
-        console.log('Calling unlikePost API for post:', postId);
         await unlikePost(postId);
       } else {
-        console.log('Calling likePost API for post:', postId);
         await likePost(postId);
       }
 
-      setPosts((prevPosts) => {
-        const updatedPosts = prevPosts.map((post) =>
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
           post.id === postId
             ? {
                 ...post,
@@ -81,11 +72,8 @@ const NewsFeed = () => {
                   : post.likeCount + 1,
               }
             : post,
-        );
-
-        console.log('Updated posts state after toggle:', updatedPosts);
-        return updatedPosts;
-      });
+        ),
+      );
     } catch (error) {
       console.error('Error toggling like:', error);
     }

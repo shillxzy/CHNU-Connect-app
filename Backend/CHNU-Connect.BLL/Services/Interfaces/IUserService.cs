@@ -21,5 +21,6 @@ namespace CHNU_Connect.BLL.Services.Interfaces
         Task<bool> SetUserRoleAsync(int userId, string newRole);
         Task UpdatePhotoAsync(int userId, string? photoUrl);
         Task<IEnumerable<UserDto>> SearchAsync(string query);
+        Task<bool> ChangePasswordAsync(int userId, string currentPassword, string newPassword);
     }
 }

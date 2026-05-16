@@ -4,6 +4,7 @@ import {
   getChatsByUser,
   getMessages,
   sendMessage,
+  sendFile,
   markMessageRead,
   updateMessage,
   deleteMessage,
@@ -15,6 +16,8 @@ import './Chats.css';
 import AuthContext from '../../context/AuthContext';
 import Avatar from '../Avatar/Avatar';
 import Loading from '../Loading/Loading';
+
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function Chats() {
   const { user, isOnline } = useContext(AuthContext);
@@ -36,6 +39,16 @@ export default function Chats() {
   const [selectedMembers, setSelectedMembers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [modalLoading, setModalLoading] = useState(false);
+
+  // #6a typing
+  const [typingUsers, setTypingUsers] = useState({});
+  const typingTimeoutRef = useRef({});
+
+  // #6b file
+  const fileInputRef = useRef(null);
+
+  // #6c members popup
+  const [showMembers, setShowMembers] = useState(false);
 
   const canCreateGroup = ['teacher', 'admin', 'superAdmin'].includes(
     user?.role,
@@ -67,7 +80,6 @@ export default function Chats() {
   /* ======================== SIGNALR ======================== */
 
   useEffect(() => {
-    const API_URL = import.meta.env.VITE_API_BASE_URL;
     const connection = new signalR.HubConnectionBuilder()
       .withUrl(`${API_URL}/hubs/chat`, {
         accessTokenFactory: () => localStorage.getItem('accessToken'),
@@ -78,7 +90,6 @@ export default function Chats() {
     connection.on('ReceiveMessage', (message) => {
       const chat = selectedChatRef.current;
       if (!chat || message.chatId !== chat.id) {
-        // Оновити lastMessage в списку чатів
         setChats((prev) =>
           prev.map((c) =>
             c.id === message.chatId
@@ -88,24 +99,36 @@ export default function Chats() {
         );
         return;
       }
-      setMessages((prev) => {
-        const updated = [...prev, message];
-        return updated.sort(
+      setMessages((prev) =>
+        [...prev, message].sort(
           (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
-        );
-      });
+        ),
+      );
     });
 
-    // Реалтайм редагування
     connection.on('MessageUpdated', (updated) => {
       setMessages((prev) =>
         prev.map((m) => (m.id === updated.id ? updated : m)),
       );
     });
 
-    // Реалтайм видалення
     connection.on('MessageDeleted', (deletedId) => {
       setMessages((prev) => prev.filter((m) => m.id !== deletedId));
+    });
+
+    // #6a typing
+    connection.on('UserTyping', (incomingChatId, typingUserId, name) => {
+      if (selectedChatRef.current?.id !== incomingChatId) {return;}
+      setTypingUsers((prev) => ({ ...prev, [typingUserId]: name }));
+    });
+
+    connection.on('UserStoppedTyping', (incomingChatId, stoppedUserId) => {
+      if (selectedChatRef.current?.id !== incomingChatId) {return;}
+      setTypingUsers((prev) => {
+        const next = { ...prev };
+        delete next[stoppedUserId];
+        return next;
+      });
     });
 
     connection
@@ -123,17 +146,10 @@ export default function Chats() {
 
   useEffect(() => {
     if (!userId) {return;}
-    const fetch = async () => {
-      try {
-        const res = await getChatsByUser(userId);
-        setChats(res.data);
-      } catch (err) {
-        console.error('Chat load error:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetch();
+    getChatsByUser(userId)
+      .then((res) => setChats(res.data))
+      .catch((err) => console.error('Chat load error:', err))
+      .finally(() => setLoading(false));
   }, [userId]);
 
   /* ======================== SELECT CHAT ======================== */
@@ -148,19 +164,18 @@ export default function Chats() {
 
   useEffect(() => {
     if (!selectedChat) {return;}
-    const fetch = async () => {
-      try {
-        const res = await getMessages(selectedChat.id);
+    setTypingUsers({});
+    setShowMembers(false);
+
+    getMessages(selectedChat.id)
+      .then((res) =>
         setMessages(
           res.data.sort(
             (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
           ),
-        );
-      } catch (err) {
-        console.error('Messages load error:', err);
-      }
-    };
-    fetch();
+        ),
+      )
+      .catch((err) => console.error('Messages load error:', err));
 
     const join = async () => {
       if (connectionRef.current?.state === 'Connected') {
@@ -182,6 +197,11 @@ export default function Chats() {
 
   const handleSend = async () => {
     if (!newMessage.trim() || !selectedChat) {return;}
+    // stop typing
+    connectionRef.current
+      ?.invoke('StopTyping', selectedChat.id)
+      .catch(() => {});
+    clearTimeout(typingTimeoutRef.current[selectedChat.id]);
     try {
       await sendMessage(selectedChat.id, {
         chatId: selectedChat.id,
@@ -192,6 +212,37 @@ export default function Chats() {
     } catch (err) {
       console.error('Send error:', err);
     }
+  };
+
+  /* ======================== TYPING (#6a) ======================== */
+
+  const handleTyping = (e) => {
+    setNewMessage(e.target.value);
+    if (!selectedChat || connectionRef.current?.state !== 'Connected') {return;}
+    connectionRef.current
+      .invoke('StartTyping', selectedChat.id, user?.name || 'Користувач')
+      .catch(() => {});
+    clearTimeout(typingTimeoutRef.current[selectedChat.id]);
+    typingTimeoutRef.current[selectedChat.id] = setTimeout(() => {
+      connectionRef.current
+        ?.invoke('StopTyping', selectedChat.id)
+        .catch(() => {});
+    }, 1500);
+  };
+
+  /* ======================== FILE UPLOAD (#6b) ======================== */
+
+  const handleFileSelect = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !selectedChat) {return;}
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      await sendFile(selectedChat.id, formData);
+    } catch (err) {
+      console.error('File send error:', err);
+    }
+    e.target.value = '';
   };
 
   /* ======================== READ ======================== */
@@ -291,6 +342,7 @@ export default function Chats() {
   const isOtherOnline = selectedDisplay?.userId
     ? isOnline(selectedDisplay.userId)
     : false;
+  const typingNames = Object.values(typingUsers);
 
   return (
     <div className="chat-page">
@@ -358,16 +410,48 @@ export default function Chats() {
                 </div>
                 <div>
                   <div className="chat-title">{selectedDisplay?.name}</div>
-                  <div
-                    className={`chat-status ${isOtherOnline ? 'online' : 'offline'}`}
-                  >
-                    {isOtherOnline ? '● Онлайн' : '○ Офлайн'}
-                  </div>
+                  {selectedChat.type !== 'group' && (
+                    <div
+                      className={`chat-status ${isOtherOnline ? 'online' : 'offline'}`}
+                    >
+                      {isOtherOnline ? '● Онлайн' : '○ Офлайн'}
+                    </div>
+                  )}
                 </div>
+
+                {/* #6c members popup */}
+                {selectedChat.type === 'group' && (
+                  <div className="members-wrap">
+                    <button
+                      className="members-btn"
+                      onClick={() => setShowMembers((v) => !v)}
+                    >
+                      👥 {selectedChat.members?.length || 0}
+                    </button>
+                    {showMembers && (
+                      <div className="members-popup">
+                        <div className="members-popup-title">Учасники</div>
+                        {selectedChat.members?.map((m) => (
+                          <div key={m.userId} className="members-popup-item">
+                            <div className="chat-avatar-wrap">
+                              <Avatar photoUrl={m.authorAvatar} size={28} />
+                              {isOnline(m.userId) && (
+                                <span className="online-dot" />
+                              )}
+                            </div>
+                            <span className="members-popup-name">
+                              {m.authorName || 'Користувач'}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Messages */}
-              <div className="messages">
+              <div className="messages" onClick={() => setShowMembers(false)}>
                 {messages.map((msg, index) => {
                   const msgDate = new Date(msg.createdAt);
                   const prevDate =
@@ -412,7 +496,28 @@ export default function Chats() {
                           </div>
                         ) : (
                           <>
-                            <div className="message-content">{msg.content}</div>
+                            {/* #6b message content by type */}
+                            {msg.messageType === 'image' ? (
+                              <img
+                                src={`${API_URL}${msg.content}`}
+                                alt="photo"
+                                className="message-image"
+                              />
+                            ) : msg.messageType === 'file' ? (
+                              <a
+                                href={`${API_URL}${msg.content}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="message-file-link"
+                              >
+                                📎 Файл
+                              </a>
+                            ) : (
+                              <div className="message-content">
+                                {msg.content}
+                              </div>
+                            )}
+
                             {msg.editedAt && (
                               <span className="edited-label">редаговано</span>
                             )}
@@ -426,21 +531,30 @@ export default function Chats() {
                               </span>
                             </div>
 
-                            {msg.senderId === userId && (
-                              <div className="message-actions">
-                                <button
-                                  onClick={() => {
-                                    setEditingMessageId(msg.id);
-                                    setEditContent(msg.content);
-                                  }}
-                                >
-                                  ✏️
-                                </button>
-                                <button onClick={() => handleDelete(msg.id)}>
-                                  🗑️
-                                </button>
-                              </div>
-                            )}
+                            {msg.senderId === userId &&
+                              msg.messageType === 'text' && (
+                                <div className="message-actions">
+                                  <button
+                                    onClick={() => {
+                                      setEditingMessageId(msg.id);
+                                      setEditContent(msg.content);
+                                    }}
+                                  >
+                                    ✏️
+                                  </button>
+                                  <button onClick={() => handleDelete(msg.id)}>
+                                    🗑️
+                                  </button>
+                                </div>
+                              )}
+                            {msg.senderId === userId &&
+                              msg.messageType !== 'text' && (
+                                <div className="message-actions">
+                                  <button onClick={() => handleDelete(msg.id)}>
+                                    🗑️
+                                  </button>
+                                </div>
+                              )}
                           </>
                         )}
                       </div>
@@ -450,13 +564,38 @@ export default function Chats() {
                 <div ref={messagesEndRef} />
               </div>
 
+              {/* #6a typing indicator */}
+              {typingNames.length > 0 && (
+                <div className="typing-bar">
+                  {typingNames.join(', ')} друкує
+                  <span className="typing-dots">
+                    <span />
+                    <span />
+                    <span />
+                  </span>
+                </div>
+              )}
+
               {/* Input */}
               <div className="chat-input">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  style={{ display: 'none' }}
+                  onChange={handleFileSelect}
+                />
+                <button
+                  className="chat-attach-btn"
+                  onClick={() => fileInputRef.current?.click()}
+                  title="Прикріпити файл"
+                >
+                  📎
+                </button>
                 <input
                   type="text"
                   placeholder="Написати повідомлення..."
                   value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
+                  onChange={handleTyping}
                   onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 />
                 <button onClick={handleSend}>Відправити</button>
@@ -471,6 +610,7 @@ export default function Chats() {
         </div>
       </div>
 
+      {/* ========== GROUP MODAL ========== */}
       {showGroupModal && (
         <div className="modal-overlay" onClick={() => setShowGroupModal(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>

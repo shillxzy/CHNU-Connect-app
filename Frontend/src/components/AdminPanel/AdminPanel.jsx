@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminPanel.css';
 import {
@@ -11,10 +11,18 @@ import {
   deleteGroup,
   deletePost,
 } from '../../api/adminAPI';
+import {
+  getUserPermissions,
+  grantPermission,
+  revokePermission,
+  ALL_PERMISSION_TYPES,
+  PERMISSION_LABELS,
+} from '../../api/permissionAPI';
 import { getEvents, updateEvent } from '../../api/eventAPI';
 import { getAllGroups, updateGroup } from '../../api/groupAPI';
 import { getPosts, updatePost } from '../../api/postAPI';
 import Avatar from '../Avatar/Avatar';
+import AuthContext from '../../context/AuthContext';
 
 const ROLES = ['student', 'teacher', 'admin'];
 const SECTIONS = [
@@ -22,6 +30,7 @@ const SECTIONS = [
   { key: 'events', label: 'Події' },
   { key: 'groups', label: 'Групи' },
   { key: 'posts', label: 'Пости' },
+  { key: 'permissions', label: 'Права доступу' },
 ];
 
 /* ──────────────── helpers ──────────────── */
@@ -35,7 +44,9 @@ const fmtDT = (d) =>
     : '—';
 // format ISO → value for datetime-local input
 const toLocal = (d) => {
-  if (!d) {return '';}
+  if (!d) {
+    return '';
+  }
   const dt = new Date(d);
   const pad = (n) => String(n).padStart(2, '0');
   return `${dt.getFullYear()}-${pad(dt.getMonth() + 1)}-${pad(dt.getDate())}T${pad(dt.getHours())}:${pad(dt.getMinutes())}`;
@@ -101,6 +112,103 @@ function EditModal({ title, fields, values, onSave, onClose, saving, extra }) {
   );
 }
 
+/* ──────────────── Permissions Section ──────────────── */
+function PermissionsSection({ adminUsers }) {
+  const { role: currentUserRole } = useContext(AuthContext);
+  const isSuperAdmin = currentUserRole === 'superAdmin';
+
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [userPerms, setUserPerms] = useState([]);
+  const [loadingPerms, setLoadingPerms] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const loadPerms = async (user) => {
+    setSelectedUser(user);
+    setLoadingPerms(true);
+    try {
+      const res = await getUserPermissions(user.id);
+      const types = (res.data || []).map((p) => p.type);
+      setUserPerms(types);
+    } catch {
+      setUserPerms([]);
+    } finally {
+      setLoadingPerms(false);
+    }
+  };
+
+  const togglePerm = async (type) => {
+    if (!isSuperAdmin || !selectedUser) {return;}
+    setSaving(true);
+    try {
+      if (userPerms.includes(type)) {
+        await revokePermission(selectedUser.id, type);
+        setUserPerms((p) => p.filter((x) => x !== type));
+      } else {
+        await grantPermission(selectedUser.id, type);
+        setUserPerms((p) => [...p, type]);
+      }
+    } catch (e) {
+      alert(e.response?.data?.message || 'Помилка зміни прав');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const admins = adminUsers.filter((u) => u.role?.toLowerCase() === 'admin');
+
+  return (
+    <div className="ap-permissions">
+      <div className="ap-perm-cols">
+        {/* Left: admin list */}
+        <div className="ap-perm-list">
+          <p className="ap-perm-hint">Оберіть адміна для управління правами:</p>
+          {admins.length === 0 && <p className="ap-msg">Немає адмінів</p>}
+          {admins.map((u) => (
+            <button
+              key={u.id}
+              className={`ap-perm-user-btn ${selectedUser?.id === u.id ? 'active' : ''}`}
+              onClick={() => loadPerms(u)}
+            >
+              <Avatar photoUrl={u.photoUrl} size={28} />
+              <span>{u.fullName || u.email}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Right: permission toggles */}
+        <div className="ap-perm-rights">
+          {!selectedUser && <p className="ap-msg">Оберіть адміна зліва</p>}
+          {selectedUser && (
+            <>
+              <h4 className="ap-perm-title">
+                Права: {selectedUser.fullName || selectedUser.email}
+              </h4>
+              {loadingPerms && <p className="ap-msg">Завантаження…</p>}
+              {!loadingPerms &&
+                ALL_PERMISSION_TYPES.map((type) => (
+                  <label key={type} className="ap-perm-toggle">
+                    <input
+                      type="checkbox"
+                      checked={userPerms.includes(type)}
+                      onChange={() => togglePerm(type)}
+                      disabled={!isSuperAdmin || saving}
+                    />
+                    <span>{PERMISSION_LABELS[type]}</span>
+                  </label>
+                ))}
+              {!isSuperAdmin && (
+                <p className="ap-perm-note">
+                  Тільки SuperAdmin може змінювати права.
+                </p>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ──────────────── Main component ──────────────── */
 export default function AdminPanel() {
   const navigate = useNavigate();
@@ -138,6 +246,10 @@ export default function AdminPanel() {
       if (sec === 'posts') {
         const r = await getPosts();
         setPosts(Array.isArray(r) ? r : []);
+      }
+      if (sec === 'permissions') {
+        const r = await getUsers();
+        setUsers(Array.isArray(r.data) ? r.data : []);
       }
     } catch (e) {
       setError(e.response?.data?.message || 'Помилка завантаження');
@@ -241,7 +353,9 @@ export default function AdminPanel() {
 
   /* ── delete ── */
   const handleDelete = async (type, id) => {
-    if (!window.confirm('Видалити? Цю дію не можна скасувати.')) {return;}
+    if (!window.confirm('Видалити? Цю дію не можна скасувати.')) {
+      return;
+    }
     try {
       if (type === 'event') {
         await deleteEvent(id);
@@ -285,60 +399,74 @@ export default function AdminPanel() {
 
   /* ── edit config ── */
   const editFields = () => {
-    if (!editTarget) {return [];}
+    if (!editTarget) {
+      return [];
+    }
     const { type } = editTarget;
-    if (type === 'user')
-      {return [
+    if (type === 'user') {
+      return [
         { key: 'fullName', label: "Повне ім'я" },
         { key: 'faculty', label: 'Факультет' },
         { key: 'course', label: 'Курс', type: 'number' },
         { key: 'bio', label: 'Про себе', type: 'textarea' },
-      ];}
-    if (type === 'event')
-      {return [
+      ];
+    }
+    if (type === 'event') {
+      return [
         { key: 'title', label: 'Назва' },
         { key: 'description', label: 'Опис', type: 'textarea' },
         { key: 'startTime', label: 'Початок', type: 'datetime-local' },
         { key: 'endTime', label: 'Кінець', type: 'datetime-local' },
-      ];}
-    if (type === 'group')
-      {return [
+      ];
+    }
+    if (type === 'group') {
+      return [
         { key: 'name', label: 'Назва' },
         { key: 'description', label: 'Опис', type: 'textarea' },
-      ];}
-    if (type === 'post')
-      {return [{ key: 'content', label: 'Зміст', type: 'textarea' }];}
+      ];
+    }
+    if (type === 'post') {
+      return [{ key: 'content', label: 'Зміст', type: 'textarea' }];
+    }
     return [];
   };
 
   const editInitial = () => {
-    if (!editTarget) {return {};}
+    if (!editTarget) {
+      return {};
+    }
     const { type, data } = editTarget;
-    if (type === 'user')
-      {return {
+    if (type === 'user') {
+      return {
         fullName: data.fullName || '',
         faculty: data.faculty || '',
         course: data.course || '',
         bio: data.bio || '',
-      };}
-    if (type === 'event')
-      {return {
+      };
+    }
+    if (type === 'event') {
+      return {
         title: data.title || '',
         description: data.description || '',
         startTime: toLocal(data.startTime),
         endTime: toLocal(data.endTime),
-      };}
-    if (type === 'group')
-      {return { name: data.name || '', description: data.description || '' };}
-    if (type === 'post')
-      {return { content: data.content || '', removeImage: false };}
+      };
+    }
+    if (type === 'group') {
+      return { name: data.name || '', description: data.description || '' };
+    }
+    if (type === 'post') {
+      return { content: data.content || '', removeImage: false };
+    }
     return {};
   };
 
   /* ── post image extra slot ── */
   const postImageExtra = (form, set) => {
     const src = editTarget?.data?.imageUrl;
-    if (!src) {return null;}
+    if (!src) {
+      return null;
+    }
     return (
       <div className="ap-field">
         <label>Зображення</label>
@@ -589,6 +717,9 @@ export default function AdminPanel() {
             )}
           </div>
         )}
+
+        {/* ── PERMISSIONS ── */}
+        {section === 'permissions' && <PermissionsSection adminUsers={users} />}
 
         {/* ── POSTS ── */}
         {!loading && section === 'posts' && (

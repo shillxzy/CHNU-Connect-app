@@ -9,7 +9,6 @@ import HomePageNewsFeed from './components/NewsFeed/NewsFeed';
 import GroupsPage from './components/Groups/GroupsPage';
 import EventsList from './components/Events/EventsList';
 import Profile from './components/Profile/Profile';
-import ProfileEdit from './components/Profile/ProfileEdit';
 import AboutUs from './components/AboutUs/AboutUs';
 import RefreshPassword from './components/Auth/RefreshPassword';
 import Registration from './components/Auth/Registration';
@@ -24,6 +23,7 @@ import GroupEdit from './components/Groups/GroupEdit';
 import ScheduleEditPage from './components/Schedule/ScheduleEditPage';
 import ScheduleViewPage from './components/Schedule/ScheduleViewPage';
 import SearchPage from './components/Search/SearchPage';
+import SettingsPage from './components/Settings/SettingsPage';
 
 function PublicRoute({ children }) {
   const { accessToken } = useContext(AuthContext);
@@ -42,6 +42,28 @@ function AdminRoute({ children }) {
   if (role !== 'admin' && role !== 'superAdmin')
     {return <Navigate to="/" replace />;}
   return children;
+}
+
+// Захищає маршрути за конкретним permission (admin з потрібним правом або superAdmin)
+function PermissionRoute({ children, permission }) {
+  const { accessToken, role, hasPermission } = useContext(AuthContext);
+  if (!accessToken) {return <Navigate to="/login" replace />;}
+  if (!role) {return null;}
+  if (role !== 'admin' && role !== 'superAdmin')
+    {return <Navigate to="/" replace />;}
+  if (!hasPermission(permission)) {return <Navigate to="/admin-panel" replace />;}
+  return children;
+}
+
+// Дозволяє редагувати розклад: admin+ManageSchedule або teacher (curator-check на бекенді)
+function ScheduleEditorRoute({ children }) {
+  const { accessToken, role, hasPermission } = useContext(AuthContext);
+  if (!accessToken) {return <Navigate to="/login" replace />;}
+  if (!role) {return null;}
+  if (role === 'superAdmin') {return children;}
+  if (role === 'admin' && hasPermission('ManageSchedule')) {return children;}
+  if (role === 'teacher') {return children;}
+  return <Navigate to="/" replace />;
 }
 
 function AppRoutes() {
@@ -86,7 +108,11 @@ function AppRoutes() {
         <Route path="posts" element={<PostsList />} />
         <Route path="profile/:fullname" element={<Profile />} />
         <Route path="profile/view/:id" element={<ProfileView />} />
-        <Route path="profile/edit/:fullname" element={<ProfileEdit />} />
+        <Route
+          path="profile/edit/:fullname"
+          element={<Navigate to="/settings" replace />}
+        />
+        <Route path="settings" element={<SettingsPage />} />
         <Route path="about" element={<AboutUs />} />
         <Route path="events/create" element={<CreateEvent />} />
         <Route path="events/:id" element={<EventDetails />} />
@@ -122,13 +148,13 @@ function AppRoutes() {
           }
         />
 
-        {/* ✅ Редагування розкладу — тільки адмін */}
+        {/* Редагування розкладу — admin+ManageSchedule або teacher (curator check на бекенді) */}
         <Route
           path="group/edit/schedule/:id"
           element={
-            <AdminRoute>
+            <ScheduleEditorRoute>
               <ScheduleEditPage />
-            </AdminRoute>
+            </ScheduleEditorRoute>
           }
         />
       </Route>

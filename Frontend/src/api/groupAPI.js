@@ -6,6 +6,7 @@ import api from './axiosInstance';
 
 export const getGroups = () => api.get('/Group/my');
 export const getAllGroups = () => api.get('/Group');
+export const getCuratedGroups = () => api.get('/Group/curated');
 export const getGroupById = (id) => api.get(`/Group/${id}`);
 export const createGroup = (data) => api.post('/Group', data);
 export const updateGroup = (id, data) => api.put(`/Group/${id}`, data);

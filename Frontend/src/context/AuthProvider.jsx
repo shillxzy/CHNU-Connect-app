@@ -2,16 +2,20 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as signalR from '@microsoft/signalr';
 import api from '../api/axiosInstance';
+import { getMyPermissions } from '../api/permissionAPI';
 import AuthContext from './AuthContext';
 
 export function AuthProvider({ children }) {
   const navigate = useNavigate();
 
-  const [accessToken, setAccessToken] = useState(localStorage.getItem('accessToken') || null);
-  const [role,        setRole]        = useState(localStorage.getItem('role') || null);
-  const [user,        setUser]        = useState(null);
-  const [onlineUsers, setOnlineUsers] = useState([]); // ✅ список онлайн userId
-  const [unreadCount, setUnreadCount] = useState(0);  // ✅ глобальний лічильник
+  const [accessToken, setAccessToken] = useState(
+    localStorage.getItem('accessToken') || null,
+  );
+  const [role, setRole] = useState(localStorage.getItem('role') || null);
+  const [user, setUser] = useState(null);
+  const [permissions, setPermissions] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const hubRef = useRef(null);
 
@@ -26,10 +30,10 @@ export function AuthProvider({ children }) {
     setAccessToken(res.data.accessToken);
     setRole(res.data.role);
     setUser({
-      id:    res.data.userId,
+      id: res.data.userId,
       email: res.data.email,
-      name:  res.data.userName,
-      role:  res.data.role,
+      name: res.data.userName,
+      role: res.data.role,
     });
   };
 
@@ -44,6 +48,7 @@ export function AuthProvider({ children }) {
     setAccessToken(null);
     setRole(null);
     setUser(null);
+    setPermissions([]);
     setOnlineUsers([]);
     setUnreadCount(0);
 
@@ -54,25 +59,41 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
-    if (!token) return;
+    if (!token) {return;}
 
-    api.get('/User/profile')
+    api
+      .get('/User/profile')
       .then((res) => {
         setUser({
-          id:    res.data.id,
+          id: res.data.id,
           email: res.data.email,
-          name:  res.data.fullName,
-          role:  res.data.role,
+          name: res.data.fullName,
+          role: res.data.role,
         });
       })
       .catch(() => logout());
   }, []);
 
+  // ==================== LOAD PERMISSIONS ====================
+
+  useEffect(() => {
+    if (!user?.id) {return;}
+    const isAdminOrSuper = user.role === 'admin' || user.role === 'superAdmin';
+    if (!isAdminOrSuper) {
+      setPermissions([]);
+      return;
+    }
+
+    getMyPermissions()
+      .then((res) => setPermissions(Array.isArray(res.data) ? res.data : []))
+      .catch(() => setPermissions([]));
+  }, [user?.id, user?.role]);
+
   // ==================== SIGNALR ====================
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
-    if (!token || hubRef.current) return;
+    if (!token || hubRef.current) {return;}
 
     const API_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -83,19 +104,21 @@ export function AuthProvider({ children }) {
       .withAutomaticReconnect()
       .build();
 
-    // Онлайн/офлайн
     connection.on('OnlineUsers', (ids) => setOnlineUsers(ids));
-    connection.on('UserOnline',  (id) => setOnlineUsers((prev) => [...new Set([...prev, id])]));
-    connection.on('UserOffline', (id) => setOnlineUsers((prev) => prev.filter((x) => x !== id)));
+    connection.on('UserOnline', (id) =>
+      setOnlineUsers((prev) => [...new Set([...prev, id])]),
+    );
+    connection.on('UserOffline', (id) =>
+      setOnlineUsers((prev) => prev.filter((x) => x !== id)),
+    );
 
-    // Нотифікації
     connection.on('ReceiveNotification', () => {
       setUnreadCount((prev) => prev + 1);
     });
 
-    connection.start()
+    connection
+      .start()
       .then(async () => {
-        // Підписатись на особисті нотифікації
         await connection.invoke('SubscribeToNotifications').catch(() => {});
       })
       .catch((err) => console.error('SignalR error:', err));
@@ -111,8 +134,9 @@ export function AuthProvider({ children }) {
   // ==================== UNREAD COUNT ON LOAD ====================
 
   useEffect(() => {
-    if (!user?.id) return;
-    api.get(`/Notification/count/${user.id}`)
+    if (!user?.id) {return;}
+    api
+      .get(`/Notification/count/${user.id}`)
       .then((res) => setUnreadCount(res.data))
       .catch(() => {});
   }, [user?.id]);
@@ -122,14 +146,34 @@ export function AuthProvider({ children }) {
     [onlineUsers],
   );
 
+  const hasPermission = useCallback(
+    (type) => {
+      if (role === 'superAdmin') {return true;}
+      return permissions.includes(type);
+    },
+    [role, permissions],
+  );
+
   return (
-    <AuthContext.Provider value={{
-      accessToken, role, user,
-      onlineUsers, unreadCount, setUnreadCount,
-      isOnline,
-      login, logout,
-      setAccessToken, setRole, setUser,
-    }}>
+    <AuthContext.Provider
+      value={{
+        accessToken,
+        role,
+        user,
+        permissions,
+        hasPermission,
+        onlineUsers,
+        unreadCount,
+        setUnreadCount,
+        isOnline,
+        login,
+        logout,
+        setAccessToken,
+        setRole,
+        setUser,
+        setPermissions,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

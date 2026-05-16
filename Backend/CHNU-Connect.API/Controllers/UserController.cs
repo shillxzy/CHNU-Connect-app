@@ -1,4 +1,5 @@
 using CHNU_Connect.BLL.DTOs.User;
+using CHNU_Connect.BLL.Exceptions;
 using CHNU_Connect.BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -124,6 +125,44 @@ namespace CHNU_Connect.API.Controllers
             var success = await _userService.UnblockUserAsync(id);
             if (success) return Ok(new { message = "User unblocked successfully." });
             return NotFound(new { message = "User not found." });
+        }
+
+        [HttpPut("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
+        {
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized();
+
+            try
+            {
+                var success = await _userService.ChangePasswordAsync(userId.Value, dto.CurrentPassword, dto.NewPassword);
+                if (!success) return NotFound(new { message = "User not found." });
+
+                _logger.LogInformation("Password changed for user: {UserId}", userId);
+                return Ok(new { message = "Password changed successfully." });
+            }
+            catch (InvalidCredentialsException)
+            {
+                return BadRequest(new { message = "Поточний пароль введено невірно." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error changing password for user: {UserId}", userId);
+                return StatusCode(500, new { message = "An error occurred while changing the password." });
+            }
+        }
+
+        [HttpDelete("account")]
+        public async Task<IActionResult> DeleteAccount()
+        {
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized();
+
+            var success = await _userService.DeleteUserAsync(userId.Value);
+            if (!success) return NotFound(new { message = "User not found." });
+
+            _logger.LogInformation("Account deleted for user: {UserId}", userId);
+            return Ok(new { message = "Account deleted successfully." });
         }
 
         private int? GetCurrentUserId()

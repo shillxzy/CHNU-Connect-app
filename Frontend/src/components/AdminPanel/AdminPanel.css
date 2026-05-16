@@ -325,3 +325,50 @@
 }
 .ap-btn-save:hover:not(:disabled) { background: #16a34a; }
 .ap-btn-save:disabled { background: #d1d5db; color: #9ca3af; cursor: not-allowed; }
+
+
+/* ── Permissions Section ── */
+.ap-permissions { padding: 8px 0; }
+.ap-perm-cols { display: flex; gap: 32px; align-items: flex-start; }
+.ap-perm-list {
+  width: 220px;
+  flex-shrink: 0;
+  border-right: 1px solid #e5e7eb;
+  padding-right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ap-perm-hint { font-size: 13px; color: #64748b; margin: 0 0 8px; }
+.ap-perm-user-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #1e293b;
+  text-align: left;
+  transition: background 0.15s, border-color 0.15s;
+}
+.ap-perm-user-btn:hover { background: #f1f5f9; border-color: #cbd5e1; }
+.ap-perm-user-btn.active { background: #eff6ff; border-color: #2563eb; color: #2563eb; font-weight: 600; }
+
+.ap-perm-rights { flex: 1; }
+.ap-perm-title { font-size: 15px; font-weight: 600; color: #1e293b; margin: 0 0 16px; }
+.ap-perm-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+}
+.ap-perm-toggle input[type=checkbox] { width: 18px; height: 18px; accent-color: #2563eb; cursor: pointer; }
+.ap-perm-toggle input:disabled { cursor: not-allowed; }
+.ap-perm-note { margin-top: 12px; font-size: 13px; color: #f59e0b; }

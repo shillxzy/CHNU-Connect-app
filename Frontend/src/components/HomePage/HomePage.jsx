@@ -4,7 +4,7 @@ import Header from '../Common/Header.jsx';
 import GroupsPage from '../Groups/GroupsPage.jsx';
 import EventsList from '../Events/EventsList.jsx';
 import PostsList from '../Posts/PostsList.jsx';
-import HeroBanner from '../Common/HeroBanner.jsx';
+import Dashboard from '../Dashboard/Dashboard.jsx';
 import NewsFeed from '../NewsFeed/NewsFeed.jsx';
 import Sidebar from '../SideBar/SideBarHomePage.jsx';
 import Footer from '../Common/Footer.jsx';
@@ -23,7 +23,7 @@ function HomePage({ onLogout }) {
   return (
     <div className="app-container">
       <Header onLogout={onLogout} />
-      {isHome && <HeroBanner />}
+      {isHome && <Dashboard />}
 
       <div
         className={`main-content-area ${isHome ? 'with-sidebar' : 'full-width'}`}

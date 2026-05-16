@@ -1,8 +1,10 @@
 using CHNU_Connect.BLL.DTOs.User;
+using CHNU_Connect.BLL.Exceptions;
 using CHNU_Connect.BLL.Services.Interfaces;
 using CHNU_Connect.DAL.Entities;
 using CHNU_Connect.DAL.Repositories.Interfaces;
 using Mapster;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace CHNU_Connect.BLL.Services
@@ -10,6 +12,7 @@ namespace CHNU_Connect.BLL.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly PasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
 
         public UserService(IUserRepository userRepository)
         {
@@ -164,6 +167,23 @@ namespace CHNU_Connect.BLL.Services
 
             _userRepository.Update(user);
             await _userRepository.SaveAsync();
+        }
+
+        public async Task<bool> ChangePasswordAsync(int userId, string currentPassword, string newPassword)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null) return false;
+
+            var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, currentPassword);
+            if (result == PasswordVerificationResult.Failed)
+                throw new InvalidCredentialsException();
+
+            user.PasswordHash = _passwordHasher.HashPassword(user, newPassword);
+            EnsureUtc(user);
+
+            _userRepository.Update(user);
+            await _userRepository.SaveAsync();
+            return true;
         }
 
     }

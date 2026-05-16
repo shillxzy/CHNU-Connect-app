@@ -1,5 +1,6 @@
 using CHNU_Connect.API.Logging;
 using CHNU_Connect.BLL.DTOs.Auth;
+using CHNU_Connect.BLL.Exceptions;
 using CHNU_Connect.BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -70,7 +71,11 @@ namespace CHNU_Connect.API.Controllers
                 _logger.LogInformation("User logged in: {Email}", request.Email);
                 return Ok(loginResponse);
             }
-            catch (UnauthorizedAccessException)
+            catch (UserBlockedException)
+            {
+                return StatusCode(403, new { message = "Your account has been blocked. Please contact an administrator." });
+            }
+            catch (InvalidCredentialsException)
             {
                 return Unauthorized(new { message = "Invalid email or password." });
             }

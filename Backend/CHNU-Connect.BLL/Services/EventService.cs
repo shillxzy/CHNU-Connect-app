@@ -47,16 +47,51 @@ namespace CHNU_Connect.BLL.Services
         }
 
 
-        public async Task<EventDto?> GetByIdAsync(int id)
+        public async Task<EventDto?> GetByIdAsync(int id, int? currentUserId = null)
         {
             var eventEntity = await _eventRepository.GetByIdAsync(id);
-            return eventEntity?.Adapt<EventDto>();
+            if (eventEntity == null) return null;
+
+            var allParticipants = (await _eventParticipantRepository.GetAllAsync())
+                .Where(p => p.EventId == id).ToList();
+
+            return new EventDto
+            {
+                Id = eventEntity.Id,
+                Title = eventEntity.Title,
+                Description = eventEntity.Description,
+                StartTime = eventEntity.StartTime,
+                EndTime = eventEntity.EndTime,
+                CreatedById = eventEntity.CreatorId,
+                IsPublic = eventEntity.IsPublic,
+                CreatedAt = eventEntity.CreatedAt,
+                ParticipantCount = allParticipants.Count,
+                IsJoinedByCurrentUser = currentUserId.HasValue && allParticipants.Any(p => p.UserId == currentUserId.Value)
+            };
         }
 
-        public async Task<IEnumerable<EventDto>> GetAllAsync()
+        public async Task<IEnumerable<EventDto>> GetAllAsync(int? currentUserId = null)
         {
-            var events = await _eventRepository.GetAllAsync();
-            return events.Adapt<IEnumerable<EventDto>>();
+            var events = (await _eventRepository.GetAllAsync()).ToList();
+            var allParticipants = (await _eventParticipantRepository.GetAllAsync()).ToList();
+
+            return events.Select(e =>
+            {
+                var eventParts = allParticipants.Where(p => p.EventId == e.Id).ToList();
+                return new EventDto
+                {
+                    Id = e.Id,
+                    Title = e.Title,
+                    Description = e.Description,
+                    StartTime = e.StartTime,
+                    EndTime = e.EndTime,
+                    CreatedById = e.CreatorId,
+                    IsPublic = e.IsPublic,
+                    CreatedAt = e.CreatedAt,
+                    ParticipantCount = eventParts.Count,
+                    IsJoinedByCurrentUser = currentUserId.HasValue && eventParts.Any(p => p.UserId == currentUserId.Value)
+                };
+            });
         }
 
         public async Task<IEnumerable<EventDto>> GetByCreatorIdAsync(int creatorId)

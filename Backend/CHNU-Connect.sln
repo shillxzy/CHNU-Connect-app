@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CHNU-Connect.DAL", "CHNU-Connect.DAL\CHNU-Connect.DAL.csproj", "{CD7DC633-9F33-450D-9B49-B196CC76CB91}"
-	ProjectSection(ProjectDependencies) = postProject
-		{E1B26B24-11EB-4D48-9193-B6504BAFC1C8} = {E1B26B24-11EB-4D48-9193-B6504BAFC1C8}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CHNU-Connect.API", "CHNU-Connect.API\CHNU-Connect.API.csproj", "{E1B26B24-11EB-4D48-9193-B6504BAFC1C8}"
 EndProject

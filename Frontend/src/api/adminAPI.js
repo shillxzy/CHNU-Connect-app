@@ -13,9 +13,10 @@ export const getActionsByAdmin = (adminId) =>
 export const getActionsByTarget = (targetUserId) =>
   api.get(`/Admin/actions/target/${targetUserId}`);
 
-export const blockUser = (userId) => api.post(`/Admin/users/${userId}/block`);
-export const unblockUser = (userId) =>
-  api.post(`/Admin/users/${userId}/unblock`);
+export const blockUser = (userId, reason = '') =>
+  api.post(`/Admin/users/${userId}/block`, { reason });
+export const unblockUser = (userId, reason = '') =>
+  api.post(`/Admin/users/${userId}/unblock`, { reason });
 
 export const getUsers = () => api.get('/Admin/users');
 export const getUserById = (id) => api.get(`/Admin/users/${id}`);

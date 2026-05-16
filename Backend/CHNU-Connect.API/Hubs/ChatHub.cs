@@ -76,6 +76,24 @@ namespace CHNU_Connect.API.Hubs
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"chat-{chatId}");
         }
 
+        // ==================== TYPING ====================
+
+        public async Task StartTyping(int chatId, string senderName)
+        {
+            var userId = GetUserId();
+            if (userId == null) return;
+            await Clients.OthersInGroup($"chat-{chatId}")
+                .SendAsync("UserTyping", chatId, userId.Value, senderName);
+        }
+
+        public async Task StopTyping(int chatId)
+        {
+            var userId = GetUserId();
+            if (userId == null) return;
+            await Clients.OthersInGroup($"chat-{chatId}")
+                .SendAsync("UserStoppedTyping", chatId, userId.Value);
+        }
+
         // ==================== NOTIFICATION PUSH ====================
 
         /// Відправити нотифікацію конкретному юзеру через SignalR

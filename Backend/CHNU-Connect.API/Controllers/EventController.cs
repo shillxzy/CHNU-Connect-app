@@ -12,11 +12,16 @@ namespace CHNU_Connect.API.Controllers
     public class EventController : ControllerBase
     {
         private readonly IEventService _eventService;
+        private readonly IAdminPermissionService _permissionService;
         private readonly ILogger<EventController> _logger;
 
-        public EventController(IEventService eventService, ILogger<EventController> logger)
+        public EventController(
+            IEventService eventService,
+            IAdminPermissionService permissionService,
+            ILogger<EventController> logger)
         {
             _eventService = eventService;
+            _permissionService = permissionService;
             _logger = logger;
         }
 
@@ -25,7 +30,8 @@ namespace CHNU_Connect.API.Controllers
         {
             try
             {
-                var events = await _eventService.GetAllAsync();
+                var currentUserId = GetCurrentUserId();
+                var events = await _eventService.GetAllAsync(currentUserId);
                 return Ok(events);
             }
             catch (Exception ex)
@@ -55,7 +61,8 @@ namespace CHNU_Connect.API.Controllers
         {
             try
             {
-                var eventEntity = await _eventService.GetByIdAsync(id);
+                var currentUserId = GetCurrentUserId();
+                var eventEntity = await _eventService.GetByIdAsync(id, currentUserId);
                 if (eventEntity == null)
                     return NotFound(new { message = "Event not found." });
 
@@ -89,15 +96,14 @@ namespace CHNU_Connect.API.Controllers
             try
             {
                 var currentUserId = GetCurrentUserId();
-                if (currentUserId == null)
-                    return Unauthorized();
+                if (currentUserId == null) return Unauthorized();
 
                 var events = await _eventService.GetUserEventsAsync(currentUserId.Value);
                 return Ok(events);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error getting my events for user: {UserId}", GetCurrentUserId());
+                _logger.LogError(ex, "Error getting my events");
                 return StatusCode(500, new { message = "An error occurred while retrieving your events." });
             }
         }
@@ -108,8 +114,10 @@ namespace CHNU_Connect.API.Controllers
             try
             {
                 var currentUserId = GetCurrentUserId();
-                if (currentUserId == null)
-                    return Unauthorized();
+                if (currentUserId == null) return Unauthorized();
+
+                if (!await CanManageEvents())
+                    return StatusCode(403, new { message = "You need ManageEvents permission to create events." });
 
                 request.CreatedById = currentUserId.Value;
 
@@ -118,11 +126,10 @@ namespace CHNU_Connect.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error creating event for user: {UserId}", GetCurrentUserId());
+                _logger.LogError(ex, "Error creating event");
                 return StatusCode(500, new { message = "An error occurred while creating the event." });
             }
         }
-
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEvent(int id, [FromBody] CreateEventDto request)
@@ -130,8 +137,7 @@ namespace CHNU_Connect.API.Controllers
             try
             {
                 var currentUserId = GetCurrentUserId();
-                if (currentUserId == null)
-                    return Unauthorized();
+                if (currentUserId == null) return Unauthorized();
 
                 var eventEntity = await _eventService.GetByIdAsync(id);
                 if (eventEntity == null)
@@ -141,8 +147,11 @@ namespace CHNU_Connect.API.Controllers
                 if (eventEntity.CreatedById != currentUserId.Value && !isAdmin)
                     return StatusCode(403, new { message = "You can only edit events you created." });
 
+                if (isAdmin && !await CanManageEvents())
+                    return StatusCode(403, new { message = "You need ManageEvents permission to edit events." });
+
                 var updatedEvent = await _eventService.UpdateEventAsync(id, request);
-                
+
                 _logger.LogInformation("Event updated: {EventId} by user: {UserId}", id, currentUserId);
                 return Ok(updatedEvent);
             }
@@ -159,8 +168,7 @@ namespace CHNU_Connect.API.Controllers
             try
             {
                 var currentUserId = GetCurrentUserId();
-                if (currentUserId == null)
-                    return Unauthorized();
+                if (currentUserId == null) return Unauthorized();
 
                 var eventEntity = await _eventService.GetByIdAsync(id);
                 if (eventEntity == null)
@@ -169,6 +177,9 @@ namespace CHNU_Connect.API.Controllers
                 var isAdmin = User.IsInRole("admin") || User.IsInRole("superAdmin");
                 if (eventEntity.CreatedById != currentUserId.Value && !isAdmin)
                     return StatusCode(403, new { message = "You can only delete events you created." });
+
+                if (isAdmin && !await CanManageEvents())
+                    return StatusCode(403, new { message = "You need ManageEvents permission to delete events." });
 
                 var success = await _eventService.DeleteEventAsync(id);
                 if (!success)
@@ -190,8 +201,7 @@ namespace CHNU_Connect.API.Controllers
             try
             {
                 var currentUserId = GetCurrentUserId();
-                if (currentUserId == null)
-                    return Unauthorized();
+                if (currentUserId == null) return Unauthorized();
 
                 var success = await _eventService.JoinEventAsync(id, currentUserId.Value);
                 if (!success)
@@ -213,8 +223,7 @@ namespace CHNU_Connect.API.Controllers
             try
             {
                 var currentUserId = GetCurrentUserId();
-                if (currentUserId == null)
-                    return Unauthorized();
+                if (currentUserId == null) return Unauthorized();
 
                 var success = await _eventService.LeaveEventAsync(id, currentUserId.Value);
                 if (!success)
@@ -230,10 +239,20 @@ namespace CHNU_Connect.API.Controllers
             }
         }
 
+        // ==================== HELPERS ====================
+
         private int? GetCurrentUserId()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return int.TryParse(userIdClaim, out var userId) ? userId : null;
+        }
+
+        private async Task<bool> CanManageEvents()
+        {
+            if (User.IsInRole("superAdmin")) return true;
+            var userId = GetCurrentUserId();
+            if (userId == null) return false;
+            return await _permissionService.HasPermissionAsync(userId.Value, "ManageEvents");
         }
     }
 }

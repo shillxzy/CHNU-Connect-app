@@ -1,4 +1,5 @@
 using CHNU_Connect.BLL.DTOs.Auth;
+using CHNU_Connect.BLL.Exceptions;
 using CHNU_Connect.BLL.Services.Interfaces;
 using CHNU_Connect.DAL.Entities;
 using CHNU_Connect.DAL.Repositories.Interfaces;
@@ -40,7 +41,7 @@ namespace CHNU_Connect.BLL.Services
             if (user == null)
             {
                 _logger.LogWarning("Login failed: user with email {Email} not found", loginRequestDto.Email);
-                throw new UnauthorizedAccessException("Invalid credentials");
+                throw new InvalidCredentialsException();
             }
 
             _logger.LogInformation("User found: {Email}", user.Email);
@@ -49,10 +50,13 @@ namespace CHNU_Connect.BLL.Services
 
             var verificationResult = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, loginRequestDto.Password);
             if (verificationResult == PasswordVerificationResult.Failed)
-                throw new UnauthorizedAccessException("Invalid credentials");
+                throw new InvalidCredentialsException();
+
+            if (user.IsBlocked)
+                throw new UserBlockedException();
 
             //  if (!user.IsEmailConfirmed)
-            //  throw new UnauthorizedAccessException("Підтвердіть email перед входом.");
+            //  throw new UnauthorizedAccessException("ПіпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ email пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.");
 
             _logger.LogInformation("Generating JWT for user {Email}", user.Email);
             var token = GenerateJwtToken(user);
@@ -217,18 +221,18 @@ namespace CHNU_Connect.BLL.Services
 <body>
     <div class='container'>
         <h2>CHNU-Connect</h2>
-        <p>Ви запросили скидання паролю.</p>
-        <p>Ваш код для відновлення паролю:</p>
+        <p>пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.</p>
+        <p>пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ:</p>
         <p class='code'>{code}</p>
-        <p>Якщо ви не робили запит, ігноруйте цей лист.</p>
+        <p>пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.</p>
         <div class='footer'>
-            &copy; {DateTime.UtcNow.Year} CHNU-Connect. Всі права захищені.
+            &copy; {DateTime.UtcNow.Year} CHNU-Connect. пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
         </div>
     </div>
 </body>
 </html>";
 
-            await SendEmailAsync(email, "Скидання паролю CHNU-Connect", body);
+            await SendEmailAsync(email, "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ CHNU-Connect", body);
 
             return true;
         }

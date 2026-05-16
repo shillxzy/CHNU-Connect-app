@@ -27,6 +27,7 @@ namespace CHNU_Connect.DAL.Data
         public DbSet<ChatMessage> ChatMessages { get; set; } = null!;
         public DbSet<Notification> Notifications { get; set; } = null!;
         public DbSet<LessonSlot> LessonSlots { get; set; } = null!;
+        public DbSet<AdminPermission> AdminPermissions { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -451,12 +452,39 @@ namespace CHNU_Connect.DAL.Data
                 entity.Property(e => e.EndTime)
                     .HasColumnName("end_time")
                     .IsRequired();
+              });
+
+            // ================= ADMIN PERMISSIONS =================
+            modelBuilder.Entity<AdminPermission>(entity =>
+            {
+                entity.ToTable("admin_permissions");
+
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.UserId).HasColumnName("user_id").IsRequired();
+                entity.Property(e => e.Type)
+                    .HasConversion<string>()
+                    .HasColumnName("type")
+                    .HasMaxLength(50)
+                    .IsRequired();
+                entity.Property(e => e.GrantedByUserId).HasColumnName("granted_by_user_id").IsRequired();
+                entity.Property(e => e.GrantedAt)
+                    .HasColumnName("granted_at")
+                    .HasDefaultValueSql("now()");
+
+                entity.HasOne(e => e.User)
+                    .WithMany()
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.GrantedBy)
+                    .WithMany()
+                    .HasForeignKey(e => e.GrantedByUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasIndex(e => new { e.UserId, e.Type }).IsUnique();
             });
-
-
-
-
-
         }
     }
 }

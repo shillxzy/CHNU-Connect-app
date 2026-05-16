@@ -163,6 +163,17 @@ namespace CHNU_Connect.BLL.Services
             return await _memberRepo.IsMemberAsync(groupId, userId);
         }
 
+        public async Task<IEnumerable<GroupDto>> GetCuratedGroupsAsync(int userId)
+        {
+            var groups = await _groupRepo.FindAsync(g => g.CuratorId == userId);
+            return groups.Adapt<IEnumerable<GroupDto>>();
+        }
+
+        public async Task<bool> IsCuratorAsync(int groupId, int userId)
+        {
+            var group = await _groupRepo.GetByIdAsync(groupId);
+            return group?.CuratorId == userId;
+        }
 
     }
 }
