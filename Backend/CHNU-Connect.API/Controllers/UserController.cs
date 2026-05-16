@@ -102,7 +102,7 @@ namespace CHNU_Connect.API.Controllers
         }
 
         [HttpGet("all")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin,superAdmin")]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _userService.GetAllAsync();

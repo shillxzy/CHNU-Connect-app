@@ -2,12 +2,19 @@ import { useState, useEffect } from 'react';
 import './LessonModal.css';
 import { LessonType } from './scheduleEnums';
 
-export default function LessonModal({ isOpen, onClose, onSave, cell, initialData = null }) {
+export default function LessonModal({
+  isOpen,
+  onClose,
+  onSave,
+  cell,
+  initialData = null,
+  subjects = [],
+}) {
   const [form, setForm] = useState({
     subjectName: '',
     teacherName: '',
-    location:    '',
-    type:        LessonType.Lecture,
+    location: '',
+    type: LessonType.Lecture,
     isEveryWeek: false,
   });
 
@@ -17,35 +24,43 @@ export default function LessonModal({ isOpen, onClose, onSave, cell, initialData
         setForm({
           subjectName: initialData.subjectName ?? '',
           teacherName: initialData.teacherName ?? '',
-          location:    initialData.location    ?? '',
-          type:        initialData.type        ?? LessonType.Lecture,
+          location: initialData.location ?? '',
+          type: initialData.type ?? LessonType.Lecture,
           isEveryWeek: initialData.isEveryWeek ?? false,
         });
       } else {
         setForm({
           subjectName: '',
           teacherName: '',
-          location:    '',
-          type:        LessonType.Lecture,
+          location: '',
+          type: LessonType.Lecture,
           isEveryWeek: false,
         });
       }
     }
   }, [isOpen, initialData]);
 
-  if (!isOpen) {return null;}
+  if (!isOpen) {
+    return null;
+  }
 
-const handleSubmit = () => {
-    if (!form.subjectName.trim()) { alert('Введіть назву дисципліни'); return; }
-    if (!form.teacherName.trim()) { alert('Введіть ПІБ викладача');    return; }
-    
-    console.log('FORM:', form);           // ← додай
-    console.log('CELL:', cell);           // ← додай
+  const handleSubmit = () => {
+    if (!form.subjectName.trim()) {
+      alert('Введіть назву дисципліни');
+      return;
+    }
+    if (!form.teacherName.trim()) {
+      alert('Введіть ПІБ викладача');
+      return;
+    }
+
+    console.log('FORM:', form); // ← додай
+    console.log('CELL:', cell); // ← додай
     console.log('MERGED:', { ...cell, ...form }); // ← додай
-    
+
     onSave({ ...cell, ...form });
     onClose();
-};
+  };
 
   const isEdit = !!initialData;
 
@@ -57,12 +72,27 @@ const handleSubmit = () => {
       <div className="modal">
         <h3>{isEdit ? 'Редагувати пару' : 'Нова пара'}</h3>
 
-        <input
-          placeholder="Назва дисципліни *"
-          value={form.subjectName}
-          onChange={(e) => setForm({ ...form, subjectName: e.target.value })}
-          autoFocus
-        />
+        {subjects.length > 0 ? (
+          <select
+            value={form.subjectName}
+            onChange={(e) => setForm({ ...form, subjectName: e.target.value })}
+            autoFocus
+          >
+            <option value="">— Оберіть дисципліну —</option>
+            {subjects.map((s) => (
+              <option key={s.id} value={s.name}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <input
+            placeholder="Назва дисципліни *"
+            value={form.subjectName}
+            onChange={(e) => setForm({ ...form, subjectName: e.target.value })}
+            autoFocus
+          />
+        )}
 
         <input
           placeholder="ПІБ викладача *"
@@ -88,13 +118,17 @@ const handleSubmit = () => {
           <input
             type="checkbox"
             checked={form.isEveryWeek}
-            onChange={(e) => setForm({ ...form, isEveryWeek: e.target.checked })}
+            onChange={(e) =>
+              setForm({ ...form, isEveryWeek: e.target.checked })
+            }
           />
           <span>Щотижня (показувати в обох тижнях)</span>
         </label>
 
         <div className="modal-actions">
-          <button onClick={handleSubmit}>{isEdit ? 'Зберегти зміни' : 'Зберегти'}</button>
+          <button onClick={handleSubmit}>
+            {isEdit ? 'Зберегти зміни' : 'Зберегти'}
+          </button>
           <button onClick={onClose}>Скасувати</button>
         </div>
       </div>
