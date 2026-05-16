@@ -101,12 +101,16 @@ namespace CHNU_Connect.BLL.Services
         public async Task<IEnumerable<GroupDto>> GetUserGroupsAsync(int userId)
         {
             var memberships = await _memberRepo.GetByUserIdAsync(userId);
+            var groupIds = memberships.Select(m => m.GroupId).ToList();
+            var groups = (await _groupRepo.GetWithCuratorByIdsAsync(groupIds)).ToList();
 
-            var groupIds = memberships.Select(m => m.GroupId);
-
-            var groups = await _groupRepo.FindAsync(g => groupIds.Contains(g.Id));
-
-            return groups.Adapt<IEnumerable<GroupDto>>();
+            return groups.Select(g =>
+            {
+                var dto = g.Adapt<GroupDto>();
+                if (g.Curator != null)
+                    dto.Curator = g.Curator.Adapt<UserDto>();
+                return dto;
+            });
         }
 
         public async Task<GroupDto?> UpdateGroupAsync(int id, CreateGroupDto dto, int userId)

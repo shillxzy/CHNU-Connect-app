@@ -24,5 +24,13 @@ namespace CHNU_Connect.DAL.Repositories
                 .Where(g => g.Type == type)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<Group>> GetWithCuratorByIdsAsync(IEnumerable<int> ids)
+        {
+            return await _dbSet
+                .Include(g => g.Curator)
+                .Where(g => ids.Contains(g.Id))
+                .ToListAsync();
+        }
     }
 }

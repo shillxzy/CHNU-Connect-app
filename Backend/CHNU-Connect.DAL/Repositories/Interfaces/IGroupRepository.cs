@@ -6,5 +6,6 @@ namespace CHNU_Connect.DAL.Repositories.Interfaces
     {
         Task<IEnumerable<Group>> GetByCreatorIdAsync(int creatorId);
         Task<IEnumerable<Group>> GetByTypeAsync(GroupType type);
+        Task<IEnumerable<Group>> GetWithCuratorByIdsAsync(IEnumerable<int> ids);
     }
 }

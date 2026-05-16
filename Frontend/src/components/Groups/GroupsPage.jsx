@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from 'react';
 import { getGroups, getGroupById } from '../../api/groupAPI';
 import { getSubjectsByGroup } from '../../api/subjectAPI';
+import { getChatsByUser, createChat } from '../../api/chatAPI';
 import AuthContext from '../../context/AuthContext';
 import './GroupsPage.css';
 import { useNavigate } from 'react-router-dom';
@@ -41,6 +42,38 @@ export default function GroupsPage() {
     setSubjects([]);
   };
 
+  const openGroupChat = async () => {
+    try {
+      const res = await getChatsByUser(currentUserId);
+      const existing = (res.data || []).find(
+        (c) => c.type === 'group' && c.title === selectedGroup.name,
+      );
+      if (existing) {
+        navigate(`/chats/${existing.id}`);
+        return;
+      }
+      const memberIds = [
+        currentUserId,
+        ...(selectedGroup.users || []).map((u) => u.id),
+      ];
+      if (
+        selectedGroup.curator &&
+        !memberIds.includes(selectedGroup.curator.id)
+      ) {
+        memberIds.push(selectedGroup.curator.id);
+      }
+      const newChat = await createChat({
+        type: 'group',
+        title: selectedGroup.name,
+        createdBy: currentUserId,
+        memberIds: [...new Set(memberIds)],
+      });
+      navigate(`/chats/${newChat.data.id}`);
+    } catch {
+      alert('Помилка відкриття чату групи');
+    }
+  };
+
   return (
     <div className="groups-page">
       {/* ===== LIST ===== */}
@@ -68,7 +101,7 @@ export default function GroupsPage() {
                 <div className="group-title">{g.name}</div>
                 <div className="group-desc">{g.description}</div>
                 <div className="group-meta">
-                  Куратор: <b>{g.curatorName || 'Нікого'}</b>
+                  Куратор: <b>{g.curator?.fullName || 'Нікого'}</b>
                 </div>
               </div>
             ))}
@@ -209,7 +242,23 @@ export default function GroupsPage() {
               )}
             </div>
 
-            <div className="section muted-box">Чат групи</div>
+            <div className="section">
+              <button
+                onClick={openGroupChat}
+                style={{
+                  padding: '10px 20px',
+                  background: '#0d6efd',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  fontSize: '15px',
+                }}
+              >
+                💬 Відкрити чат групи
+              </button>
+            </div>
           </div>
         </div>
       )}
