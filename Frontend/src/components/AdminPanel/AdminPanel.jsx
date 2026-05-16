@@ -137,7 +137,9 @@ function PermissionsSection({ adminUsers }) {
   };
 
   const togglePerm = async (type) => {
-    if (!isSuperAdmin || !selectedUser) {return;}
+    if (!isSuperAdmin || !selectedUser) {
+      return;
+    }
     setSaving(true);
     try {
       if (userPerms.includes(type)) {
@@ -264,20 +266,32 @@ export default function AdminPanel() {
 
   /* ── user actions ── */
   const handleBlock = async (id) => {
-    await blockUser(id);
-    setUsers((p) =>
-      p.map((u) => (u.id === id ? { ...u, isBlocked: true } : u)),
-    );
+    try {
+      await blockUser(id);
+      setUsers((p) =>
+        p.map((u) => (u.id === id ? { ...u, isBlocked: true } : u)),
+      );
+    } catch (e) {
+      alert(e.response?.data?.message || 'Помилка блокування');
+    }
   };
   const handleUnblock = async (id) => {
-    await unblockUser(id);
-    setUsers((p) =>
-      p.map((u) => (u.id === id ? { ...u, isBlocked: false } : u)),
-    );
+    try {
+      await unblockUser(id);
+      setUsers((p) =>
+        p.map((u) => (u.id === id ? { ...u, isBlocked: false } : u)),
+      );
+    } catch (e) {
+      alert(e.response?.data?.message || 'Помилка розблокування');
+    }
   };
   const handleRole = async (id, role) => {
-    await setRole({ userId: id, role });
-    setUsers((p) => p.map((u) => (u.id === id ? { ...u, role } : u)));
+    try {
+      await setRole({ userId: id, role });
+      setUsers((p) => p.map((u) => (u.id === id ? { ...u, role } : u)));
+    } catch (e) {
+      alert(e.response?.data?.message || 'Помилка зміни ролі');
+    }
   };
 
   /* ── save ── */
