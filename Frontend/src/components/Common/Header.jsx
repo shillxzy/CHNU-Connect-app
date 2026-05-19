@@ -94,24 +94,18 @@ const Header = () => {
   };
 
   const getNotifText = (type) => {
-    if (type === 'message') {
-      return 'написав вам повідомлення';
-    }
-    if (type === 'like') {
-      return 'вподобав ваш пост';
-    }
-    if (type === 'comment') {
-      return 'прокоментував ваш пост';
-    }
-    if (type === 'event') {
-      return 'запросив на подію';
-    }
+    if (type === 'message') {return 'написав вам повідомлення';}
+    if (type === 'like') {return 'вподобав ваш пост';}
+    if (type === 'comment') {return 'прокоментував ваш пост';}
+    if (type === 'event') {return 'запросив на подію';}
     return 'надіслав сповіщення';
   };
 
+  // #3 FIX: сповіщення типу 'message' перекидає на чат за chatId (entityId)
   const handleNotifClick = (n) => {
     setIsNotifOpen(false);
     if (n.type === 'message') {
+      // entityId для message — це chatId
       navigate(`/chats/${n.entityId}`);
     } else if (n.type === 'event') {
       navigate(`/events/${n.entityId}`);
@@ -177,7 +171,6 @@ const Header = () => {
             src={SearchIcon}
             alt="Search"
             className="search-icon"
-            style={{ cursor: 'pointer' }}
             onClick={() => {
               setShowSearchResults(false);
               navigate(
@@ -185,6 +178,7 @@ const Header = () => {
               );
             }}
           />
+          {/* #9 FIX: плейсхолдер "Пошук користувачів..." */}
           <input
             type="text"
             placeholder="Пошук користувачів..."
@@ -210,7 +204,8 @@ const Header = () => {
                   onMouseDown={() => {
                     setShowSearchResults(false);
                     setSearchQuery('');
-                    navigate(`/profile/${encodeURIComponent(u.fullName)}`);
+                    // #6 FIX: навігація через id, а не fullName — щоб не відкривався свій профіль
+                    navigate(`/profile/view/${u.id}`);
                   }}
                 >
                   <Avatar photoUrl={u.photoUrl} size={28} />

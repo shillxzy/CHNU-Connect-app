@@ -44,13 +44,14 @@
   margin-right: 28px;
 }
 
+/* ===== FIX #1: єдине правило для іконок без margin-right ===== */
 .user-icon,
 .search-icon {
   width: 20px;
   height: 20px;
+  object-fit: contain;
   display: inline-block;
   vertical-align: middle;
-  margin-right: 10px;
 }
 
 .nav-link {
@@ -79,16 +80,8 @@
   align-items: center;
 }
 
-.user-icon,
-.search-icon {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-}
-
 .search-icon {
   cursor: pointer;
-  font-size: 18px;
 }
 
 .search-input {
@@ -280,7 +273,6 @@
     justify-content: center;
   }
 }
-
 
 /* Search wrapper */
 .search-wrapper {

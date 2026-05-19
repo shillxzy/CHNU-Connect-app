@@ -64,14 +64,29 @@ export function AuthProvider({ children }) {
     api
       .get('/User/profile')
       .then((res) => {
+        const data = res.data;
+
+        // #13 FIX: якщо користувач заблокований — розлогінити
+        if (data.isBlocked) {
+          alert('Ваш акаунт заблоковано адміністратором.');
+          logout();
+          return;
+        }
+
         setUser({
-          id: res.data.id,
-          email: res.data.email,
-          name: res.data.fullName,
-          role: res.data.role,
+          id: data.id,
+          email: data.email,
+          name: data.fullName,
+          role: data.role,
         });
       })
-      .catch(() => logout());
+      .catch((err) => {
+        // #13 FIX: 403 Forbidden = заблокований на рівні бекенду
+        if (err.response?.status === 403) {
+          alert('Ваш акаунт заблоковано адміністратором.');
+        }
+        logout();
+      });
   }, []);
 
   // ==================== LOAD PERMISSIONS ====================
@@ -114,6 +129,12 @@ export function AuthProvider({ children }) {
 
     connection.on('ReceiveNotification', () => {
       setUnreadCount((prev) => prev + 1);
+    });
+
+    // #13 FIX: бекенд може надіслати UserBanned подію через SignalR
+    connection.on('UserBanned', () => {
+      alert('Ваш акаунт заблоковано адміністратором.');
+      logout();
     });
 
     connection

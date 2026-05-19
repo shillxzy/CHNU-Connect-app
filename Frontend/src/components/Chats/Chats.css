@@ -52,7 +52,7 @@
   align-items: center;
 }
 
-.chat-item:hover   { background: #f4f6f8; }
+.chat-item:hover    { background: #f4f6f8; }
 .chat-item.selected { background: #eef3ff; }
 
 .chat-avatar-wrap {
@@ -111,6 +111,7 @@
   padding: 14px 20px;
   border-bottom: 1px solid #f0f0f0;
   background: #fff;
+  position: relative;
 }
 
 .chat-title {
@@ -162,6 +163,14 @@
 }
 
 .message-content { word-break: break-word; }
+
+/* #11 FIX: ім'я відправника у груповому чаті */
+.message-sender-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: #2563eb;
+  margin-bottom: 3px;
+}
 
 .message-footer {
   display: flex;
@@ -423,7 +432,7 @@
 
 .modal-actions .btn-submit.ready:hover { background: #16a34a !important; }
 
-/* ========== TYPING INDICATOR (#6a) ========== */
+/* ========== TYPING INDICATOR ========== */
 
 .typing-bar {
   padding: 4px 20px 6px;
@@ -457,10 +466,10 @@
 
 @keyframes typing-bounce {
   0%, 80%, 100% { transform: scale(0.8); opacity: 0.4; }
-  40%           { transform: scale(1.2); opacity: 1; }
+  40%            { transform: scale(1.2); opacity: 1; }
 }
 
-/* ========== FILE ATTACH BUTTON (#6b) ========== */
+/* ========== FILE ATTACH BUTTON ========== */
 
 .chat-attach-btn {
   background: none;
@@ -482,7 +491,11 @@
   border-radius: 10px;
   display: block;
   object-fit: cover;
+  cursor: zoom-in;
+  transition: opacity 0.15s;
 }
+
+.message-image:hover { opacity: 0.9; }
 
 .message-file-link {
   font-size: 13px;
@@ -493,9 +506,7 @@
 
 .message-file-link:hover { text-decoration: underline; }
 
-/* ========== MEMBERS POPUP (#6c) ========== */
-
-.chat-header { position: relative; }
+/* ========== MEMBERS POPUP ========== */
 
 .members-wrap {
   margin-left: auto;
@@ -556,3 +567,45 @@
   font-weight: 500;
   color: #111827;
 }
+
+/* ========== LIGHTBOX (#14) ========== */
+
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  cursor: zoom-out;
+}
+
+.lightbox-img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 8px;
+  object-fit: contain;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  cursor: default;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.lightbox-close:hover { background: rgba(255,255,255,0.3); }

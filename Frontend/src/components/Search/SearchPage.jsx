@@ -64,7 +64,6 @@ export default function SearchPage() {
     }, 350);
   };
 
-  // Run search on initial load if q param exists
   useEffect(() => {
     const q = searchParams.get('q') || '';
     if (q) {
@@ -77,7 +76,8 @@ export default function SearchPage() {
   return (
     <div className="sp-wrap">
       <div className="sp-header">
-        <h1 className="sp-title">Пошук</h1>
+        {/* #9 FIX: "Пошук користувачів" замість "Пошук" */}
+        <h1 className="sp-title">Пошук користувачів</h1>
         <div className="sp-input-wrap">
           <input
             className="sp-input"
@@ -108,11 +108,8 @@ export default function SearchPage() {
                   <div
                     key={u.id}
                     className="sp-user-card"
-                    onClick={() =>
-                      navigate(
-                        `/profile/${encodeURIComponent(u.fullName || u.email)}`,
-                      )
-                    }
+                    // #6 FIX: navigate by id → ProfileView, а не Profile (свій профіль)
+                    onClick={() => navigate(`/profile/view/${u.id}`)}
                   >
                     <Avatar photoUrl={u.photoUrl} size={48} />
                     <div className="sp-user-info">

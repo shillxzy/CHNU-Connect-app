@@ -19,12 +19,9 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
   const getComments = async (postId) => {
     try {
       const res = await getCommentsByPost(postId);
-
-      if (res) {
-        return res?.data;
-      }
+      if (res) {return res?.data;}
     } catch {
-      console.error('Can`t get comments');
+      console.error("Can't get comments");
       return [];
     }
   };
@@ -34,43 +31,30 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
     setLocalPosts(posts);
     const fetchAllComments = async () => {
       const counts = {};
-
       const promises = posts.map(async (post) => {
         const data = await getComments(post.id);
-        counts[post.id] = data.length;
+        counts[post.id] = data?.length || 0;
       });
-
       await Promise.all(promises);
-
       if (isMounted) {
         setCommentsCount(counts);
       }
     };
-
     if (posts.length > 0) {
       fetchAllComments();
     }
   }, [posts]);
 
   const toggleComments = (postId) => {
-    setOpenComments((prev) => ({
-      ...prev,
-      [postId]: !prev[postId],
-    }));
+    setOpenComments((prev) => ({ ...prev, [postId]: !prev[postId] }));
   };
 
   const toggleMenu = (postId) => {
-    setOpenMenu((prev) => ({
-      ...prev,
-      [postId]: !prev[postId],
-    }));
+    setOpenMenu((prev) => ({ ...prev, [postId]: !prev[postId] }));
   };
 
   const handleCommentAdded = (postId) => {
-    setCommentsCount((prev) => ({
-      ...prev,
-      [postId]: (prev[postId] || 0) + 1,
-    }));
+    setCommentsCount((prev) => ({ ...prev, [postId]: (prev[postId] || 0) + 1 }));
   };
 
   const handleCommentDeleted = (postId) => {
@@ -82,10 +66,7 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
 
   const handleDelete = async (postId) => {
     const confirmDelete = window.confirm('Видалити пост?');
-    if (!confirmDelete) {
-      return;
-    }
-
+    if (!confirmDelete) {return;}
     try {
       await deletePost(postId);
       setLocalPosts((prev) => prev.filter((p) => p.id !== postId));
@@ -101,10 +82,7 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
   };
 
   const saveEdit = async (postId) => {
-    if (!editedContent.trim()) {
-      return;
-    }
-
+    if (!editedContent.trim()) {return;}
     try {
       const updated = await updatePost(postId, { content: editedContent });
       setLocalPosts((prev) =>
@@ -143,7 +121,7 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
               />
               <div className="author-name">{post.authorName || 'Unknown'}</div>
 
-              {/* ТРИКРАПКА */}
+              {/* ТРИКРАПКА — тільки для свого поста */}
               {currentUser?.id === post.authorId && !isEditing && (
                 <div className="post-menu">
                   <button
@@ -154,9 +132,7 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
                   </button>
                   {openMenu[post.id] && (
                     <div className="menu-dropdown">
-                      <button
-                        onClick={() => startEditing(post.id, post.content)}
-                      >
+                      <button onClick={() => startEditing(post.id, post.content)}>
                         Редагувати
                       </button>
                       <button
@@ -205,6 +181,7 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
               </div>
             )}
 
+            {/* #7 FIX: передаємо postId для кнопки Share */}
             <PostActions
               likes={post.likeCount || 0}
               comments={commentsCount[post.id] || 0}
@@ -213,6 +190,7 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
                 onLikeToggle(post.id, post.hasCurrentUserLiked)
               }
               onCommentToggle={() => toggleComments(post.id)}
+              postId={post.id}
             />
 
             <CommentsSection

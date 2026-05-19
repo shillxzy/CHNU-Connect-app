@@ -19,6 +19,27 @@ import Loading from '../Loading/Loading';
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 
+// #14 FIX: компонент для перегляду фото на повний екран
+function ImageLightbox({ src, onClose }) {
+  useEffect(() => {
+    const handler = (e) => { if (e.key === 'Escape') {onClose();} };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [onClose]);
+
+  return (
+    <div className="lightbox-overlay" onClick={onClose}>
+      <button className="lightbox-close" onClick={onClose}>✕</button>
+      <img
+        src={src}
+        alt="fullscreen"
+        className="lightbox-img"
+        onClick={(e) => e.stopPropagation()}
+      />
+    </div>
+  );
+}
+
 export default function Chats() {
   const { user, isOnline } = useContext(AuthContext);
   const userId = user?.id;
@@ -40,19 +61,20 @@ export default function Chats() {
   const [allUsers, setAllUsers] = useState([]);
   const [modalLoading, setModalLoading] = useState(false);
 
-  // #6a typing
+  // typing
   const [typingUsers, setTypingUsers] = useState({});
   const typingTimeoutRef = useRef({});
 
-  // #6b file
+  // file
   const fileInputRef = useRef(null);
 
-  // #6c members popup
+  // members popup
   const [showMembers, setShowMembers] = useState(false);
 
-  const canCreateGroup = ['teacher', 'admin', 'superAdmin'].includes(
-    user?.role,
-  );
+  // #14 lightbox
+  const [lightboxSrc, setLightboxSrc] = useState(null);
+
+  const canCreateGroup = ['teacher', 'admin', 'superAdmin'].includes(user?.role);
 
   const connectionRef = useRef(null);
   const selectedChatRef = useRef(null);
@@ -77,6 +99,13 @@ export default function Chats() {
     return { name: chat.title || 'Груповий чат', avatar: null, userId: null };
   };
 
+  // #11 FIX: отримати ім'я відправника з членів чату
+  const getSenderName = (msg) => {
+    if (!selectedChat) {return '';}
+    const member = selectedChat.members?.find((m) => m.userId === msg.senderId);
+    return member?.authorName || 'Користувач';
+  };
+
   /* ======================== SIGNALR ======================== */
 
   useEffect(() => {
@@ -89,16 +118,24 @@ export default function Chats() {
 
     connection.on('ReceiveMessage', (message) => {
       const chat = selectedChatRef.current;
-      if (!chat || message.chatId !== chat.id) {
-        setChats((prev) =>
-          prev.map((c) =>
-            c.id === message.chatId
-              ? { ...c, lastMessage: message.content }
-              : c,
-          ),
+
+      // #10 FIX: оновлюємо lastMessage і сортуємо чати
+      setChats((prev) => {
+        const updated = prev.map((c) =>
+          c.id === message.chatId
+            ? { ...c, lastMessage: message.content, lastMessageAt: message.createdAt }
+            : c,
         );
-        return;
-      }
+        // #12 FIX: сортування за останнім повідомленням
+        return [...updated].sort((a, b) => {
+          const aTime = a.lastMessageAt ? new Date(a.lastMessageAt) : new Date(0);
+          const bTime = b.lastMessageAt ? new Date(b.lastMessageAt) : new Date(0);
+          return bTime - aTime;
+        });
+      });
+
+      if (!chat || message.chatId !== chat.id) {return;}
+
       setMessages((prev) =>
         [...prev, message].sort(
           (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
@@ -116,7 +153,6 @@ export default function Chats() {
       setMessages((prev) => prev.filter((m) => m.id !== deletedId));
     });
 
-    // #6a typing
     connection.on('UserTyping', (incomingChatId, typingUserId, name) => {
       if (selectedChatRef.current?.id !== incomingChatId) {return;}
       setTypingUsers((prev) => ({ ...prev, [typingUserId]: name }));
@@ -147,7 +183,16 @@ export default function Chats() {
   useEffect(() => {
     if (!userId) {return;}
     getChatsByUser(userId)
-      .then((res) => setChats(res.data))
+      .then((res) => {
+        const rawChats = res.data || [];
+        // #12 FIX: початкове сортування за lastMessageAt
+        const sorted = [...rawChats].sort((a, b) => {
+          const aTime = a.lastMessageAt ? new Date(a.lastMessageAt) : new Date(0);
+          const bTime = b.lastMessageAt ? new Date(b.lastMessageAt) : new Date(0);
+          return bTime - aTime;
+        });
+        setChats(sorted);
+      })
       .catch((err) => console.error('Chat load error:', err))
       .finally(() => setLoading(false));
   }, [userId]);
@@ -197,7 +242,6 @@ export default function Chats() {
 
   const handleSend = async () => {
     if (!newMessage.trim() || !selectedChat) {return;}
-    // stop typing
     connectionRef.current
       ?.invoke('StopTyping', selectedChat.id)
       .catch(() => {});
@@ -214,7 +258,7 @@ export default function Chats() {
     }
   };
 
-  /* ======================== TYPING (#6a) ======================== */
+  /* ======================== TYPING ======================== */
 
   const handleTyping = (e) => {
     setNewMessage(e.target.value);
@@ -230,7 +274,7 @@ export default function Chats() {
     }, 1500);
   };
 
-  /* ======================== FILE UPLOAD (#6b) ======================== */
+  /* ======================== FILE UPLOAD ======================== */
 
   const handleFileSelect = async (e) => {
     const file = e.target.files[0];
@@ -252,9 +296,7 @@ export default function Chats() {
     const mark = async () => {
       for (const msg of messages) {
         if (msg.senderId !== userId) {
-          await markMessageRead(selectedChat.id, msg.id, userId).catch(
-            () => {},
-          );
+          await markMessageRead(selectedChat.id, msg.id, userId).catch(() => {});
         }
       }
     };
@@ -336,16 +378,20 @@ export default function Chats() {
 
   if (loading) {return <Loading />;}
 
-  const selectedDisplay = selectedChat
-    ? getChatDisplayInfo(selectedChat)
-    : null;
+  const selectedDisplay = selectedChat ? getChatDisplayInfo(selectedChat) : null;
   const isOtherOnline = selectedDisplay?.userId
     ? isOnline(selectedDisplay.userId)
     : false;
   const typingNames = Object.values(typingUsers);
+  const isGroupChat = selectedChat?.type === 'group';
 
   return (
     <div className="chat-page">
+      {/* #14 lightbox */}
+      {lightboxSrc && (
+        <ImageLightbox src={lightboxSrc} onClose={() => setLightboxSrc(null)} />
+      )}
+
       <div className="chat-layout">
         {/* ========== SIDEBAR ========== */}
         <div className="chat-sidebar">
@@ -360,14 +406,7 @@ export default function Chats() {
 
           <div className="chat-list">
             {chats.length === 0 && (
-              <p
-                style={{
-                  color: '#888',
-                  fontSize: '14px',
-                  textAlign: 'center',
-                  marginTop: '20px',
-                }}
-              >
+              <p style={{ color: '#888', fontSize: '14px', textAlign: 'center', marginTop: '20px' }}>
                 Немає чатів
               </p>
             )}
@@ -388,6 +427,7 @@ export default function Chats() {
                   </div>
                   <div className="chat-info">
                     <div className="chat-name">{display.name}</div>
+                    {/* #10 FIX: показує останнє повідомлення */}
                     <div className="chat-last">
                       {chat.lastMessage || 'Немає повідомлень'}
                     </div>
@@ -410,17 +450,15 @@ export default function Chats() {
                 </div>
                 <div>
                   <div className="chat-title">{selectedDisplay?.name}</div>
-                  {selectedChat.type !== 'group' && (
-                    <div
-                      className={`chat-status ${isOtherOnline ? 'online' : 'offline'}`}
-                    >
-                      {isOtherOnline ? '● Онлайн' : '○ Офлайн'}
+                  {!isGroupChat && (
+                    <div className={`chat-status ${isOtherOnline ? 'online' : 'offline'}`}>
+                      {isOtherOnline ? '◎ Онлайн' : '○ Офлайн'}
                     </div>
                   )}
                 </div>
 
-                {/* #6c members popup */}
-                {selectedChat.type === 'group' && (
+                {/* members popup */}
+                {isGroupChat && (
                   <div className="members-wrap">
                     <button
                       className="members-btn"
@@ -435,9 +473,7 @@ export default function Chats() {
                           <div key={m.userId} className="members-popup-item">
                             <div className="chat-avatar-wrap">
                               <Avatar photoUrl={m.authorAvatar} size={28} />
-                              {isOnline(m.userId) && (
-                                <span className="online-dot" />
-                              )}
+                              {isOnline(m.userId) && <span className="online-dot" />}
                             </div>
                             <span className="members-popup-name">
                               {m.authorName || 'Користувач'}
@@ -459,6 +495,7 @@ export default function Chats() {
                   const showDate =
                     !prevDate ||
                     msgDate.toDateString() !== prevDate.toDateString();
+                  const isMyMsg = msg.senderId === userId;
 
                   return (
                     <React.Fragment key={msg.id}>
@@ -472,9 +509,14 @@ export default function Chats() {
                         </div>
                       )}
 
-                      <div
-                        className={`message ${msg.senderId === userId ? 'mine' : ''}`}
-                      >
+                      <div className={`message ${isMyMsg ? 'mine' : ''}`}>
+                        {/* #11 FIX: ім'я відправника у груповому чаті для чужих повідомлень */}
+                        {isGroupChat && !isMyMsg && (
+                          <div className="message-sender-name">
+                            {getSenderName(msg)}
+                          </div>
+                        )}
+
                         {editingMessageId === msg.id ? (
                           <div className="edit-wrap">
                             <input
@@ -487,7 +529,7 @@ export default function Chats() {
                             />
                             <div className="message-actions">
                               <button onClick={() => handleUpdate(msg.id)}>
-                                ✓ Зберегти
+                                ✔ Зберегти
                               </button>
                               <button onClick={() => setEditingMessageId(null)}>
                                 ✗ Скасувати
@@ -496,12 +538,16 @@ export default function Chats() {
                           </div>
                         ) : (
                           <>
-                            {/* #6b message content by type */}
+                            {/* #14 FIX: клік по фото відкриває lightbox */}
                             {msg.messageType === 'image' ? (
                               <img
                                 src={`${API_URL}${msg.content}`}
                                 alt="photo"
                                 className="message-image"
+                                style={{ cursor: 'zoom-in' }}
+                                onClick={() =>
+                                  setLightboxSrc(`${API_URL}${msg.content}`)
+                                }
                               />
                             ) : msg.messageType === 'file' ? (
                               <a
@@ -531,30 +577,28 @@ export default function Chats() {
                               </span>
                             </div>
 
-                            {msg.senderId === userId &&
-                              msg.messageType === 'text' && (
-                                <div className="message-actions">
-                                  <button
-                                    onClick={() => {
-                                      setEditingMessageId(msg.id);
-                                      setEditContent(msg.content);
-                                    }}
-                                  >
-                                    ✏️
-                                  </button>
-                                  <button onClick={() => handleDelete(msg.id)}>
-                                    🗑️
-                                  </button>
-                                </div>
-                              )}
-                            {msg.senderId === userId &&
-                              msg.messageType !== 'text' && (
-                                <div className="message-actions">
-                                  <button onClick={() => handleDelete(msg.id)}>
-                                    🗑️
-                                  </button>
-                                </div>
-                              )}
+                            {isMyMsg && msg.messageType === 'text' && (
+                              <div className="message-actions">
+                                <button
+                                  onClick={() => {
+                                    setEditingMessageId(msg.id);
+                                    setEditContent(msg.content);
+                                  }}
+                                >
+                                  ✏️
+                                </button>
+                                <button onClick={() => handleDelete(msg.id)}>
+                                  🗑️
+                                </button>
+                              </div>
+                            )}
+                            {isMyMsg && msg.messageType !== 'text' && (
+                              <div className="message-actions">
+                                <button onClick={() => handleDelete(msg.id)}>
+                                  🗑️
+                                </button>
+                              </div>
+                            )}
                           </>
                         )}
                       </div>
@@ -564,7 +608,7 @@ export default function Chats() {
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* #6a typing indicator */}
+              {/* typing indicator */}
               {typingNames.length > 0 && (
                 <div className="typing-bar">
                   {typingNames.join(', ')} друкує

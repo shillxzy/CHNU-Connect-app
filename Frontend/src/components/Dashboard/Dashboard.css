@@ -224,3 +224,47 @@
     flex: 1;
   }
 }
+
+/* ========== #2 FIX: Наступна пара ========== */
+/* Додати ці стилі в кінець Dashboard.css */
+
+.db-next-class {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.db-next-label {
+  font-weight: 700;
+  color: #1d4ed8;
+  white-space: nowrap;
+}
+
+.db-next-time {
+  background: #2563eb;
+  color: #fff;
+  padding: 1px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.db-next-subject {
+  color: #1e3a5f;
+  font-weight: 500;
+  flex: 1;
+}
+
+.db-next-room {
+  color: #64748b;
+  font-size: 12px;
+  white-space: nowrap;
+}

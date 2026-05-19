@@ -8,36 +8,13 @@ import './Dashboard.css';
 
 /* ── helpers ── */
 const DAY_MAP = {
-  Sunday: 0,
-  Monday: 1,
-  Tuesday: 2,
-  Wednesday: 3,
-  Thursday: 4,
-  Friday: 5,
-  Saturday: 6,
+  Sunday: 0, Monday: 1, Tuesday: 2, Wednesday: 3,
+  Thursday: 4, Friday: 5, Saturday: 6,
 };
-const DAY_UK = [
-  'Неділя',
-  'Понеділок',
-  'Вівторок',
-  'Середа',
-  'Четвер',
-  "П'ятниця",
-  'Субота',
-];
+const DAY_UK = ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', "П'ятниця", 'Субота'];
 const MON_UK = [
-  'січня',
-  'лютого',
-  'березня',
-  'квітня',
-  'травня',
-  'червня',
-  'липня',
-  'серпня',
-  'вересня',
-  'жовтня',
-  'листопада',
-  'грудня',
+  'січня','лютого','березня','квітня','травня','червня',
+  'липня','серпня','вересня','жовтня','листопада','грудня',
 ];
 
 function getISOWeek(date) {
@@ -45,13 +22,7 @@ function getISOWeek(date) {
   d.setHours(0, 0, 0, 0);
   d.setDate(d.getDate() + 3 - ((d.getDay() + 6) % 7));
   const w1 = new Date(d.getFullYear(), 0, 4);
-  return (
-    1 +
-    Math.round(
-      ((d.getTime() - w1.getTime()) / 86400000 - 3 + ((w1.getDay() + 6) % 7)) /
-        7,
-    )
-  );
+  return 1 + Math.round(((d.getTime() - w1.getTime()) / 86400000 - 3 + ((w1.getDay() + 6) % 7)) / 7);
 }
 
 function todayLabel() {
@@ -68,9 +39,12 @@ function matchesWeek(s, weekType) {
   if (s.isEveryWeek) {return true;}
   const w = s.week;
   if (typeof w === 'number') {return w === weekType;}
-  return (
-    (weekType === 1 && w === 'First') || (weekType === 2 && w === 'Second')
-  );
+  return (weekType === 1 && w === 'First') || (weekType === 2 && w === 'Second');
+}
+
+function fmtTime(t) {
+  if (!t) {return '';}
+  return typeof t === 'string' ? t.slice(0, 5) : '';
 }
 
 function getTodayClasses(schedule, slots) {
@@ -81,17 +55,47 @@ function getTodayClasses(schedule, slots) {
     .sort((a, b) => a.pairNumber - b.pairNumber)
     .map((s) => {
       const slot = slots.find((sl) => sl.id === s.slotId);
-      return {
-        ...s,
-        startTime: slot?.startTime ?? '',
-        endTime: slot?.endTime ?? '',
-      };
+      return { ...s, startTime: slot?.startTime ?? '', endTime: slot?.endTime ?? '' };
     });
 }
 
-function fmtTime(t) {
-  if (!t) {return '';}
-  return typeof t === 'string' ? t.slice(0, 5) : '';
+// #2 FIX: знайти наступну пару (першу що ще не почалась сьогодні)
+function getNextClass(schedule, slots) {
+  const now = new Date();
+  const todayClasses = getTodayClasses(schedule, slots);
+
+  for (const cls of todayClasses) {
+    if (!cls.startTime) {continue;}
+    const [h, m] = cls.startTime.split(':').map(Number);
+    const classStart = new Date();
+    classStart.setHours(h, m, 0, 0);
+    if (classStart > now) {return cls;}
+  }
+
+  // Якщо сьогодні більше немає — шукаємо наступний день тижня
+  const weekType = getISOWeek(new Date()) % 2 === 1 ? 1 : 2;
+  const todayIdx = now.getDay();
+
+  for (let offset = 1; offset <= 6; offset++) {
+    const nextDay = (todayIdx + offset) % 7;
+    // для наступного тижня weekType може змінитись — спрощено беремо той самий
+    const nextWeekType = offset >= (7 - todayIdx) ? (weekType === 1 ? 2 : 1) : weekType;
+    const nextDayClasses = schedule
+      .filter((s) => toDay(s.day) === nextDay && matchesWeek(s, nextWeekType))
+      .sort((a, b) => a.pairNumber - b.pairNumber);
+
+    if (nextDayClasses.length > 0) {
+      const cls = nextDayClasses[0];
+      const slot = slots.find((sl) => sl.id === cls.slotId);
+      return {
+        ...cls,
+        startTime: slot?.startTime ?? '',
+        endTime: slot?.endTime ?? '',
+        nextDay: DAY_UK[nextDay],
+      };
+    }
+  }
+  return null;
 }
 
 function upcomingEvents(events) {
@@ -108,21 +112,20 @@ function fmtEventDate(iso) {
 }
 
 const ROLE_LABELS = {
-  student: 'Студент',
-  teacher: 'Викладач',
-  admin: 'Адміністратор',
-  superAdmin: 'Супер-адмін',
+  student: 'Студент', teacher: 'Викладач',
+  admin: 'Адміністратор', superAdmin: 'Супер-адмін',
 };
 const ROLE_COLORS = {
-  student: '#16a34a',
-  teacher: '#0369a1',
-  admin: '#7c3aed',
-  superAdmin: '#b91c1c',
+  student: '#16a34a', teacher: '#0369a1',
+  admin: '#7c3aed', superAdmin: '#b91c1c',
 };
 
 /* ── cards ── */
 function ScheduleCard({ schedule, slots }) {
   const today = getTodayClasses(schedule, slots);
+  // #2 FIX: наступна пара
+  const next = getNextClass(schedule, slots);
+
   return (
     <div className="db-card">
       <div className="db-card-header">
@@ -142,6 +145,21 @@ function ScheduleCard({ schedule, slots }) {
           ))}
         </ul>
       )}
+
+      {/* #2 FIX: блок "Наступна пара" */}
+      {next && (
+        <div className="db-next-class">
+          <span className="db-next-label">
+            Наступна:{next.nextDay ? ` ${next.nextDay}` : ''}
+          </span>
+          <span className="db-next-time">{fmtTime(next.startTime)}</span>
+          <span className="db-next-subject">{next.subjectName}</span>
+          {next.location && (
+            <span className="db-next-room">{next.location}</span>
+          )}
+        </div>
+      )}
+
       <Link to="/groups" className="db-card-link">
         Мій розклад →
       </Link>
@@ -246,15 +264,9 @@ function AdminCard() {
         <h3>Швидкі дії</h3>
       </div>
       <div className="db-quick-actions">
-        <Link to="/admin-panel" className="db-action-btn">
-          Адмін панель
-        </Link>
-        <Link to="/events/create" className="db-action-btn">
-          + Подія
-        </Link>
-        <Link to="/groups/create" className="db-action-btn">
-          + Група
-        </Link>
+        <Link to="/admin-panel" className="db-action-btn">Адмін панель</Link>
+        <Link to="/events/create" className="db-action-btn">+ Подія</Link>
+        <Link to="/groups/create" className="db-action-btn">+ Група</Link>
       </div>
     </div>
   );
@@ -274,36 +286,24 @@ export default function Dashboard() {
 
   useEffect(() => {
     const loads = [
-      getEvents()
-        .then((r) => setEvents(r.data || []))
-        .catch(() => {}),
+      getEvents().then((r) => setEvents(r.data || [])).catch(() => {}),
     ];
 
     if (isStudent) {
       loads.push(
-        getMySchedule()
-          .then((r) => setSchedule(r.data || []))
-          .catch(() => {}),
-        getLessonSlots()
-          .then((r) => setSlots(r.data || []))
-          .catch(() => {}),
-        getGroups()
-          .then((r) => setGroups(r.data || []))
-          .catch(() => {}),
+        getMySchedule().then((r) => setSchedule(r.data || [])).catch(() => {}),
+        getLessonSlots().then((r) => setSlots(r.data || [])).catch(() => {}),
+        getGroups().then((r) => setGroups(r.data || [])).catch(() => {}),
       );
     }
     if (isTeacher) {
       loads.push(
-        getCuratedGroups()
-          .then((r) => setGroups(r.data || []))
-          .catch(() => {}),
+        getCuratedGroups().then((r) => setGroups(r.data || [])).catch(() => {}),
       );
     }
     if (isAdmin) {
       loads.push(
-        getGroups()
-          .then((r) => setGroups(r.data || []))
-          .catch(() => {}),
+        getGroups().then((r) => setGroups(r.data || [])).catch(() => {}),
       );
     }
 
