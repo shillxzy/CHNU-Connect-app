@@ -265,6 +265,14 @@
   pointer-events: none;
 }
 
+.ev-image-upload {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
 .file-upload-area {
   border: 2px dashed #ced4da;
   border-radius: 8px;
@@ -460,6 +468,53 @@
 .ev-feedback--success { background: #dcfce7; color: #15803d; }
 .ev-feedback--info    { background: #dbeafe; color: #1d4ed8; }
 .ev-feedback--error   { background: #fee2e2; color: #b91c1c; }
+
+/* ── invite panel ── */
+.ev-invite-panel {
+  margin-top: 16px;
+  padding: 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ev-invite-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.ev-invite-search { display: flex; gap: 8px; }
+
+.ev-invite-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.ev-invite-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.ev-invite-name {
+  font-size: 14px;
+  color: #374151;
+}
 
 @media (max-width: 768px) {
   .form-row {

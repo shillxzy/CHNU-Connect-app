@@ -1,46 +1,70 @@
-import { useEffect, useState, useContext } from 'react';
-import { getGroups, getGroupById } from '../../api/groupAPI';
+import { useEffect, useRef, useState, useContext } from 'react';
+import {
+  getGroups,
+  getAllGroups,
+  getGroupById,
+  addUserToGroup,
+} from '../../api/groupAPI';
 import { getSubjectsByGroup } from '../../api/subjectAPI';
 import { getChatsByUser, createChat } from '../../api/chatAPI';
+import { searchUsers } from '../../api/userAPI';
 import AuthContext from '../../context/AuthContext';
 import './GroupsPage.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import UserTooltip from '../ToolTip/UserTooltip';
 
 export default function GroupsPage() {
   const { role, user } = useContext(AuthContext);
   const currentUserId = user?.id;
   const navigate = useNavigate();
+  const { id: groupIdParam } = useParams();
 
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [subjects, setSubjects] = useState([]);
 
+  // invite state
+  const [showInvite, setShowInvite] = useState(false);
+  const [inviteQuery, setInviteQuery] = useState('');
+  const [inviteResults, setInviteResults] = useState([]);
+  const [inviteFeedback, setInviteFeedback] = useState(null);
+  const [inviteBusy, setInviteBusy] = useState(false);
+  const searchTimer = useRef(null);
+
   const isAdmin = role === 'admin' || role === 'superAdmin';
   const isTeacher = role === 'teacher';
   const isTeacherCurator =
     isTeacher && selectedGroup?.curator?.id === currentUserId;
+  const canInvite = isAdmin || isTeacherCurator;
 
   useEffect(() => {
     load();
   }, []);
 
+  useEffect(() => {
+    if (!groupIdParam) {
+      setSelectedGroup(null);
+      setSubjects([]);
+      setShowInvite(false);
+      return;
+    }
+    getGroupById(groupIdParam)
+      .then((res) => {
+        setSelectedGroup(res.data);
+        return getSubjectsByGroup(groupIdParam);
+      })
+      .then((res) => {
+        if (res) {setSubjects(res.data);}
+      })
+      .catch(() => navigate('/groups'));
+  }, [groupIdParam]);
+
   const load = async () => {
-    const res = await getGroups();
+    const res = isAdmin ? await getAllGroups() : await getGroups();
     setGroups(res.data);
   };
 
-  const openGroup = async (group) => {
-    const res = await getGroupById(group.id);
-    setSelectedGroup(res.data);
-    const subjectsRes = await getSubjectsByGroup(group.id);
-    setSubjects(subjectsRes.data);
-  };
-
-  const backToList = () => {
-    setSelectedGroup(null);
-    setSubjects([]);
-  };
+  const backToList = () => navigate('/groups');
 
   const openGroupChat = async () => {
     try {
@@ -59,9 +83,8 @@ export default function GroupsPage() {
       if (
         selectedGroup.curator &&
         !memberIds.includes(selectedGroup.curator.id)
-      ) {
-        memberIds.push(selectedGroup.curator.id);
-      }
+      )
+        {memberIds.push(selectedGroup.curator.id);}
       const newChat = await createChat({
         type: 'group',
         title: selectedGroup.name,
@@ -71,6 +94,48 @@ export default function GroupsPage() {
       navigate(`/chats/${newChat.data.id}`);
     } catch {
       alert('Помилка відкриття чату групи');
+    }
+  };
+
+  const handleInviteSearch = (q) => {
+    setInviteQuery(q);
+    setInviteFeedback(null);
+    clearTimeout(searchTimer.current);
+    if (!q.trim()) {
+      setInviteResults([]);
+      return;
+    }
+    searchTimer.current = setTimeout(async () => {
+      try {
+        const res = await searchUsers(q);
+        setInviteResults(Array.isArray(res.data) ? res.data : []);
+      } catch {
+        setInviteResults([]);
+      }
+    }, 350);
+  };
+
+  const handleAddUser = async (targetUser) => {
+    setInviteBusy(true);
+    setInviteFeedback(null);
+    try {
+      await addUserToGroup(selectedGroup.id, targetUser.id, 'Student');
+      setInviteFeedback({
+        type: 'success',
+        text: `${targetUser.fullName || targetUser.email} додано до групи!`,
+      });
+      setInviteResults([]);
+      setInviteQuery('');
+      // refresh group
+      const res = await getGroupById(selectedGroup.id);
+      setSelectedGroup(res.data);
+    } catch (err) {
+      setInviteFeedback({
+        type: 'error',
+        text: err.response?.data?.message || 'Помилка',
+      });
+    } finally {
+      setInviteBusy(false);
     }
   };
 
@@ -96,7 +161,7 @@ export default function GroupsPage() {
               <div
                 key={g.id}
                 className="group-card"
-                onClick={() => openGroup(g)}
+                onClick={() => navigate('/groups/' + g.id)}
               >
                 <div className="group-title">{g.name}</div>
                 <div className="group-desc">{g.description}</div>
@@ -152,7 +217,6 @@ export default function GroupsPage() {
               </button>
             )}
 
-            {/* Кнопка перегляду розкладу для всіх */}
             <button
               onClick={() => navigate('/group/schedule/' + selectedGroup.id)}
               style={{
@@ -167,7 +231,63 @@ export default function GroupsPage() {
             >
               📋 Переглянути розклад
             </button>
+
+            {canInvite && (
+              <button
+                onClick={() => {
+                  setShowInvite((v) => !v);
+                  setInviteFeedback(null);
+                }}
+                style={{
+                  padding: '8px 16px',
+                  background: '#0ca678',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                }}
+              >
+                👤 {showInvite ? 'Сховати' : 'Запросити учасника'}
+              </button>
+            )}
           </div>
+
+          {/* Invite panel */}
+          {showInvite && canInvite && (
+            <div className="gp-invite-panel">
+              <p className="gp-invite-title">Запросити у групу</p>
+              <input
+                className="gp-invite-input"
+                placeholder="Пошук за іменем або email..."
+                value={inviteQuery}
+                onChange={(e) => handleInviteSearch(e.target.value)}
+              />
+              {inviteResults.length > 0 && (
+                <ul className="gp-invite-list">
+                  {inviteResults.map((u) => (
+                    <li key={u.id} className="gp-invite-item">
+                      <span>{u.fullName || u.email}</span>
+                      <button
+                        className="gp-invite-btn"
+                        onClick={() => handleAddUser(u)}
+                        disabled={inviteBusy}
+                      >
+                        Додати
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {inviteFeedback && (
+                <p
+                  className={`gp-invite-feedback gp-invite-feedback--${inviteFeedback.type}`}
+                >
+                  {inviteFeedback.text}
+                </p>
+              )}
+            </div>
+          )}
 
           <div className="card">
             <h2>{selectedGroup.name}</h2>

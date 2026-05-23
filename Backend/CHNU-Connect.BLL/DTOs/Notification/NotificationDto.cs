@@ -16,6 +16,7 @@ namespace CHNU_Connect.BLL.DTOs.Notification
 		public int? ActorId { get; set; }
 		public string? ActorName { get; set; }
 		public string? ActorAvatar { get; set; }
+		public string? Body { get; set; }
 	}
 
 }

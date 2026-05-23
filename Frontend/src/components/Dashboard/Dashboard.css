@@ -1,6 +1,8 @@
 .db-wrap {
   width: 100%;
-  padding: 16px 24px 0;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 24px 0;
   box-sizing: border-box;
 }
 
@@ -175,6 +177,8 @@
   flex-wrap: wrap;
   gap: 8px;
   flex: 1;
+  align-items: flex-start;
+  align-content: flex-start;
 }
 
 .db-action-btn {
@@ -213,7 +217,7 @@
 }
 
 /* ── responsive ── */
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   .db-wrap {
     padding: 12px 12px 0;
   }

@@ -23,3 +23,8 @@ export const createPostWithImage = (formData) =>
   api.post('/Post/with-image', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
+
+export const updatePostImage = (id, formData) =>
+  api.put(`/Post/${id}/image`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });

@@ -19,5 +19,6 @@ namespace CHNU_Connect.BLL.Services.Interfaces
         Task<bool> JoinEventAsync(int eventId, int userId);
         Task<bool> LeaveEventAsync(int eventId, int userId);
         Task<IEnumerable<EventDto>> GetUserEventsAsync(int userId);
+        Task UpdateEventImageAsync(int id, string imageUrl);
     }
 }

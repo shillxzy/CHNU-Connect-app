@@ -6,7 +6,8 @@ namespace CHNU_Connect.DAL.Repositories.Interfaces
     {
         Task InsertAsync(Notification notification);
         Task<IEnumerable<Notification>> GetUnreadByUserIdAsync(int userId);
+        Task<IEnumerable<Notification>> GetAllByUserIdAsync(int userId);
         Task MarkAsReadAsync(int notificationId);
-        Task MarkAllAsReadAsync(int userId); // NEW
+        Task MarkAllAsReadAsync(int userId);
     }
 }

@@ -20,9 +20,12 @@ import {
 } from '../../api/permissionAPI';
 import { getEvents, updateEvent } from '../../api/eventAPI';
 import { getAllGroups, updateGroup } from '../../api/groupAPI';
-import { getPosts, updatePost } from '../../api/postAPI';
+import { getPosts, updatePost, updatePostImage } from '../../api/postAPI';
+import { getCommentsByPost, deleteComment } from '../../api/commentAPI';
 import Avatar from '../Avatar/Avatar';
 import AuthContext from '../../context/AuthContext';
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const ROLES = ['student', 'teacher', 'admin'];
 const SECTIONS = [
@@ -228,6 +231,10 @@ export default function AdminPanel() {
   const [editTarget, setEditTarget] = useState(null);
   const [saving, setSaving] = useState(false);
 
+  const [expandedPostId, setExpandedPostId] = useState(null);
+  const [postComments, setPostComments] = useState({});
+  const [loadingComments, setLoadingComments] = useState(false);
+
   /* ── load ── */
   const load = useCallback(async (sec) => {
     setLoading(true);
@@ -294,6 +301,38 @@ export default function AdminPanel() {
     }
   };
 
+  /* ── comments ── */
+  const handleToggleComments = async (postId) => {
+    if (expandedPostId === postId) {
+      setExpandedPostId(null);
+      return;
+    }
+    setExpandedPostId(postId);
+    if (postComments[postId]) {return;}
+    setLoadingComments(true);
+    try {
+      const res = await getCommentsByPost(postId);
+      setPostComments((prev) => ({ ...prev, [postId]: res.data || [] }));
+    } catch {
+      setPostComments((prev) => ({ ...prev, [postId]: [] }));
+    } finally {
+      setLoadingComments(false);
+    }
+  };
+
+  const handleDeleteComment = async (commentId, postId) => {
+    if (!window.confirm('Видалити коментар?')) {return;}
+    try {
+      await deleteComment(commentId);
+      setPostComments((prev) => ({
+        ...prev,
+        [postId]: (prev[postId] || []).filter((c) => c.id !== commentId),
+      }));
+    } catch (e) {
+      alert(e.response?.data?.message || 'Помилка видалення');
+    }
+  };
+
   /* ── save ── */
   const handleSave = async (form) => {
     setSaving(true);
@@ -340,18 +379,21 @@ export default function AdminPanel() {
       }
 
       if (type === 'post') {
+        let finalImageUrl = form.removeImage ? null : data.imageUrl;
+        if (form.newImageFile) {
+          const fd = new FormData();
+          fd.append('image', form.newImageFile);
+          const res = await updatePostImage(data.id, fd);
+          finalImageUrl = res.data.imageUrl;
+        }
         await updatePost(data.id, {
           content: form.content,
-          imageUrl: form.removeImage ? null : data.imageUrl,
+          imageUrl: finalImageUrl,
         });
         setPosts((p) =>
           p.map((p2) =>
             p2.id === data.id
-              ? {
-                  ...p2,
-                  content: form.content,
-                  imageUrl: form.removeImage ? null : p2.imageUrl,
-                }
+              ? { ...p2, content: form.content, imageUrl: finalImageUrl }
               : p2,
           ),
         );
@@ -470,36 +512,61 @@ export default function AdminPanel() {
       return { name: data.name || '', description: data.description || '' };
     }
     if (type === 'post') {
-      return { content: data.content || '', removeImage: false };
+      return {
+        content: data.content || '',
+        removeImage: false,
+        newImageFile: null,
+      };
     }
     return {};
   };
 
   /* ── post image extra slot ── */
   const postImageExtra = (form, set) => {
-    const src = editTarget?.data?.imageUrl;
-    if (!src) {
-      return null;
-    }
+    const rawSrc = editTarget?.data?.imageUrl;
+    const baseSrc = rawSrc ? `${API_BASE}${rawSrc}` : null;
+    const previewSrc = form.newImageFile
+      ? URL.createObjectURL(form.newImageFile)
+      : form.removeImage
+        ? null
+        : baseSrc;
+
     return (
       <div className="ap-field">
         <label>Зображення</label>
-        {!form.removeImage ? (
+        {previewSrc ? (
           <div className="ap-img-preview-wrap">
-            <img src={src} alt="post" className="ap-img-preview" />
+            <img src={previewSrc} alt="post" className="ap-img-preview" />
             <button
               type="button"
               className="ap-btn-remove-img"
-              onClick={() => set('removeImage', true)}
+              onClick={() => {
+                set('removeImage', true);
+                set('newImageFile', null);
+              }}
             >
               Видалити зображення
             </button>
           </div>
-        ) : (
+        ) : baseSrc || form.newImageFile ? (
           <div className="ap-img-removed">
             Зображення буде видалено після збереження
           </div>
-        )}
+        ) : null}
+        <label className="ap-btn-upload-img">
+          {previewSrc ? 'Замінити фото' : 'Завантажити фото'}
+          <input
+            type="file"
+            accept="image/*"
+            style={{ display: 'none' }}
+            onChange={(e) => {
+              if (e.target.files[0]) {
+                set('newImageFile', e.target.files[0]);
+                set('removeImage', false);
+              }
+            }}
+          />
+        </label>
       </div>
     );
   };
@@ -750,40 +817,86 @@ export default function AdminPanel() {
               </thead>
               <tbody>
                 {filteredPosts.map((p) => (
-                  <tr key={p.id}>
-                    <td className="ap-post-content">
-                      {(p.content || '').slice(0, 100)}
-                      {p.content?.length > 100 ? '…' : ''}
-                    </td>
-                    <td>
-                      {p.imageUrl ? (
-                        <img
-                          src={p.imageUrl}
-                          alt="post"
-                          className="ap-post-thumb"
-                          onClick={() => window.open(p.imageUrl, '_blank')}
-                        />
-                      ) : (
-                        <span className="ap-sub">—</span>
-                      )}
-                    </td>
-                    <td>{p.authorName || '—'}</td>
-                    <td className="ap-nowrap">{fmt(p.createdAt)}</td>
-                    <td className="ap-actions">
-                      <button
-                        className="ap-btn-edit"
-                        onClick={() => setEditTarget({ type: 'post', data: p })}
-                      >
-                        Редагувати
-                      </button>
-                      <button
-                        className="ap-btn-delete"
-                        onClick={() => handleDelete('post', p.id)}
-                      >
-                        Видалити
-                      </button>
-                    </td>
-                  </tr>
+                  <React.Fragment key={p.id}>
+                    <tr>
+                      <td className="ap-post-content">{p.content || '—'}</td>
+                      <td>
+                        {p.imageUrl ? (
+                          <img
+                            src={`${API_BASE}${p.imageUrl}`}
+                            alt="post"
+                            className="ap-post-thumb"
+                            onClick={() =>
+                              window.open(`${API_BASE}${p.imageUrl}`, '_blank')
+                            }
+                          />
+                        ) : (
+                          <span className="ap-sub">—</span>
+                        )}
+                      </td>
+                      <td>{p.authorName || '—'}</td>
+                      <td className="ap-nowrap">{fmt(p.createdAt)}</td>
+                      <td className="ap-actions">
+                        <button
+                          className="ap-btn-edit"
+                          onClick={() =>
+                            setEditTarget({ type: 'post', data: p })
+                          }
+                        >
+                          Редагувати
+                        </button>
+                        <button
+                          className="ap-btn-comments"
+                          onClick={() => handleToggleComments(p.id)}
+                        >
+                          {expandedPostId === p.id ? 'Сховати' : 'Коментарі'}
+                          {postComments[p.id]
+                            ? ` (${postComments[p.id].length})`
+                            : ''}
+                        </button>
+                        <button
+                          className="ap-btn-delete"
+                          onClick={() => handleDelete('post', p.id)}
+                        >
+                          Видалити
+                        </button>
+                      </td>
+                    </tr>
+                    {expandedPostId === p.id && (
+                      <tr>
+                        <td colSpan={5} className="ap-comments-row">
+                          {loadingComments && !postComments[p.id] ? (
+                            <p className="ap-msg">Завантаження...</p>
+                          ) : (postComments[p.id] || []).length === 0 ? (
+                            <p className="ap-msg" style={{ padding: '8px 0' }}>
+                              Немає коментарів
+                            </p>
+                          ) : (
+                            <div className="ap-comment-list">
+                              {(postComments[p.id] || []).map((c) => (
+                                <div key={c.id} className="ap-comment-item">
+                                  <span className="ap-comment-author">
+                                    {c.authorName || '—'}:
+                                  </span>
+                                  <span className="ap-comment-text">
+                                    {c.content}
+                                  </span>
+                                  <button
+                                    className="ap-btn-delete ap-btn-comment-del"
+                                    onClick={() =>
+                                      handleDeleteComment(c.id, p.id)
+                                    }
+                                  >
+                                    ✕
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                 ))}
               </tbody>
             </table>

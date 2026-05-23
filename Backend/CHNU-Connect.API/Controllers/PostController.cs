@@ -312,5 +312,36 @@ namespace CHNU_Connect.API.Controllers
             public string Content { get; set; } = "";
             public IFormFile? Image { get; set; }
         }
+
+        [HttpPut("{id}/image")]
+        public async Task<IActionResult> UpdatePostImage(int id, IFormFile image)
+        {
+            var currentUserId = GetCurrentUserId();
+            if (currentUserId == null) return Unauthorized();
+
+            var post = await _postService.GetByIdAsync(id, currentUserId);
+            if (post == null) return NotFound(new { message = "Post not found." });
+
+            var isAdmin = User.IsInRole("admin") || User.IsInRole("superAdmin");
+            if (post.UserId != currentUserId.Value && !isAdmin)
+                return StatusCode(403, new { message = "You can only edit your own posts." });
+
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+            if (!Directory.Exists(uploadsFolder))
+                Directory.CreateDirectory(uploadsFolder);
+
+            var fileName = $"{Guid.NewGuid()}_{image.FileName}";
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await image.CopyToAsync(stream);
+            }
+
+            var imageUrl = $"/uploads/{fileName}";
+            await _postService.UpdatePostAsync(id, new UpdatePostDto { Content = post.Content ?? "", ImageUrl = imageUrl }, currentUserId);
+
+            return Ok(new { imageUrl });
+        }
     }
 }

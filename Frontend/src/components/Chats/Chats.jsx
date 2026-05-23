@@ -22,14 +22,20 @@ const API_URL = import.meta.env.VITE_API_BASE_URL;
 // #14 FIX: компонент для перегляду фото на повний екран
 function ImageLightbox({ src, onClose }) {
   useEffect(() => {
-    const handler = (e) => { if (e.key === 'Escape') {onClose();} };
+    const handler = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
   }, [onClose]);
 
   return (
     <div className="lightbox-overlay" onClick={onClose}>
-      <button className="lightbox-close" onClick={onClose}>✕</button>
+      <button className="lightbox-close" onClick={onClose}>
+        ✕
+      </button>
       <img
         src={src}
         alt="fullscreen"
@@ -74,7 +80,9 @@ export default function Chats() {
   // #14 lightbox
   const [lightboxSrc, setLightboxSrc] = useState(null);
 
-  const canCreateGroup = ['teacher', 'admin', 'superAdmin'].includes(user?.role);
+  const canCreateGroup = ['teacher', 'admin', 'superAdmin'].includes(
+    user?.role,
+  );
 
   const connectionRef = useRef(null);
   const selectedChatRef = useRef(null);
@@ -101,7 +109,9 @@ export default function Chats() {
 
   // #11 FIX: отримати ім'я відправника з членів чату
   const getSenderName = (msg) => {
-    if (!selectedChat) {return '';}
+    if (!selectedChat) {
+      return '';
+    }
     const member = selectedChat.members?.find((m) => m.userId === msg.senderId);
     return member?.authorName || 'Користувач';
   };
@@ -123,18 +133,28 @@ export default function Chats() {
       setChats((prev) => {
         const updated = prev.map((c) =>
           c.id === message.chatId
-            ? { ...c, lastMessage: message.content, lastMessageAt: message.createdAt }
+            ? {
+                ...c,
+                lastMessage: message.content,
+                lastMessageAt: message.createdAt,
+              }
             : c,
         );
         // #12 FIX: сортування за останнім повідомленням
         return [...updated].sort((a, b) => {
-          const aTime = a.lastMessageAt ? new Date(a.lastMessageAt) : new Date(0);
-          const bTime = b.lastMessageAt ? new Date(b.lastMessageAt) : new Date(0);
+          const aTime = a.lastMessageAt
+            ? new Date(a.lastMessageAt)
+            : new Date(0);
+          const bTime = b.lastMessageAt
+            ? new Date(b.lastMessageAt)
+            : new Date(0);
           return bTime - aTime;
         });
       });
 
-      if (!chat || message.chatId !== chat.id) {return;}
+      if (!chat || message.chatId !== chat.id) {
+        return;
+      }
 
       setMessages((prev) =>
         [...prev, message].sort(
@@ -154,12 +174,22 @@ export default function Chats() {
     });
 
     connection.on('UserTyping', (incomingChatId, typingUserId, name) => {
-      if (selectedChatRef.current?.id !== incomingChatId) {return;}
-      setTypingUsers((prev) => ({ ...prev, [typingUserId]: name }));
+      if (selectedChatRef.current?.id !== incomingChatId) {
+        return;
+      }
+      const member = selectedChatRef.current?.members?.find(
+        (m) => m.userId === typingUserId,
+      );
+      setTypingUsers((prev) => ({
+        ...prev,
+        [typingUserId]: { name, avatar: member?.authorAvatar ?? null },
+      }));
     });
 
     connection.on('UserStoppedTyping', (incomingChatId, stoppedUserId) => {
-      if (selectedChatRef.current?.id !== incomingChatId) {return;}
+      if (selectedChatRef.current?.id !== incomingChatId) {
+        return;
+      }
       setTypingUsers((prev) => {
         const next = { ...prev };
         delete next[stoppedUserId];
@@ -181,14 +211,20 @@ export default function Chats() {
   /* ======================== LOAD CHATS ======================== */
 
   useEffect(() => {
-    if (!userId) {return;}
+    if (!userId) {
+      return;
+    }
     getChatsByUser(userId)
       .then((res) => {
         const rawChats = res.data || [];
         // #12 FIX: початкове сортування за lastMessageAt
         const sorted = [...rawChats].sort((a, b) => {
-          const aTime = a.lastMessageAt ? new Date(a.lastMessageAt) : new Date(0);
-          const bTime = b.lastMessageAt ? new Date(b.lastMessageAt) : new Date(0);
+          const aTime = a.lastMessageAt
+            ? new Date(a.lastMessageAt)
+            : new Date(0);
+          const bTime = b.lastMessageAt
+            ? new Date(b.lastMessageAt)
+            : new Date(0);
           return bTime - aTime;
         });
         setChats(sorted);
@@ -200,15 +236,21 @@ export default function Chats() {
   /* ======================== SELECT CHAT ======================== */
 
   useEffect(() => {
-    if (!chatId || chats.length === 0) {return;}
+    if (!chatId || chats.length === 0) {
+      return;
+    }
     const chat = chats.find((c) => c.id === parseInt(chatId));
-    if (chat) {setSelectedChat(chat);}
+    if (chat) {
+      setSelectedChat(chat);
+    }
   }, [chatId, chats]);
 
   /* ======================== LOAD MESSAGES ======================== */
 
   useEffect(() => {
-    if (!selectedChat) {return;}
+    if (!selectedChat) {
+      return;
+    }
     setTypingUsers({});
     setShowMembers(false);
 
@@ -241,7 +283,11 @@ export default function Chats() {
   /* ======================== SEND ======================== */
 
   const handleSend = async () => {
-    if (!newMessage.trim() || !selectedChat) {return;}
+    const content = newMessage.trim();
+    if (!content || !selectedChat) {
+      return;
+    }
+    setNewMessage('');
     connectionRef.current
       ?.invoke('StopTyping', selectedChat.id)
       .catch(() => {});
@@ -250,10 +296,10 @@ export default function Chats() {
       await sendMessage(selectedChat.id, {
         chatId: selectedChat.id,
         senderId: userId,
-        content: newMessage.trim(),
+        content,
       });
-      setNewMessage('');
     } catch (err) {
+      setNewMessage(content);
       console.error('Send error:', err);
     }
   };
@@ -262,7 +308,9 @@ export default function Chats() {
 
   const handleTyping = (e) => {
     setNewMessage(e.target.value);
-    if (!selectedChat || connectionRef.current?.state !== 'Connected') {return;}
+    if (!selectedChat || connectionRef.current?.state !== 'Connected') {
+      return;
+    }
     connectionRef.current
       .invoke('StartTyping', selectedChat.id, user?.name || 'Користувач')
       .catch(() => {});
@@ -278,7 +326,9 @@ export default function Chats() {
 
   const handleFileSelect = async (e) => {
     const file = e.target.files[0];
-    if (!file || !selectedChat) {return;}
+    if (!file || !selectedChat) {
+      return;
+    }
     const formData = new FormData();
     formData.append('file', file);
     try {
@@ -292,11 +342,15 @@ export default function Chats() {
   /* ======================== READ ======================== */
 
   useEffect(() => {
-    if (!selectedChat || messages.length === 0) {return;}
+    if (!selectedChat || messages.length === 0) {
+      return;
+    }
     const mark = async () => {
       for (const msg of messages) {
         if (msg.senderId !== userId) {
-          await markMessageRead(selectedChat.id, msg.id, userId).catch(() => {});
+          await markMessageRead(selectedChat.id, msg.id, userId).catch(
+            () => {},
+          );
         }
       }
     };
@@ -312,7 +366,9 @@ export default function Chats() {
   /* ======================== EDIT / DELETE ======================== */
 
   const handleUpdate = async (messageId) => {
-    if (!editContent.trim()) {return;}
+    if (!editContent.trim()) {
+      return;
+    }
     try {
       await updateMessage(selectedChat.id, messageId, editContent.trim());
       setMessages((prev) =>
@@ -357,7 +413,9 @@ export default function Chats() {
   };
 
   const handleCreateGroup = async () => {
-    if (!groupTitle.trim() || selectedMembers.length === 0) {return;}
+    if (!groupTitle.trim() || selectedMembers.length === 0) {
+      return;
+    }
     setModalLoading(true);
     try {
       const res = await createChat({
@@ -376,13 +434,18 @@ export default function Chats() {
     }
   };
 
-  if (loading) {return <Loading />;}
+  if (loading) {
+    return <Loading />;
+  }
 
-  const selectedDisplay = selectedChat ? getChatDisplayInfo(selectedChat) : null;
+  const selectedDisplay = selectedChat
+    ? getChatDisplayInfo(selectedChat)
+    : null;
   const isOtherOnline = selectedDisplay?.userId
     ? isOnline(selectedDisplay.userId)
     : false;
-  const typingNames = Object.values(typingUsers);
+  const typingEntries = Object.values(typingUsers);
+  const typingNames = typingEntries.map((t) => t.name);
   const isGroupChat = selectedChat?.type === 'group';
 
   return (
@@ -406,7 +469,14 @@ export default function Chats() {
 
           <div className="chat-list">
             {chats.length === 0 && (
-              <p style={{ color: '#888', fontSize: '14px', textAlign: 'center', marginTop: '20px' }}>
+              <p
+                style={{
+                  color: '#888',
+                  fontSize: '14px',
+                  textAlign: 'center',
+                  marginTop: '20px',
+                }}
+              >
                 Немає чатів
               </p>
             )}
@@ -451,7 +521,9 @@ export default function Chats() {
                 <div>
                   <div className="chat-title">{selectedDisplay?.name}</div>
                   {!isGroupChat && (
-                    <div className={`chat-status ${isOtherOnline ? 'online' : 'offline'}`}>
+                    <div
+                      className={`chat-status ${isOtherOnline ? 'online' : 'offline'}`}
+                    >
                       {isOtherOnline ? '◎ Онлайн' : '○ Офлайн'}
                     </div>
                   )}
@@ -473,7 +545,9 @@ export default function Chats() {
                           <div key={m.userId} className="members-popup-item">
                             <div className="chat-avatar-wrap">
                               <Avatar photoUrl={m.authorAvatar} size={28} />
-                              {isOnline(m.userId) && <span className="online-dot" />}
+                              {isOnline(m.userId) && (
+                                <span className="online-dot" />
+                              )}
                             </div>
                             <span className="members-popup-name">
                               {m.authorName || 'Користувач'}
@@ -512,7 +586,13 @@ export default function Chats() {
                       <div className={`message ${isMyMsg ? 'mine' : ''}`}>
                         {/* #11 FIX: ім'я відправника у груповому чаті для чужих повідомлень */}
                         {isGroupChat && !isMyMsg && (
-                          <div className="message-sender-name">
+                          <div
+                            className="message-sender-name"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() =>
+                              navigate(`/profile/view/${msg.senderId}`)
+                            }
+                          >
                             {getSenderName(msg)}
                           </div>
                         )}
@@ -611,6 +691,14 @@ export default function Chats() {
               {/* typing indicator */}
               {typingNames.length > 0 && (
                 <div className="typing-bar">
+                  {typingEntries.map((t, i) => (
+                    <Avatar
+                      key={i}
+                      photoUrl={t.avatar}
+                      size={18}
+                      style={{ marginRight: 4 }}
+                    />
+                  ))}
                   {typingNames.join(', ')} друкує
                   <span className="typing-dots">
                     <span />

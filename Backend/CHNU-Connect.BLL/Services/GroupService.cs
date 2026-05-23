@@ -83,7 +83,16 @@ namespace CHNU_Connect.BLL.Services
         public async Task<IEnumerable<GroupDto>> GetAllAsync()
         {
             var list = await _groupRepo.GetAllAsync();
-            return list.Adapt<IEnumerable<GroupDto>>();
+            var ids = list.Select(g => g.Id).ToList();
+            var groups = (await _groupRepo.GetWithCuratorByIdsAsync(ids)).ToList();
+
+            return groups.Select(g =>
+            {
+                var dto = g.Adapt<GroupDto>();
+                if (g.Curator != null)
+                    dto.Curator = g.Curator.Adapt<UserDto>();
+                return dto;
+            });
         }
 
         public async Task<IEnumerable<GroupDto>> GetByCreatorIdAsync(int creatorId)

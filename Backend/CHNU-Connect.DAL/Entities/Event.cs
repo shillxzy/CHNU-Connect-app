@@ -20,6 +20,7 @@ namespace CHNU_Connect.DAL.Entities
 
         public bool IsPublic { get; set; } = true;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public string? ImageUrl { get; set; }
 
         public ICollection<EventParticipant>? Participants { get; set; }
     }

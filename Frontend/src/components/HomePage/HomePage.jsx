@@ -6,8 +6,6 @@ import EventsList from '../Events/EventsList.jsx';
 import PostsList from '../Posts/PostsList.jsx';
 import Dashboard from '../Dashboard/Dashboard.jsx';
 import NewsFeed from '../NewsFeed/NewsFeed.jsx';
-import Sidebar from '../SideBar/SideBarHomePage.jsx';
-import Footer from '../Common/Footer.jsx';
 import './HomePage.css';
 import Profile from '../Profile/Profile.jsx';
 import AboutUs from '../AboutUs/AboutUs.jsx';
@@ -25,14 +23,9 @@ function HomePage({ onLogout }) {
       <Header onLogout={onLogout} />
       {isHome && <Dashboard />}
 
-      <div
-        className={`main-content-area ${isHome ? 'with-sidebar' : 'full-width'}`}
-      >
+      <div className="main-content-area full-width">
         <Outlet />
-        {isHome && <Sidebar />}
       </div>
-
-      <Footer />
     </div>
   );
 }

@@ -22,6 +22,17 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    if (error.response?.status === 403) {
+      const reason = error.response?.data?.reason || error.response?.data;
+      if (reason === 'banned' || error.response?.data?.message === 'banned') {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('role');
+        window.location.href = '/login?banned=1';
+        return Promise.reject(error);
+      }
+    }
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const refreshToken = localStorage.getItem('refreshToken');

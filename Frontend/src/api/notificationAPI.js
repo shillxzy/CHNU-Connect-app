@@ -3,6 +3,9 @@ import api from './axiosInstance';
 export const getUnreadNotifications = (userId) =>
   api.get(`/Notification/user/${userId}`);
 
+export const getAllNotifications = (userId) =>
+  api.get(`/Notification/all/${userId}`);
+
 export const getUnreadCount = (userId) =>
   api.get(`/Notification/count/${userId}`);
 

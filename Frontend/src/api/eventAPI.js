@@ -14,3 +14,12 @@ export const getEventsByUser = (userId) => api.get(`/Event/user/${userId}`);
 export const getMyEvents = () => api.get('/Event/my-events');
 export const joinEvent = (id) => api.post(`/Event/${id}/join`);
 export const leaveEvent = (id) => api.delete(`/Event/${id}/leave`);
+export const uploadEventImage = (id, formData) =>
+  api.put(`/Event/${id}/image`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+
+export const inviteToEvent = (id, userId) =>
+  api.post(`/Event/${id}/invite`, userId, {
+    headers: { 'Content-Type': 'application/json' },
+  });

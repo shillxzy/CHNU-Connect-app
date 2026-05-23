@@ -1,11 +1,12 @@
-import { useState, React } from 'react';
+import { useState, useRef, React } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createEvent } from '../../api/eventAPI';
+import { createEvent, uploadEventImage } from '../../api/eventAPI';
 import './Events.css';
 import Loading from '../Loading/Loading';
 
 export default function CreateEvent() {
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -15,6 +16,7 @@ export default function CreateEvent() {
     isPublic: true,
   });
 
+  const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -57,7 +59,12 @@ export default function CreateEvent() {
 
       console.log('Event payload:', payload); // для дебагу
 
-      await createEvent(payload);
+      const created = await createEvent(payload);
+      if (imageFile && created.data?.id) {
+        const fd = new FormData();
+        fd.append('image', imageFile);
+        await uploadEventImage(created.data.id, fd).catch(() => {});
+      }
       navigate('/events');
     } catch (err) {
       console.error('Error creating event:', err);
@@ -135,6 +142,58 @@ export default function CreateEvent() {
                   Публічна подія
                 </label>
               </div>
+
+              <label className="form-label">
+                {"Зображення події (необов'язково)"}
+              </label>
+              <div className="ev-image-upload">
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  onClick={() => fileInputRef.current.click()}
+                >
+                  {imageFile ? 'Змінити фото' : 'Додати фото'}
+                </button>
+                {imageFile && (
+                  <>
+                    <span
+                      style={{ fontSize: 13, color: '#4b5563', marginLeft: 8 }}
+                    >
+                      {imageFile.name}
+                    </span>
+                    <button
+                      type="button"
+                      className="btn-secondary"
+                      style={{ marginLeft: 8 }}
+                      onClick={() => setImageFile(null)}
+                    >
+                      ✕
+                    </button>
+                  </>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  style={{ display: 'none' }}
+                  onChange={(e) =>
+                    e.target.files[0] && setImageFile(e.target.files[0])
+                  }
+                />
+              </div>
+              {imageFile && (
+                <img
+                  src={URL.createObjectURL(imageFile)}
+                  alt="preview"
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: 200,
+                    borderRadius: 8,
+                    marginTop: 8,
+                    objectFit: 'cover',
+                  }}
+                />
+              )}
             </div>
 
             <div className="form-actions">

@@ -23,7 +23,18 @@
       "Bash(git rm *)",
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\hedge\\\\OneDrive\\\\Desktop\\\\CNU_connect\\\\CHNU-Connect-app\" -Force | Format-Table Name, @{Name=\"Type\";Expression={if\\($_.PSIsContainer\\){\"Folder\"}else{\"File\"}}} -AutoSize)",
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\hedge\\\\OneDrive\\\\Desktop\\\\CNU_connect\\\\CHNU-Connect-app\\\\Frontend\" -Recurse -Force | Where-Object { $_.PSIsContainer } | Select-Object FullName | Sort-Object FullName)",
-      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\hedge\\\\OneDrive\\\\Desktop\\\\CNU_connect\\\\CHNU-Connect-app\\\\Backend\" -Recurse -Force | Where-Object { $_.PSIsContainer } | Select-Object FullName | Sort-Object FullName)"
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\hedge\\\\OneDrive\\\\Desktop\\\\CNU_connect\\\\CHNU-Connect-app\\\\Backend\" -Recurse -Force | Where-Object { $_.PSIsContainer } | Select-Object FullName | Sort-Object FullName)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\hedge\\\\OneDrive\\\\Desktop\\\\CNU_connect\\\\CHNU-Connect-app\" -Force)",
+      "Bash(Select-Object Name, FullName)",
+      "Bash(Format-Table -AutoSize)",
+      "Bash(Start-Sleep -Seconds 10)",
+      "Bash(Get-Content \"C:\\\\Users\\\\hedge\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-hedge-OneDrive-Desktop-CNU-connect-CHNU-Connect-app\\\\ea1a36fe-86b7-4e3e-8e00-58a09987d1f2\\\\tasks\\\\b8qejn5ta.output\")",
+      "Bash(Select-Object -Last 15)",
+      "PowerShell(Get-Content \"C:\\\\Users\\\\hedge\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-hedge-OneDrive-Desktop-CNU-connect-CHNU-Connect-app\\\\ea1a36fe-86b7-4e3e-8e00-58a09987d1f2\\\\tasks\\\\by1ambngj.output\" | Where-Object { $_ -match \"ERR|Error|error|Exception|fail|Fail|INF|WRN\" } | Select-Object -Last 30)",
+      "Bash(Start-Sleep -Seconds 8)",
+      "Bash(Get-Content \"C:\\\\Users\\\\hedge\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-hedge-OneDrive-Desktop-CNU-connect-CHNU-Connect-app\\\\ea1a36fe-86b7-4e3e-8e00-58a09987d1f2\\\\tasks\\\\b01nqi8ov.output\")",
+      "Bash(Get-ChildItem -Recurse -File -Name)",
+      "Bash(Select-String -Pattern \"\\(Seed|Initialize\\)\")"
     ]
   }
 }

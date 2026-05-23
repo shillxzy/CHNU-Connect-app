@@ -11,11 +11,13 @@ import {
 import Avatar from '../Avatar/Avatar';
 import Loading from '../Loading/Loading';
 import AuthContext from '../../context/AuthContext';
+import ThemeContext from '../../context/ThemeContext';
 import './SettingsPage.css';
 
 const TABS = [
   { key: 'profile', label: 'Профіль' },
   { key: 'account', label: 'Акаунт' },
+  { key: 'appearance', label: 'Вигляд' },
   { key: 'danger', label: 'Небезпечна зона' },
 ];
 
@@ -81,7 +83,9 @@ function ProfileTab({ user, onSaved }) {
   };
 
   const handleDeletePhoto = async () => {
-    if (!window.confirm('Видалити фото профілю?')) {return;}
+    if (!window.confirm('Видалити фото профілю?')) {
+      return;
+    }
     try {
       await deletePhoto();
       onSaved();
@@ -231,6 +235,7 @@ function AccountTab() {
         <input
           type="password"
           name="currentPassword"
+          autoComplete="current-password"
           value={form.currentPassword}
           onChange={handle}
         />
@@ -241,6 +246,7 @@ function AccountTab() {
         <input
           type="password"
           name="newPassword"
+          autoComplete="new-password"
           value={form.newPassword}
           onChange={handle}
         />
@@ -251,6 +257,7 @@ function AccountTab() {
         <input
           type="password"
           name="confirmPassword"
+          autoComplete="new-password"
           value={form.confirmPassword}
           onChange={handle}
         />
@@ -333,6 +340,52 @@ function DangerTab({ onDeleted }) {
   );
 }
 
+/* ─────────── Appearance tab ─────────── */
+function AppearanceTab() {
+  const { isDark, toggle, resetToSystem } = useContext(ThemeContext);
+
+  const [mode, setMode] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    if (!saved) {return 'system';}
+    return saved;
+  });
+
+  const handleMode = (newMode) => {
+    setMode(newMode);
+    if (newMode === 'system') {
+      resetToSystem();
+    } else if (newMode === 'dark' && !isDark) {
+      toggle();
+    } else if (newMode === 'light' && isDark) {
+      toggle();
+    }
+  };
+
+  return (
+    <div className="st-section">
+      <h3 className="st-section-title">Зовнішній вигляд</h3>
+      <div className="st-field">
+        <label>Тема</label>
+        <div className="st-theme-options">
+          {[
+            { key: 'light', label: '☀️ Світла' },
+            { key: 'dark', label: '🌙 Темна' },
+            { key: 'system', label: '💻 Системна' },
+          ].map(({ key, label }) => (
+            <button
+              key={key}
+              className={`st-theme-btn ${mode === key ? 'active' : ''}`}
+              onClick={() => handleMode(key)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─────────── Main component ─────────── */
 export default function SettingsPage() {
   const navigate = useNavigate();
@@ -362,8 +415,12 @@ export default function SettingsPage() {
     logout();
   };
 
-  if (loading) {return <Loading />;}
-  if (!user) {return null;}
+  if (loading) {
+    return <Loading />;
+  }
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="st-wrap">
@@ -386,6 +443,7 @@ export default function SettingsPage() {
           <ProfileTab user={user} onSaved={handleProfileSaved} />
         )}
         {tab === 'account' && <AccountTab />}
+        {tab === 'appearance' && <AppearanceTab />}
         {tab === 'danger' && <DangerTab onDeleted={handleAccountDeleted} />}
       </div>
     </div>

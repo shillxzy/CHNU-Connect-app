@@ -1,3 +1,12 @@
+/* ── centering container for the feed ── */
+.posts-feed {
+  max-width: 760px;
+  margin: 24px auto;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+}
+
 .post-card {
   position: relative;
   min-height: 120px;

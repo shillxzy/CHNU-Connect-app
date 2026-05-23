@@ -41,9 +41,10 @@ namespace CHNU_Connect.BLL.Services
                 EndTime = entity.EndTime,
                 CreatedById = entity.CreatorId,
                 IsPublic = entity.IsPublic,
-                CreatedAt = entity.CreatedAt
+                CreatedAt = entity.CreatedAt,
+                ImageUrl = entity.ImageUrl
             };
-        
+
         }
 
 
@@ -65,6 +66,7 @@ namespace CHNU_Connect.BLL.Services
                 CreatedById = eventEntity.CreatorId,
                 IsPublic = eventEntity.IsPublic,
                 CreatedAt = eventEntity.CreatedAt,
+                ImageUrl = eventEntity.ImageUrl,
                 ParticipantCount = allParticipants.Count,
                 IsJoinedByCurrentUser = currentUserId.HasValue && allParticipants.Any(p => p.UserId == currentUserId.Value)
             };
@@ -88,6 +90,7 @@ namespace CHNU_Connect.BLL.Services
                     CreatedById = e.CreatorId,
                     IsPublic = e.IsPublic,
                     CreatedAt = e.CreatedAt,
+                    ImageUrl = e.ImageUrl,
                     ParticipantCount = eventParts.Count,
                     IsJoinedByCurrentUser = currentUserId.HasValue && eventParts.Any(p => p.UserId == currentUserId.Value)
                 };
@@ -168,10 +171,19 @@ namespace CHNU_Connect.BLL.Services
         {
             var participants = await _eventParticipantRepository.GetAllAsync();
             var userEventIds = participants.Where(p => p.UserId == userId).Select(p => p.EventId);
-            
+
             var events = await _eventRepository.GetAllAsync();
             var userEvents = events.Where(e => userEventIds.Contains(e.Id));
             return userEvents.Adapt<IEnumerable<EventDto>>();
+        }
+
+        public async Task UpdateEventImageAsync(int id, string imageUrl)
+        {
+            var eventEntity = await _eventRepository.GetByIdAsync(id);
+            if (eventEntity == null) throw new ArgumentException("Event not found");
+            eventEntity.ImageUrl = imageUrl;
+            _eventRepository.Update(eventEntity);
+            await _eventRepository.SaveAsync();
         }
     }
 }

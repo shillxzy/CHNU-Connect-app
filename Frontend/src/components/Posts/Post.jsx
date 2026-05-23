@@ -19,7 +19,9 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
   const getComments = async (postId) => {
     try {
       const res = await getCommentsByPost(postId);
-      if (res) {return res?.data;}
+      if (res) {
+        return res?.data;
+      }
     } catch {
       console.error("Can't get comments");
       return [];
@@ -54,7 +56,10 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
   };
 
   const handleCommentAdded = (postId) => {
-    setCommentsCount((prev) => ({ ...prev, [postId]: (prev[postId] || 0) + 1 }));
+    setCommentsCount((prev) => ({
+      ...prev,
+      [postId]: (prev[postId] || 0) + 1,
+    }));
   };
 
   const handleCommentDeleted = (postId) => {
@@ -66,7 +71,9 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
 
   const handleDelete = async (postId) => {
     const confirmDelete = window.confirm('Видалити пост?');
-    if (!confirmDelete) {return;}
+    if (!confirmDelete) {
+      return;
+    }
     try {
       await deletePost(postId);
       setLocalPosts((prev) => prev.filter((p) => p.id !== postId));
@@ -82,7 +89,9 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
   };
 
   const saveEdit = async (postId) => {
-    if (!editedContent.trim()) {return;}
+    if (!editedContent.trim()) {
+      return;
+    }
     try {
       const updated = await updatePost(postId, { content: editedContent });
       setLocalPosts((prev) =>
@@ -121,30 +130,35 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
               />
               <div className="author-name">{post.authorName || 'Unknown'}</div>
 
-              {/* ТРИКРАПКА — тільки для свого поста */}
-              {currentUser?.id === post.authorId && !isEditing && (
-                <div className="post-menu">
-                  <button
-                    className="menu-btn"
-                    onClick={() => toggleMenu(post.id)}
-                  >
-                    ⋯
-                  </button>
-                  {openMenu[post.id] && (
-                    <div className="menu-dropdown">
-                      <button onClick={() => startEditing(post.id, post.content)}>
-                        Редагувати
-                      </button>
-                      <button
-                        className="delete-btn"
-                        onClick={() => handleDelete(post.id)}
-                      >
-                        Видалити
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
+              {/* ТРИКРАПКА — для автора або адміна */}
+              {(currentUser?.id === post.authorId ||
+                currentUser?.role === 'admin' ||
+                currentUser?.role === 'superAdmin') &&
+                !isEditing && (
+                  <div className="post-menu">
+                    <button
+                      className="menu-btn"
+                      onClick={() => toggleMenu(post.id)}
+                    >
+                      ⋯
+                    </button>
+                    {openMenu[post.id] && (
+                      <div className="menu-dropdown">
+                        <button
+                          onClick={() => startEditing(post.id, post.content)}
+                        >
+                          Редагувати
+                        </button>
+                        <button
+                          className="delete-btn"
+                          onClick={() => handleDelete(post.id)}
+                        >
+                          Видалити
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
             </div>
 
             {/* Контент або редагування */}

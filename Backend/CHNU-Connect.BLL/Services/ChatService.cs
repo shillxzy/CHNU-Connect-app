@@ -30,29 +30,40 @@ namespace CHNU_Connect.BLL.Services
             var chats = await _unitOfWork.ChatRepository.GetUserChatsAsync(userId);
 
             // 2. Перетворюємо їх у DTO з підставленими User (AuthorName, AuthorAvatar)
-            var chatDtos = chats.Select(c => new ChatDto
+            var chatDtos = chats.Select(c =>
             {
-                Id = c.Id,
-                Type = c.Type,
-                Title = c.Title,
-                CreatedBy = c.CreatedBy,
-                CreatedAt = c.CreatedAt,
-                Members = c.Members
-                .GroupBy(m => m.UserId)
-                .Select(g => g.First())
-                .Select(m => new ChatMemberDto
+                var lastMsg = c.Messages?
+                    .OrderByDescending(m => m.CreatedAt)
+                    .FirstOrDefault();
+
+                return new ChatDto
                 {
-                    Id = m.Id,
-                    ChatId = m.ChatId,
-                    UserId = m.UserId,
-                    Role = m.Role,
-                    JoinedAt = m.JoinedAt,
-                    LastReadMessageId = m.LastReadMessageId,
-                    AuthorName = m.User.FullName,
-                    AuthorAvatar = m.User.PhotoUrl
-                }).ToList(),
-                Messages = c.Messages.Adapt<List<ChatMessageDto>>()
-            }).ToList();
+                    Id = c.Id,
+                    Type = c.Type,
+                    Title = c.Title,
+                    CreatedBy = c.CreatedBy,
+                    CreatedAt = c.CreatedAt,
+                    Members = c.Members
+                        .GroupBy(m => m.UserId)
+                        .Select(g => g.First())
+                        .Select(m => new ChatMemberDto
+                        {
+                            Id = m.Id,
+                            ChatId = m.ChatId,
+                            UserId = m.UserId,
+                            Role = m.Role,
+                            JoinedAt = m.JoinedAt,
+                            LastReadMessageId = m.LastReadMessageId,
+                            AuthorName = m.User.FullName,
+                            AuthorAvatar = m.User.PhotoUrl
+                        }).ToList(),
+                    Messages = c.Messages?.Adapt<List<ChatMessageDto>>(),
+                    LastMessage = lastMsg?.Content,
+                    LastMessageAt = lastMsg?.CreatedAt
+                };
+            })
+            .OrderByDescending(c => c.LastMessageAt ?? c.CreatedAt)
+            .ToList();
 
 
             // 3. Повертаємо DTO на фронт

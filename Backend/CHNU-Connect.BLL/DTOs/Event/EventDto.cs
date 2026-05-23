@@ -18,5 +18,6 @@ namespace CHNU_Connect.BLL.DTOs.Event
         public DateTime CreatedAt { get; set; }
         public int ParticipantCount { get; set; }
         public bool IsJoinedByCurrentUser { get; set; }
+        public string? ImageUrl { get; set; }
     }
 }

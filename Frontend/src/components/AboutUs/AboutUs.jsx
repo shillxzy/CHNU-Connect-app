@@ -2,11 +2,18 @@ import React from 'react';
 import './AboutUs.css';
 
 const teamMembers = [
-  { name: '###', role: '###' },
-  { name: '###', role: '###' },
-  { name: '###', role: '###' },
-  { name: '###', role: '###' },
+  { name: 'Станіслав Кушнір', role: 'PM', color: '#7c3aed' },
+  { name: 'Дмитро Скальський', role: 'Team Lead', color: '#2563eb' },
+  { name: 'Габрієль Спелчук', role: 'Full-stack Developer', color: '#059669' },
+  { name: 'Ярослав Сапсай', role: 'Business Analytic', color: '#d97706' },
+  { name: 'Олексій Дорошенко', role: 'Business Analytic', color: '#dc2626' },
 ];
+
+const getInitials = (name) => {
+  const parts = name.trim().split(' ');
+  if (parts.length === 1) {return parts[0].charAt(0).toUpperCase();}
+  return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+};
 
 const AboutUs = () => {
   return (
@@ -24,7 +31,12 @@ const AboutUs = () => {
       <div className="team-grid">
         {teamMembers.map((member, index) => (
           <div key={index} className="team-card">
-            <div className="team-avatar">{member.name.charAt(0)}</div>
+            <div
+              className="team-avatar"
+              style={{ backgroundColor: member.color }}
+            >
+              {getInitials(member.name)}
+            </div>
             <div className="team-info">
               <h3 className="team-name">{member.name}</h3>
               <p className="team-role">{member.role}</p>

@@ -212,6 +212,37 @@
   border-color: #b91c1c;
 }
 
+/* ─── Appearance tab ─── */
+.st-theme-options {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.st-theme-btn {
+  padding: 10px 22px;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  background: #f9fafb;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.st-theme-btn:hover {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.st-theme-btn.active {
+  border-color: #2563eb;
+  background: #2563eb;
+  color: #fff;
+}
+
 /* ─── Feedback ─── */
 .st-success {
   font-size: 13px;

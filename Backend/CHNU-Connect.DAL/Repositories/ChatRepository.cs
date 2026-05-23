@@ -27,7 +27,8 @@ namespace CHNU_Connect.DAL.Repositories
             return await _dbSet
                 .Where(c => c.Members.Any(m => m.UserId == userId))
                 .Include(c => c.Members)
-                    .ThenInclude(m => m.User) 
+                    .ThenInclude(m => m.User)
+                .Include(c => c.Messages)
                 .ToListAsync();
         }
 

@@ -29,6 +29,16 @@ namespace CHNU_Connect.DAL.Repositories
 				.ToListAsync();
 		}
 
+		public async Task<IEnumerable<Notification>> GetAllByUserIdAsync(int userId)
+		{
+			return await _context.Notifications
+				.Include(n => n.Actor)
+				.Where(n => n.UserId == userId)
+				.OrderByDescending(n => n.CreatedAt)
+				.Take(50)
+				.ToListAsync();
+		}
+
 		public async Task MarkAsReadAsync(int notificationId)
         {
             var n = await _context.Notifications.FirstOrDefaultAsync(x => x.Id == notificationId);

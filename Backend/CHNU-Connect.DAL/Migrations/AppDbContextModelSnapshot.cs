@@ -324,6 +324,10 @@ namespace CHNU_Connect.DAL.Migrations
                         .HasColumnType("character varying(255)")
                         .HasColumnName("title");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("text")
+                        .HasColumnName("ImageUrl");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatorId");
@@ -534,6 +538,9 @@ namespace CHNU_Connect.DAL.Migrations
 
                     b.Property<int?>("ActorId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Body")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()

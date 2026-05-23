@@ -36,7 +36,7 @@ namespace CHNU_Connect.BLL.Services.Interfaces
             await _repo.MarkAllAsReadAsync(userId);
         }
 
-		public async Task<NotificationDto> CreateAsync(int userId, string type, int? entityId = null, int? actorId = null)
+		public async Task<NotificationDto> CreateAsync(int userId, string type, int? entityId = null, int? actorId = null, string? body = null)
 		{
 			var entity = new Notification
 			{
@@ -44,11 +44,18 @@ namespace CHNU_Connect.BLL.Services.Interfaces
 				Type = type,
 				EntityId = entityId,
 				ActorId = actorId,
+				Body = body,
 				IsRead = false,
 				CreatedAt = DateTime.UtcNow,
 			};
 			await _repo.InsertAsync(entity);
 			return ToDto(entity);
+		}
+
+		public async Task<IEnumerable<NotificationDto>> GetAllNotificationsAsync(int userId)
+		{
+			var list = await _repo.GetAllByUserIdAsync(userId);
+			return list.Select(ToDto);
 		}
 
 		private static NotificationDto ToDto(Notification n) => new()
@@ -61,6 +68,7 @@ namespace CHNU_Connect.BLL.Services.Interfaces
 			ActorId = n.ActorId,
 			ActorName = n.Actor?.FullName,
 			ActorAvatar = n.Actor?.PhotoUrl,
+			Body = n.Body,
 		};
 	}
 }

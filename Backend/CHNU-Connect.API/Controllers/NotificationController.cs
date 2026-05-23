@@ -41,6 +41,14 @@ namespace CHNU_Connect.API.Controllers
             return NoContent();
         }
 
+        // GET /api/Notification/all/{userId} — всі сповіщення (50 останніх)
+        [HttpGet("all/{userId}")]
+        public async Task<IActionResult> GetAll(int userId)
+        {
+            var list = await _service.GetAllNotificationsAsync(userId);
+            return Ok(list);
+        }
+
         // POST /api/Notification/read-all — позначити всі як прочитані
         [HttpPost("read-all")]
         public async Task<IActionResult> MarkAllAsRead()

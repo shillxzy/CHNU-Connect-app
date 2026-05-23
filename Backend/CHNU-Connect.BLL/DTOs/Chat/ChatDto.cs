@@ -13,5 +13,7 @@ namespace CHNU_Connect.BLL.DTOs.Chat
         public DateTime CreatedAt { get; set; }
         public IEnumerable<ChatMemberDto>? Members { get; set; }
         public IEnumerable<ChatMessageDto>? Messages { get; set; }
+        public string? LastMessage { get; set; }
+        public DateTime? LastMessageAt { get; set; }
     }
 }

@@ -15,6 +15,7 @@ namespace CHNU_Connect.DAL.Entities
         public int? EntityId { get; set; }  // пов’язана подія: message_id / event_id / post_id
         public bool IsRead { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public string? Body { get; set; }
 
         // навігаційна властивість
         public User? User { get; set; }

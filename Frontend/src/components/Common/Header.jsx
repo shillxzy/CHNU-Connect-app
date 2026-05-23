@@ -6,12 +6,13 @@ import React, {
   useCallback,
 } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
-import { CHNUConnectIcon, UserIcon, SearchIcon } from '../Icons';
+import { CHNUConnectIcon, SearchIcon } from '../Icons';
 import notificationIcon from '../Icons/notification.png';
 import { getProfile, searchUsers } from '../../api/userAPI';
 import {
   getUnreadNotifications,
   markAllNotificationsAsRead,
+  markNotificationAsRead,
 } from '../../api/notificationAPI';
 import AuthContext from '../../context/AuthContext';
 import Avatar from '../Avatar/Avatar';
@@ -19,13 +20,7 @@ import './Header.css';
 
 const Header = () => {
   const navigate = useNavigate();
-  const {
-    unreadCount,
-    setUnreadCount,
-    logout,
-    user: ctxUser,
-    role,
-  } = useContext(AuthContext);
+  const { unreadCount, setUnreadCount, logout, role } = useContext(AuthContext);
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
@@ -94,24 +89,45 @@ const Header = () => {
   };
 
   const getNotifText = (type) => {
-    if (type === 'message') {return 'написав вам повідомлення';}
-    if (type === 'like') {return 'вподобав ваш пост';}
-    if (type === 'comment') {return 'прокоментував ваш пост';}
-    if (type === 'event') {return 'запросив на подію';}
+    if (type === 'message') {
+      return 'написав вам повідомлення';
+    }
+    if (type === 'like') {
+      return 'вподобав ваш пост';
+    }
+    if (type === 'comment') {
+      return 'прокоментував ваш пост';
+    }
+    if (type === 'event') {
+      return 'запросив на подію';
+    }
+    if (type === 'group') {
+      return 'додав вас до групи';
+    }
     return 'надіслав сповіщення';
   };
 
-  // #3 FIX: сповіщення типу 'message' перекидає на чат за chatId (entityId)
   const handleNotifClick = (n) => {
     setIsNotifOpen(false);
+    markNotificationAsRead(n.id).catch(() => {});
+    setNotifications((prev) => prev.filter((x) => x.id !== n.id));
+    setUnreadCount((prev) => Math.max(0, prev - 1));
     if (n.type === 'message') {
-      // entityId для message — це chatId
       navigate(`/chats/${n.entityId}`);
     } else if (n.type === 'event') {
       navigate(`/events/${n.entityId}`);
+    } else if (n.type === 'group') {
+      navigate(`/groups/${n.entityId}`);
     } else if (n.entityId) {
       navigate(`/posts/${n.entityId}`);
     }
+  };
+
+  const handleDismiss = async (e, id) => {
+    e.stopPropagation();
+    await markNotificationAsRead(id).catch(() => {});
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+    setUnreadCount((prev) => Math.max(0, prev - 1));
   };
 
   const handleLogout = () => logout();
@@ -265,16 +281,39 @@ const Header = () => {
                         <span className="notif-action">
                           {getNotifText(n.type)}
                         </span>
+                        {n.body && (
+                          <div className="notif-preview">{n.body}</div>
+                        )}
                       </div>
-                      <span className="notif-time">
-                        {new Date(n.createdAt).toLocaleTimeString([], {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </span>
+                      <div className="notif-right">
+                        <span className="notif-time">
+                          {new Date(n.createdAt).toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </span>
+                        <button
+                          className="notif-dismiss"
+                          title="Закрити"
+                          onClick={(e) => handleDismiss(e, n.id)}
+                        >
+                          ✕
+                        </button>
+                      </div>
                     </div>
                   ))
                 )}
+              </div>
+              <div className="notif-footer">
+                <button
+                  className="notif-all-btn"
+                  onClick={() => {
+                    setIsNotifOpen(false);
+                    navigate('/notifications');
+                  }}
+                >
+                  Усі сповіщення →
+                </button>
               </div>
             </div>
           )}
@@ -283,7 +322,7 @@ const Header = () => {
         {/* ===== PROFILE ===== */}
         <div className="profile-wrapper" ref={profileRef} onClick={openProfile}>
           <div className="profile-icon-wrap">
-            <img src={UserIcon} alt="User" className="user-icon" />
+            <Avatar photoUrl={user?.photoUrl} size={32} />
           </div>
 
           <div className={`profile-dropdown ${isProfileOpen ? 'active' : ''}`}>

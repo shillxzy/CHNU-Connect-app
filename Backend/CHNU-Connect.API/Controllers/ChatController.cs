@@ -98,8 +98,11 @@ namespace CHNU_Connect.API.Controllers
             {
                 foreach (var member in chat.Members.Where(m => m.UserId != dto.SenderId))
                 {
+                    var preview = dto.Content?.Length > 60
+                        ? dto.Content[..60] + "…"
+                        : dto.Content;
 					var notification = await _notificationService.CreateAsync(
-	                    member.UserId, "message", chatId, actorId: dto.SenderId);
+	                    member.UserId, "message", chatId, actorId: dto.SenderId, body: preview);
 
 					// Push через SignalR якщо юзер онлайн
 					await _hubContext.Clients
@@ -150,7 +153,8 @@ namespace CHNU_Connect.API.Controllers
                 foreach (var member in chat.Members.Where(m => m.UserId != senderId))
                 {
                     var notification = await _notificationService.CreateAsync(
-                        member.UserId, "message", chatId, actorId: senderId);
+                        member.UserId, "message", chatId, actorId: senderId,
+                        body: messageType == "image" ? "📷 Фото" : "📎 Файл");
                     await _hubContext.Clients
                         .Group($"user-{member.UserId}")
                         .SendAsync("ReceiveNotification", notification);

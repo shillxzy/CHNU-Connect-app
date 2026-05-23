@@ -1,7 +1,9 @@
 using CHNU_Connect.BLL.DTOs.Notification;
 using CHNU_Connect.BLL.Services.Interfaces;
+using CHNU_Connect.DAL.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
 
 namespace CHNU_Connect.API.Hubs
@@ -14,10 +16,12 @@ namespace CHNU_Connect.API.Hubs
             = new ConcurrentDictionary<int, HashSet<string>>();
 
         private readonly INotificationService _notificationService;
+        private readonly AppDbContext _db;
 
-        public ChatHub(INotificationService notificationService)
+        public ChatHub(INotificationService notificationService, AppDbContext db)
         {
             _notificationService = notificationService;
+            _db = db;
         }
 
         // ==================== CONNECT / DISCONNECT ====================
@@ -27,6 +31,17 @@ namespace CHNU_Connect.API.Hubs
             var userId = GetUserId();
             if (userId != null)
             {
+                var isBlocked = await _db.Users
+                    .Where(u => u.Id == userId.Value)
+                    .Select(u => u.IsBlocked)
+                    .FirstOrDefaultAsync();
+
+                if (isBlocked)
+                {
+                    Context.Abort();
+                    return;
+                }
+
                 _onlineUsers.AddOrUpdate(
                     userId.Value,
                     new HashSet<string> { Context.ConnectionId },

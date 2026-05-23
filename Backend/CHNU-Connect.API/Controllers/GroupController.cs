@@ -1,8 +1,10 @@
+using CHNU_Connect.API.Hubs;
 using CHNU_Connect.BLL.DTOs.Group;
 using CHNU_Connect.BLL.Services.Interfaces;
 using CHNU_Connect.DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
 [ApiController]
@@ -12,15 +14,21 @@ public class GroupController : ControllerBase
 {
     private readonly IGroupService _groupService;
     private readonly IGroupMemberService _memberService;
+    private readonly INotificationService _notificationService;
+    private readonly IHubContext<ChatHub> _hubContext;
     private readonly ILogger<GroupController> _logger;
 
     public GroupController(
         IGroupService groupService,
         IGroupMemberService memberService,
+        INotificationService notificationService,
+        IHubContext<ChatHub> hubContext,
         ILogger<GroupController> logger)
     {
         _groupService = groupService;
         _memberService = memberService;
+        _notificationService = notificationService;
+        _hubContext = hubContext;
         _logger = logger;
     }
 
@@ -30,10 +38,14 @@ public class GroupController : ControllerBase
         var userId = GetUserId();
         if (userId == null) return Unauthorized();
 
-        var isMember = await _memberService.IsMemberAsync(id, userId.Value);
+        var isAdmin = User.IsInRole("admin") || User.IsInRole("superAdmin");
+        if (!isAdmin)
+        {
+            var isMember = await _memberService.IsMemberAsync(id, userId.Value);
+            if (!isMember)
+                return Forbid();
+        }
 
-        if (!isMember)
-            return Forbid(); 
         var group = await _groupService.GetByIdAsync(id);
 
         if (group == null)
@@ -150,6 +162,15 @@ public class GroupController : ControllerBase
 
         if (!success)
             return BadRequest("User is already in group");
+
+        var group = await _groupService.GetByIdAsync(groupId);
+        var groupName = group?.Name ?? "групу";
+        var notification = await _notificationService.CreateAsync(
+            dto.UserId, "group", groupId, actorId: userId.Value,
+            body: $"Вас додано до групи «{groupName}»");
+        await _hubContext.Clients
+            .Group($"user-{dto.UserId}")
+            .SendAsync("ReceiveNotification", notification);
 
         return Ok();
     }

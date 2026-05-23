@@ -372,3 +372,23 @@
 .ap-perm-toggle input[type=checkbox] { width: 18px; height: 18px; accent-color: #2563eb; cursor: pointer; }
 .ap-perm-toggle input:disabled { cursor: not-allowed; }
 .ap-perm-note { margin-top: 12px; font-size: 13px; color: #f59e0b; }
+
+/* ── Comments expansion ── */
+.ap-btn-comments { background: #f0fdf4; color: #16a34a; padding: 5px 10px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.ap-btn-comments:hover { background: #bbf7d0; }
+
+.ap-comments-row { padding: 0 !important; background: #f8fafc; border-bottom: 2px solid #e5e7eb; }
+
+.ap-comment-list { display: flex; flex-direction: column; gap: 6px; padding: 10px 16px; }
+
+.ap-comment-item { display: flex; align-items: center; gap: 10px; font-size: 13px; padding: 6px 10px; background: #fff; border-radius: 8px; border: 1px solid #e5e7eb; }
+
+.ap-comment-author { font-weight: 600; color: #374151; flex-shrink: 0; }
+
+.ap-comment-text { flex: 1; color: #4b5563; word-break: break-word; }
+
+.ap-btn-comment-del { padding: 3px 8px !important; flex-shrink: 0; }
+
+/* ── Image upload button ── */
+.ap-btn-upload-img { display: inline-block; margin-top: 8px; padding: 6px 12px; background: #e0f2fe; color: #0284c7; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.ap-btn-upload-img:hover { background: #bae6fd; }

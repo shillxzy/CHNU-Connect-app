@@ -1,5 +1,5 @@
-import { useState, useContext, React } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useContext, useEffect, React } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './Login.css';
 import { MailIcon, LockIcon, EyeIcon, GoogleIcon, EyeOffIcon } from '../Icons';
 import { login as loginAPI } from '../../api/authAPI';
@@ -9,6 +9,7 @@ const handleGoogleSignIn = () => alert("Button 'Sign in with Google' clicked!");
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useContext(AuthContext);
 
   const [email, setEmail] = useState('');
@@ -17,6 +18,13 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('banned') === '1') {
+      setError('Ваш акаунт заблоковано. Зверніться до адміністратора.');
+    }
+  }, [location.search]);
 
   const handleForgotPassword = (e) => {
     e.preventDefault();

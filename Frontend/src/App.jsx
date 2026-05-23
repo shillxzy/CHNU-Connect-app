@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthProvider';
 import AuthContext from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeProvider';
 
 import Login from './components/Auth/Login';
 import HomePage from './components/HomePage/HomePage';
@@ -24,6 +25,7 @@ import ScheduleEditPage from './components/Schedule/ScheduleEditPage';
 import ScheduleViewPage from './components/Schedule/ScheduleViewPage';
 import SearchPage from './components/Search/SearchPage';
 import SettingsPage from './components/Settings/SettingsPage';
+import NotificationsPage from './components/Notifications/NotificationsPage';
 
 function PublicRoute({ children }) {
   const { accessToken } = useContext(AuthContext);
@@ -37,32 +39,36 @@ function ProtectedRoute({ children }) {
 
 function AdminRoute({ children }) {
   const { accessToken, role } = useContext(AuthContext);
-  if (!accessToken) {return <Navigate to="/login" replace />;}
-  if (!role) {return null;}
-  if (role !== 'admin' && role !== 'superAdmin')
-    {return <Navigate to="/" replace />;}
-  return children;
-}
-
-// Захищає маршрути за конкретним permission (admin з потрібним правом або superAdmin)
-function PermissionRoute({ children, permission }) {
-  const { accessToken, role, hasPermission } = useContext(AuthContext);
-  if (!accessToken) {return <Navigate to="/login" replace />;}
-  if (!role) {return null;}
-  if (role !== 'admin' && role !== 'superAdmin')
-    {return <Navigate to="/" replace />;}
-  if (!hasPermission(permission)) {return <Navigate to="/admin-panel" replace />;}
+  if (!accessToken) {
+    return <Navigate to="/login" replace />;
+  }
+  if (!role) {
+    return null;
+  }
+  if (role !== 'admin' && role !== 'superAdmin') {
+    return <Navigate to="/" replace />;
+  }
   return children;
 }
 
 // Дозволяє редагувати розклад: admin+ManageSchedule або teacher (curator-check на бекенді)
 function ScheduleEditorRoute({ children }) {
   const { accessToken, role, hasPermission } = useContext(AuthContext);
-  if (!accessToken) {return <Navigate to="/login" replace />;}
-  if (!role) {return null;}
-  if (role === 'superAdmin') {return children;}
-  if (role === 'admin' && hasPermission('ManageSchedule')) {return children;}
-  if (role === 'teacher') {return children;}
+  if (!accessToken) {
+    return <Navigate to="/login" replace />;
+  }
+  if (!role) {
+    return null;
+  }
+  if (role === 'superAdmin') {
+    return children;
+  }
+  if (role === 'admin' && hasPermission('ManageSchedule')) {
+    return children;
+  }
+  if (role === 'teacher') {
+    return children;
+  }
   return <Navigate to="/" replace />;
 }
 
@@ -104,6 +110,7 @@ function AppRoutes() {
       >
         <Route index element={<HomePageNewsFeed />} />
         <Route path="groups" element={<GroupsPage />} />
+        <Route path="groups/:id" element={<GroupsPage />} />
         <Route path="events" element={<EventsList />} />
         <Route path="posts" element={<PostsList />} />
         <Route path="profile/:fullname" element={<Profile />} />
@@ -119,6 +126,7 @@ function AppRoutes() {
         <Route path="chats" element={<Chats />} />
         <Route path="search" element={<SearchPage />} />
         <Route path="chats/:chatId" element={<Chats />} />
+        <Route path="notifications" element={<NotificationsPage />} />
 
         {/* ✅ Перегляд розкладу — для всіх авторизованих */}
         <Route path="group/schedule/:id" element={<ScheduleViewPage />} />
@@ -166,9 +174,11 @@ function AppRoutes() {
 
 function App() {
   return (
-    <AuthProvider>
-      <AppRoutes />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

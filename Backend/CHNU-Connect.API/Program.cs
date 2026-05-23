@@ -1,3 +1,4 @@
+using CHNU_Connect.API.Data;
 using CHNU_Connect.API.Hubs;
 using CHNU_Connect.API.Logging;
 using CHNU_Connect.BLL;
@@ -18,7 +19,7 @@ namespace CHNU_Connect.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -157,11 +158,12 @@ namespace CHNU_Connect.API
 
             var app = builder.Build();
 
-            // ---------- AUTO MIGRATIONS ----------
+            // ---------- AUTO MIGRATIONS + SEED ----------
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 db.Database.Migrate();
+                await DataSeeder.SeedAsync(db);
             }
 
             // ---------- GLOBAL ERROR HANDLER ----------
@@ -190,6 +192,7 @@ namespace CHNU_Connect.API
             app.UseCors("AllowReactApp");
 
             app.UseAuthentication();
+            app.UseMiddleware<CHNU_Connect.API.Middleware.BanCheckMiddleware>();
             app.UseAuthorization();
 
             // ---------- ROUTES ----------
