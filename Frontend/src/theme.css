@@ -221,17 +221,48 @@ body.dark th                   { background: var(--bg-hover); }
 body.dark tr:nth-child(even)   { background: var(--bg-subtle); }
 
 /* ── Chats ── */
-body.dark .chats-container,
-body.dark .chat-sidebar,
-body.dark .chat-main           { background: var(--bg-card); border-color: var(--border-mid); }
+body.dark .chat-page           { background: var(--bg); }
+body.dark .chat-sidebar        { background: var(--bg-card); border-color: var(--border-mid); }
+body.dark .chat-sidebar-header { border-bottom-color: var(--border-mid); }
+body.dark .chat-sidebar-header h2 { color: var(--text); }
+body.dark .chat-window         { background: var(--bg-card); border-color: var(--border-mid); }
 body.dark .chat-header         { background: var(--bg-card); border-bottom-color: var(--border-mid); }
-body.dark .chat-item           { border-bottom-color: var(--border-mid); color: var(--text); }
-body.dark .chat-item:hover,
-body.dark .chat-item.active    { background: var(--bg-hover); }
-body.dark .message-bubble      { background: var(--bg-hover); color: var(--text); }
-body.dark .message-bubble.own  { background: #1e3a6e; }
-body.dark .chat-input-area,
-body.dark .message-input       { background: var(--bg-input); color: var(--text); border-color: var(--border-mid); }
+body.dark .chat-title          { color: var(--text); }
+body.dark .chat-status.offline { color: var(--text-sub); }
+body.dark .chat-item           { color: var(--text); }
+body.dark .chat-item:hover     { background: var(--bg-hover); }
+body.dark .chat-item.selected  { background: var(--bg-input); }
+body.dark .chat-name           { color: var(--text); }
+body.dark .chat-last           { color: var(--text-muted); }
+body.dark .online-dot          { border-color: var(--bg-card); }
+body.dark .messages            { background: var(--bg); }
+body.dark .message:not(.mine)  { background: var(--bg-card); border-color: var(--border-mid); color: var(--text); }
+body.dark .message.mine        { background: #1e3a6e; color: #e2e8f0; }
+body.dark .message-actions button { color: var(--text-muted); }
+body.dark .message-actions button:hover { background: var(--bg-hover); }
+body.dark .message-sender-name { color: #93c5fd; }
+body.dark .chat-input          { background: var(--bg-card); border-top-color: var(--border-mid); }
+body.dark .chat-input input    { background: var(--bg-input); color: var(--text); border-color: var(--border-mid); }
+body.dark .chat-input input:focus { border-color: var(--accent); }
+body.dark .chat-attach-btn     { color: var(--text-muted); }
+body.dark .chat-attach-btn:hover { background: var(--bg-hover); }
+body.dark .typing-bar          { background: var(--bg-card); color: var(--text-muted); }
+body.dark .date-divider        { color: var(--text-sub); }
+body.dark .date-divider::before,
+body.dark .date-divider::after { border-bottom-color: var(--border-mid); }
+body.dark .chat-empty          { color: var(--text-sub); }
+body.dark .members-btn         { background: var(--bg-hover); border-color: var(--border-mid); color: var(--text-body); }
+body.dark .members-btn:hover   { background: var(--border-mid); }
+body.dark .members-popup       { background: var(--bg-card); border-color: var(--border-mid); box-shadow: 0 4px 16px var(--shadow-lg); }
+body.dark .members-popup-title { color: var(--text-muted); border-bottom-color: var(--border-mid); }
+body.dark .members-popup-name  { color: var(--text); }
+body.dark .members-popup-item:hover { background: var(--bg-hover); }
+body.dark .modal-overlay       { background: rgba(0, 0, 0, 0.7); }
+body.dark .modal               { background: var(--bg-card); }
+body.dark .modal h3            { color: var(--text); }
+body.dark .modal input[type="text"] { background: var(--bg-input); color: var(--text); border-color: var(--border-mid); }
+body.dark .modal-member-item:hover  { background: var(--bg-hover); }
+body.dark .modal-member-name   { color: var(--text); }
 
 /* ── Admin Panel ── */
 body.dark .ap-wrap             { background: var(--bg); }
@@ -273,14 +304,54 @@ body.dark .ap-msg              { color: var(--text-muted); }
 body.dark .ap-img-preview      { border-color: var(--border-mid); }
 
 /* ── Profile ── */
+body.dark .profile-page-container { background: var(--bg); }
+body.dark .profile-header      { background: var(--bg-card); border-color: var(--border-mid); }
+body.dark .profile-photo-area  { background: var(--bg-hover); }
+body.dark .profile-name        { color: var(--text); }
+body.dark .profile-label       { color: var(--text-muted); }
+body.dark .profile-value       { color: var(--text-body); }
+body.dark .profile-detail-line { color: var(--text-body); }
+body.dark .profile-btn         { background: var(--bg-card); border-color: var(--border-mid); color: var(--text-body); }
+body.dark .profile-btn:hover   { background: var(--bg-hover); }
+body.dark .recent-posts-section { background: var(--bg-card); border-color: var(--border-mid); }
+body.dark .user-post           { background: var(--bg-subtle); border-color: var(--border-mid); }
 body.dark .profile-card        { background: var(--bg-card); }
 body.dark .profile-info        { color: var(--text-body); }
 
-/* ── Auth pages (Login, Register) ── */
-body.dark .login-card,
-body.dark .register-card,
-body.dark .auth-card           { background: var(--bg-card); }
-body.dark .auth-input          { background: var(--bg-input); color: var(--text); border-color: var(--border-mid); }
+/* ── Auth pages (Login, Register, RefreshPassword) ── */
+body.dark .login-container     { background: var(--bg); }
+body.dark .login-card          { background: var(--bg-card); border-color: var(--border-mid); }
+body.dark .h2                  { color: var(--text); }
+body.dark .subtitle            { color: var(--text-muted); }
+body.dark .label               { color: var(--text-body); }
+body.dark .input-login-group   { background: var(--bg-input); border-color: var(--border-mid); }
+body.dark .input-login-group:focus-within { border-color: var(--accent); }
+body.dark .input-login-field   { color: var(--text); }
+body.dark .icon                { filter: invert(0.6); }
+body.dark .google-button       { background: var(--bg-hover); border-color: var(--border-mid); color: var(--text-body); }
+body.dark .google-button:hover { background: var(--bg-input); }
+body.dark .divider             { border-top-color: var(--border-mid); }
+body.dark .remember-me-label   { color: var(--text-muted); }
+body.dark .signup-text         { color: var(--text-muted); }
+body.dark .toggle              { background-color: var(--border-solid); }
+body.dark .toggle.checked      { background-color: var(--accent); }
+body.dark .toggle-circle       { background-color: var(--text); }
+body.dark .error-message       { background-color: rgba(220, 53, 69, 0.15); border-color: rgba(220, 53, 69, 0.4); color: #f87171; }
+
+/* ── Chrome autofill override ── */
+body.dark input:-webkit-autofill,
+body.dark input:-webkit-autofill:hover,
+body.dark input:-webkit-autofill:focus,
+body.dark textarea:-webkit-autofill,
+body.dark select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px var(--bg-input) inset !important;
+  -webkit-text-fill-color: var(--text) !important;
+  caret-color: var(--text);
+}
+
+/* ── UserTooltip / ProfileCard ── */
+body.dark .user-tooltip-popup  { background: var(--bg-card); border-color: var(--border-mid); box-shadow: 0 4px 16px var(--shadow-lg); }
+body.dark .tooltip-info p      { color: var(--text-body); }
 
 /* ── Notifications ── */
 body.dark .notifications-page  { background: var(--bg); }

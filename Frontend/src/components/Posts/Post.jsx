@@ -23,6 +23,7 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
         return res?.data;
       }
     } catch {
+      // eslint-disable-next-line no-console
       console.error("Can't get comments");
       return [];
     }
@@ -78,6 +79,7 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
       await deletePost(postId);
       setLocalPosts((prev) => prev.filter((p) => p.id !== postId));
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error('Помилка видалення:', e);
     }
   };
@@ -102,6 +104,7 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
       setEditingPostId(null);
       setEditedContent('');
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error('Помилка редагування:', e);
     }
   };

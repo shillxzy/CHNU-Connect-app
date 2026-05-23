@@ -202,6 +202,7 @@ export default function Chats() {
       .then(async () => {
         await connection.invoke('SubscribeToNotifications').catch(() => {});
       })
+      // eslint-disable-next-line no-console
       .catch((err) => console.error('SignalR error:', err));
 
     connectionRef.current = connection;
@@ -229,6 +230,7 @@ export default function Chats() {
         });
         setChats(sorted);
       })
+      // eslint-disable-next-line no-console
       .catch((err) => console.error('Chat load error:', err))
       .finally(() => setLoading(false));
   }, [userId]);
@@ -262,6 +264,7 @@ export default function Chats() {
           ),
         ),
       )
+      // eslint-disable-next-line no-console
       .catch((err) => console.error('Messages load error:', err));
 
     const join = async () => {
@@ -300,6 +303,7 @@ export default function Chats() {
       });
     } catch (err) {
       setNewMessage(content);
+      // eslint-disable-next-line no-console
       console.error('Send error:', err);
     }
   };
@@ -334,6 +338,7 @@ export default function Chats() {
     try {
       await sendFile(selectedChat.id, formData);
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('File send error:', err);
     }
     e.target.value = '';
@@ -379,6 +384,7 @@ export default function Chats() {
       setEditingMessageId(null);
       setEditContent('');
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('Update error:', err);
     }
   };
@@ -388,6 +394,7 @@ export default function Chats() {
       await deleteMessage(selectedChat.id, messageId);
       setMessages((prev) => prev.filter((m) => m.id !== messageId));
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('Delete error:', err);
     }
   };
@@ -402,6 +409,7 @@ export default function Chats() {
       const res = await getAllUsers();
       setAllUsers(res.data.filter((u) => u.id !== userId));
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('Users load error:', err);
     }
   };
@@ -428,6 +436,7 @@ export default function Chats() {
       setShowGroupModal(false);
       navigate(`/chats/${res.data.id}`);
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('Create group error:', err);
     } finally {
       setModalLoading(false);
@@ -514,11 +523,34 @@ export default function Chats() {
             <>
               {/* Header */}
               <div className="chat-header">
-                <div className="chat-avatar-wrap">
+                <div
+                  className="chat-avatar-wrap"
+                  style={
+                    !isGroupChat && selectedDisplay?.userId
+                      ? { cursor: 'pointer' }
+                      : {}
+                  }
+                  onClick={() =>
+                    !isGroupChat &&
+                    selectedDisplay?.userId &&
+                    navigate(`/profile/view/${selectedDisplay.userId}`)
+                  }
+                >
                   <Avatar photoUrl={selectedDisplay?.avatar} size={40} />
                   {isOtherOnline && <span className="online-dot" />}
                 </div>
-                <div>
+                <div
+                  style={
+                    !isGroupChat && selectedDisplay?.userId
+                      ? { cursor: 'pointer' }
+                      : {}
+                  }
+                  onClick={() =>
+                    !isGroupChat &&
+                    selectedDisplay?.userId &&
+                    navigate(`/profile/view/${selectedDisplay.userId}`)
+                  }
+                >
                   <div className="chat-title">{selectedDisplay?.name}</div>
                   {!isGroupChat && (
                     <div
@@ -542,7 +574,15 @@ export default function Chats() {
                       <div className="members-popup">
                         <div className="members-popup-title">Учасники</div>
                         {selectedChat.members?.map((m) => (
-                          <div key={m.userId} className="members-popup-item">
+                          <div
+                            key={m.userId}
+                            className="members-popup-item"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => {
+                              setShowMembers(false);
+                              navigate(`/profile/view/${m.userId}`);
+                            }}
+                          >
                             <div className="chat-avatar-wrap">
                               <Avatar photoUrl={m.authorAvatar} size={28} />
                               {isOnline(m.userId) && (

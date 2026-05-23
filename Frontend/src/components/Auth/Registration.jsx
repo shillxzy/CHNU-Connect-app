@@ -33,6 +33,7 @@ export default function Registration() {
       alert('Реєстрація пройшла успішно! Перейдіть на сторінку входу.');
       navigate('/login');
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error(err);
       setError(
         err.response?.data?.message || 'Сталася помилка під час реєстрації',

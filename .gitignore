@@ -8,3 +8,7 @@ Backend/CHNU-Connect.API/logs/
 /wwwroot
 .env.local
 AppDbContextFactory.cs
+
+# Claude Code
+CLAUDE.md
+.claude/

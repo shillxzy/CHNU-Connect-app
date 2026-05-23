@@ -34,7 +34,9 @@
       "Bash(Start-Sleep -Seconds 8)",
       "Bash(Get-Content \"C:\\\\Users\\\\hedge\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-hedge-OneDrive-Desktop-CNU-connect-CHNU-Connect-app\\\\ea1a36fe-86b7-4e3e-8e00-58a09987d1f2\\\\tasks\\\\b01nqi8ov.output\")",
       "Bash(Get-ChildItem -Recurse -File -Name)",
-      "Bash(Select-String -Pattern \"\\(Seed|Initialize\\)\")"
+      "Bash(Select-String -Pattern \"\\(Seed|Initialize\\)\")",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\hedge\\\\OneDrive\\\\Desktop\\\\CNU_connect\\\\CHNU-Connect-app\" -Recurse -Filter \"pre-commit\" -ErrorAction SilentlyContinue)",
+      "Bash(Select-Object FullName)"
     ]
   }
 }

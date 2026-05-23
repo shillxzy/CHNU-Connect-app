@@ -34,6 +34,7 @@ export default function PostsList() {
 
         setProfile(profileRes.data);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching posts:', error);
         setPosts([]);
       } finally {
@@ -59,6 +60,7 @@ export default function PostsList() {
         ),
       );
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error('Like error:', e);
     }
   };
@@ -72,11 +74,15 @@ export default function PostsList() {
   };
 
   const handleCreatePost = async () => {
-    if (!newPostContent.trim() && !newPostImage) {return;}
+    if (!newPostContent.trim() && !newPostImage) {
+      return;
+    }
     try {
       const formData = new FormData();
       formData.append('content', newPostContent);
-      if (newPostImage) {formData.append('image', newPostImage);}
+      if (newPostImage) {
+        formData.append('image', newPostImage);
+      }
 
       const res = await createPostWithImage(formData);
       const newPost = {
@@ -92,11 +98,14 @@ export default function PostsList() {
       setNewPostImage(null);
       setPreviewImage(null);
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Помилка створення поста:', error);
     }
   };
 
-  if (loading) {return <Loading />;}
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="posts-feed">

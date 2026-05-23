@@ -57,6 +57,7 @@ export default function Login() {
 
       navigate('/');
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error(err);
       if (err.response?.status === 403) {
         setError('Ваш акаунт заблоковано. Зверніться до адміністратора.');
