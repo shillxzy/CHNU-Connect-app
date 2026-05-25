@@ -8,6 +8,15 @@ export const getPosts = async () => {
   const response = await api.get('/Post');
   return response.data;
 };
+
+export const getFirstFivePosts = async () => {
+  const response = await api.get('/Post', {
+    params: {
+      _limit: 5,
+    },
+  });
+  return response.data;
+};
 export const createPost = (data) => api.post('/Post', data);
 export const getFeed = () => api.get('/Post/feed');
 export const getPostById = (id) => api.get(`/Post/${id}`);

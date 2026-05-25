@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import Post from '../Posts/Post';
 import {
-  getPosts,
+  getFirstFivePosts,
   createPostWithImage,
   likePost,
   unlikePost,
@@ -27,7 +27,7 @@ const NewsFeed = () => {
         const resUser = await getProfile();
         setCurrentUser(resUser.data);
 
-        const postsData = await getPosts();
+        const postsData = await getFirstFivePosts();
 
         const postsWithUser = postsData.map((post) => ({
           ...post,

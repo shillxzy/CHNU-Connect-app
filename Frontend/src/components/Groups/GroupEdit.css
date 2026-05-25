@@ -136,8 +136,10 @@ textarea {
   justify-content: space-between;
   padding: 10px;
   border-radius: 8px;
-  background: #f7f9ff;
-  border: 1px solid #e0e6f5;
+  background: var(--bg-subtle);
+  border: 1px solid;
+  border-color: var(--border-mid);
+  color: var(--text);
 }
 
 .subject-info {

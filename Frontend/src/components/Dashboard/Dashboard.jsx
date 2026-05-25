@@ -8,13 +8,36 @@ import './Dashboard.css';
 
 /* ── helpers ── */
 const DAY_MAP = {
-  Sunday: 0, Monday: 1, Tuesday: 2, Wednesday: 3,
-  Thursday: 4, Friday: 5, Saturday: 6,
+  Sunday: 0,
+  Monday: 1,
+  Tuesday: 2,
+  Wednesday: 3,
+  Thursday: 4,
+  Friday: 5,
+  Saturday: 6,
 };
-const DAY_UK = ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', "П'ятниця", 'Субота'];
+const DAY_UK = [
+  'Неділя',
+  'Понеділок',
+  'Вівторок',
+  'Середа',
+  'Четвер',
+  "П'ятниця",
+  'Субота',
+];
 const MON_UK = [
-  'січня','лютого','березня','квітня','травня','червня',
-  'липня','серпня','вересня','жовтня','листопада','грудня',
+  'січня',
+  'лютого',
+  'березня',
+  'квітня',
+  'травня',
+  'червня',
+  'липня',
+  'серпня',
+  'вересня',
+  'жовтня',
+  'листопада',
+  'грудня',
 ];
 
 function getISOWeek(date) {
@@ -22,7 +45,13 @@ function getISOWeek(date) {
   d.setHours(0, 0, 0, 0);
   d.setDate(d.getDate() + 3 - ((d.getDay() + 6) % 7));
   const w1 = new Date(d.getFullYear(), 0, 4);
-  return 1 + Math.round(((d.getTime() - w1.getTime()) / 86400000 - 3 + ((w1.getDay() + 6) % 7)) / 7);
+  return (
+    1 +
+    Math.round(
+      ((d.getTime() - w1.getTime()) / 86400000 - 3 + ((w1.getDay() + 6) % 7)) /
+        7,
+    )
+  );
 }
 
 function todayLabel() {
@@ -31,19 +60,29 @@ function todayLabel() {
 }
 
 function toDay(raw) {
-  if (typeof raw === 'number') {return raw;}
+  if (typeof raw === 'number') {
+    return raw;
+  }
   return DAY_MAP[raw] ?? 0;
 }
 
 function matchesWeek(s, weekType) {
-  if (s.isEveryWeek) {return true;}
+  if (s.isEveryWeek) {
+    return true;
+  }
   const w = s.week;
-  if (typeof w === 'number') {return w === weekType;}
-  return (weekType === 1 && w === 'First') || (weekType === 2 && w === 'Second');
+  if (typeof w === 'number') {
+    return w === weekType;
+  }
+  return (
+    (weekType === 1 && w === 'First') || (weekType === 2 && w === 'Second')
+  );
 }
 
 function fmtTime(t) {
-  if (!t) {return '';}
+  if (!t) {
+    return '';
+  }
   return typeof t === 'string' ? t.slice(0, 5) : '';
 }
 
@@ -55,7 +94,11 @@ function getTodayClasses(schedule, slots) {
     .sort((a, b) => a.pairNumber - b.pairNumber)
     .map((s) => {
       const slot = slots.find((sl) => sl.id === s.slotId);
-      return { ...s, startTime: slot?.startTime ?? '', endTime: slot?.endTime ?? '' };
+      return {
+        ...s,
+        startTime: slot?.startTime ?? '',
+        endTime: slot?.endTime ?? '',
+      };
     });
 }
 
@@ -65,11 +108,15 @@ function getNextClass(schedule, slots) {
   const todayClasses = getTodayClasses(schedule, slots);
 
   for (const cls of todayClasses) {
-    if (!cls.startTime) {continue;}
+    if (!cls.startTime) {
+      continue;
+    }
     const [h, m] = cls.startTime.split(':').map(Number);
     const classStart = new Date();
     classStart.setHours(h, m, 0, 0);
-    if (classStart > now) {return cls;}
+    if (classStart > now) {
+      return cls;
+    }
   }
 
   // Якщо сьогодні більше немає — шукаємо наступний день тижня
@@ -79,7 +126,8 @@ function getNextClass(schedule, slots) {
   for (let offset = 1; offset <= 6; offset++) {
     const nextDay = (todayIdx + offset) % 7;
     // для наступного тижня weekType може змінитись — спрощено беремо той самий
-    const nextWeekType = offset >= (7 - todayIdx) ? (weekType === 1 ? 2 : 1) : weekType;
+    const nextWeekType =
+      offset >= 7 - todayIdx ? (weekType === 1 ? 2 : 1) : weekType;
     const nextDayClasses = schedule
       .filter((s) => toDay(s.day) === nextDay && matchesWeek(s, nextWeekType))
       .sort((a, b) => a.pairNumber - b.pairNumber);
@@ -112,19 +160,25 @@ function fmtEventDate(iso) {
 }
 
 const ROLE_LABELS = {
-  student: 'Студент', teacher: 'Викладач',
-  admin: 'Адміністратор', superAdmin: 'Супер-адмін',
+  student: 'Студент',
+  teacher: 'Викладач',
+  admin: 'Адміністратор',
+  superAdmin: 'Супер-адмін',
 };
 const ROLE_COLORS = {
-  student: '#16a34a', teacher: '#0369a1',
-  admin: '#7c3aed', superAdmin: '#b91c1c',
+  student: '#16a34a',
+  teacher: '#0369a1',
+  admin: '#7c3aed',
+  superAdmin: '#b91c1c',
 };
 
 /* ── cards ── */
-function ScheduleCard({ schedule, slots }) {
+function ScheduleCard({ schedule, slots, groups }) {
   const today = getTodayClasses(schedule, slots);
   // #2 FIX: наступна пара
   const next = getNextClass(schedule, slots);
+
+  const myGroupId = groups && groups.length > 0 ? groups[0].id : null;
 
   return (
     <div className="db-card">
@@ -160,9 +214,15 @@ function ScheduleCard({ schedule, slots }) {
         </div>
       )}
 
-      <Link to="/groups" className="db-card-link">
-        Мій розклад →
-      </Link>
+      {myGroupId ? (
+        <Link to={`/group/schedule/${myGroupId}`} className="db-card-link">
+          Мій розклад →
+        </Link>
+      ) : (
+        <Link to="/groups" className="db-card-link">
+          Мій розклад (Оберіть групу) →
+        </Link>
+      )}
     </div>
   );
 }
@@ -264,9 +324,15 @@ function AdminCard() {
         <h3>Швидкі дії</h3>
       </div>
       <div className="db-quick-actions">
-        <Link to="/admin-panel" className="db-action-btn">Адмін панель</Link>
-        <Link to="/events/create" className="db-action-btn">+ Подія</Link>
-        <Link to="/groups/create" className="db-action-btn">+ Група</Link>
+        <Link to="/admin-panel" className="db-action-btn">
+          Адмін панель
+        </Link>
+        <Link to="/events/create" className="db-action-btn">
+          + Подія
+        </Link>
+        <Link to="/groups/create" className="db-action-btn">
+          + Група
+        </Link>
       </div>
     </div>
   );
@@ -286,24 +352,36 @@ export default function Dashboard() {
 
   useEffect(() => {
     const loads = [
-      getEvents().then((r) => setEvents(r.data || [])).catch(() => {}),
+      getEvents()
+        .then((r) => setEvents(r.data || []))
+        .catch(() => {}),
     ];
 
     if (isStudent) {
       loads.push(
-        getMySchedule().then((r) => setSchedule(r.data || [])).catch(() => {}),
-        getLessonSlots().then((r) => setSlots(r.data || [])).catch(() => {}),
-        getGroups().then((r) => setGroups(r.data || [])).catch(() => {}),
+        getMySchedule()
+          .then((r) => setSchedule(r.data || []))
+          .catch(() => {}),
+        getLessonSlots()
+          .then((r) => setSlots(r.data || []))
+          .catch(() => {}),
+        getGroups()
+          .then((r) => setGroups(r.data || []))
+          .catch(() => {}),
       );
     }
     if (isTeacher) {
       loads.push(
-        getCuratedGroups().then((r) => setGroups(r.data || [])).catch(() => {}),
+        getCuratedGroups()
+          .then((r) => setGroups(r.data || []))
+          .catch(() => {}),
       );
     }
     if (isAdmin) {
       loads.push(
-        getGroups().then((r) => setGroups(r.data || [])).catch(() => {}),
+        getGroups()
+          .then((r) => setGroups(r.data || []))
+          .catch(() => {}),
       );
     }
 
@@ -339,7 +417,7 @@ export default function Dashboard() {
       <div className="db-cards">
         {isStudent && (
           <>
-            <ScheduleCard schedule={schedule} slots={slots} />
+            <ScheduleCard schedule={schedule} slots={slots} groups={groups} />
             <GroupsCard groups={groups} />
           </>
         )}

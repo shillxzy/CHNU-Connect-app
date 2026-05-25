@@ -7,11 +7,14 @@ const teamMembers = [
   { name: 'Габрієль Спелчук', role: 'Full-stack Developer', color: '#059669' },
   { name: 'Ярослав Сапсай', role: 'Business Analytic', color: '#d97706' },
   { name: 'Олексій Дорошенко', role: 'Business Analytic', color: '#dc2626' },
+  { name: 'Евеліна Іващук', role: 'Tester', color: '#da13e4' },
 ];
 
 const getInitials = (name) => {
   const parts = name.trim().split(' ');
-  if (parts.length === 1) {return parts[0].charAt(0).toUpperCase();}
+  if (parts.length === 1) {
+    return parts[0].charAt(0).toUpperCase();
+  }
   return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
 };
 
