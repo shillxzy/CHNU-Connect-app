@@ -134,7 +134,7 @@ const Post = ({ posts, onLikeToggle, currentUser }) => {
               <div className="author-name">{post.authorName || 'Unknown'}</div>
 
               {/* ТРИКРАПКА — для автора або адміна */}
-              {(currentUser?.id === post.authorId ||
+              {(currentUser?.id === post.userId ||
                 currentUser?.role === 'admin' ||
                 currentUser?.role === 'superAdmin') &&
                 !isEditing && (

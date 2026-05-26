@@ -10,6 +10,7 @@ import {
   deleteEvent,
   deleteGroup,
   deletePost,
+  getActivityLog,
 } from '../../api/adminAPI';
 import {
   getUserPermissions,
@@ -34,7 +35,10 @@ const SECTIONS = [
   { key: 'groups', label: 'Групи' },
   { key: 'posts', label: 'Пости' },
   { key: 'permissions', label: 'Права доступу' },
+  { key: 'activity-log', label: 'Журнал активності' },
 ];
+
+const LOG_PAGE_SIZE = 20;
 
 /* ──────────────── helpers ──────────────── */
 const fmt = (d) => (d ? new Date(d).toLocaleDateString('uk-UA') : '—');
@@ -235,37 +239,65 @@ export default function AdminPanel() {
   const [postComments, setPostComments] = useState({});
   const [loadingComments, setLoadingComments] = useState(false);
 
+  const [activityLog, setActivityLog] = useState([]);
+  const [logTotal, setLogTotal] = useState(0);
+  const [logPage, setLogPage] = useState(1);
+  const [logFilters, setLogFilters] = useState({
+    from: '',
+    to: '',
+    action: '',
+    userId: '',
+  });
+
   /* ── load ── */
-  const load = useCallback(async (sec) => {
-    setLoading(true);
-    setError(null);
-    try {
-      if (sec === 'users') {
-        const r = await getUsers();
-        setUsers(Array.isArray(r.data) ? r.data : []);
+  const load = useCallback(
+    async (sec) => {
+      setLoading(true);
+      setError(null);
+      try {
+        if (sec === 'users') {
+          const r = await getUsers();
+          setUsers(Array.isArray(r.data) ? r.data : []);
+        }
+        if (sec === 'events') {
+          const r = await getEvents();
+          setEvents(Array.isArray(r.data) ? r.data : []);
+        }
+        if (sec === 'groups') {
+          const r = await getAllGroups();
+          setGroups(Array.isArray(r.data) ? r.data : []);
+        }
+        if (sec === 'posts') {
+          const r = await getPosts();
+          setPosts(Array.isArray(r) ? r : []);
+        }
+        if (sec === 'permissions') {
+          const r = await getUsers();
+          setUsers(Array.isArray(r.data) ? r.data : []);
+        }
+        if (sec === 'activity-log') {
+          const params = {
+            page: logPage,
+            pageSize: LOG_PAGE_SIZE,
+            ...(logFilters.from && {
+              from: new Date(logFilters.from).toISOString(),
+            }),
+            ...(logFilters.to && { to: new Date(logFilters.to).toISOString() }),
+            ...(logFilters.action && { action: logFilters.action }),
+            ...(logFilters.userId && { userId: Number(logFilters.userId) }),
+          };
+          const r = await getActivityLog(params);
+          setActivityLog(Array.isArray(r.data.items) ? r.data.items : []);
+          setLogTotal(r.data.totalCount ?? 0);
+        }
+      } catch (e) {
+        setError(e.response?.data?.message || 'Помилка завантаження');
+      } finally {
+        setLoading(false);
       }
-      if (sec === 'events') {
-        const r = await getEvents();
-        setEvents(Array.isArray(r.data) ? r.data : []);
-      }
-      if (sec === 'groups') {
-        const r = await getAllGroups();
-        setGroups(Array.isArray(r.data) ? r.data : []);
-      }
-      if (sec === 'posts') {
-        const r = await getPosts();
-        setPosts(Array.isArray(r) ? r : []);
-      }
-      if (sec === 'permissions') {
-        const r = await getUsers();
-        setUsers(Array.isArray(r.data) ? r.data : []);
-      }
-    } catch (e) {
-      setError(e.response?.data?.message || 'Помилка завантаження');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    },
+    [logPage, logFilters],
+  );
 
   useEffect(() => {
     load(section);
@@ -308,7 +340,9 @@ export default function AdminPanel() {
       return;
     }
     setExpandedPostId(postId);
-    if (postComments[postId]) {return;}
+    if (postComments[postId]) {
+      return;
+    }
     setLoadingComments(true);
     try {
       const res = await getCommentsByPost(postId);
@@ -321,7 +355,9 @@ export default function AdminPanel() {
   };
 
   const handleDeleteComment = async (commentId, postId) => {
-    if (!window.confirm('Видалити коментар?')) {return;}
+    if (!window.confirm('Видалити коментар?')) {
+      return;
+    }
     try {
       await deleteComment(commentId);
       setPostComments((prev) => ({
@@ -599,13 +635,15 @@ export default function AdminPanel() {
           <h2 className="ap-section-title">
             {SECTIONS.find((s) => s.key === section)?.label}
           </h2>
-          <input
-            className="ap-search"
-            type="text"
-            placeholder="Пошук за назвою, автором, описом..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          {section !== 'activity-log' && (
+            <input
+              className="ap-search"
+              type="text"
+              placeholder="Пошук за назвою, автором, описом..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          )}
         </div>
 
         {loading && <p className="ap-msg">Завантаження…</p>}
@@ -801,6 +839,118 @@ export default function AdminPanel() {
 
         {/* ── PERMISSIONS ── */}
         {section === 'permissions' && <PermissionsSection adminUsers={users} />}
+
+        {/* ── ACTIVITY LOG ── */}
+        {section === 'activity-log' && (
+          <div>
+            <div className="ap-log-filters">
+              <input
+                type="date"
+                className="ap-log-input"
+                placeholder="Від"
+                value={logFilters.from}
+                onChange={(e) => {
+                  setLogFilters((f) => ({ ...f, from: e.target.value }));
+                  setLogPage(1);
+                }}
+              />
+              <input
+                type="date"
+                className="ap-log-input"
+                placeholder="До"
+                value={logFilters.to}
+                onChange={(e) => {
+                  setLogFilters((f) => ({ ...f, to: e.target.value }));
+                  setLogPage(1);
+                }}
+              />
+              <input
+                type="text"
+                className="ap-log-input"
+                placeholder="Дія (login, post_created…)"
+                value={logFilters.action}
+                onChange={(e) => {
+                  setLogFilters((f) => ({ ...f, action: e.target.value }));
+                  setLogPage(1);
+                }}
+              />
+              <input
+                type="number"
+                className="ap-log-input"
+                placeholder="ID користувача"
+                value={logFilters.userId}
+                onChange={(e) => {
+                  setLogFilters((f) => ({ ...f, userId: e.target.value }));
+                  setLogPage(1);
+                }}
+              />
+              <button
+                className="ap-btn-cancel"
+                onClick={() => {
+                  setLogFilters({ from: '', to: '', action: '', userId: '' });
+                  setLogPage(1);
+                }}
+              >
+                Скинути
+              </button>
+            </div>
+
+            <div className="ap-table-wrap">
+              <table className="ap-table">
+                <thead>
+                  <tr>
+                    <th>Час</th>
+                    <th>Користувач</th>
+                    <th>Дія</th>
+                    <th>Сутність</th>
+                    <th>ID сутності</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {activityLog.map((entry) => (
+                    <tr key={entry.id}>
+                      <td className="ap-nowrap">{fmtDT(entry.timestamp)}</td>
+                      <td>
+                        <div className="ap-user-name">{entry.userName}</div>
+                        <div className="ap-sub">ID: {entry.userId}</div>
+                      </td>
+                      <td>
+                        <span className="ap-log-action">{entry.action}</span>
+                      </td>
+                      <td>{entry.entityType || '—'}</td>
+                      <td>{entry.entityId ?? '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {activityLog.length === 0 && !loading && (
+                <p className="ap-msg">Немає записів</p>
+              )}
+            </div>
+
+            {logTotal > LOG_PAGE_SIZE && (
+              <div className="ap-log-pagination">
+                <button
+                  className="ap-btn-cancel"
+                  disabled={logPage === 1}
+                  onClick={() => setLogPage((p) => p - 1)}
+                >
+                  ← Назад
+                </button>
+                <span className="ap-log-page-info">
+                  Сторінка {logPage} з {Math.ceil(logTotal / LOG_PAGE_SIZE)}
+                </span>
+                <button
+                  className="ap-btn-cancel"
+                  disabled={logPage >= Math.ceil(logTotal / LOG_PAGE_SIZE)}
+                  onClick={() => setLogPage((p) => p + 1)}
+                >
+                  Вперед →
+                </button>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* ── POSTS ── */}
         {!loading && section === 'posts' && (

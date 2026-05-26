@@ -108,7 +108,18 @@ namespace CHNU_Connect.API
             {
                 options.AddPolicy("AllowReactApp", policy =>
                 {
-                    policy.WithOrigins("http://localhost:5173", "http://localhost:5174", "http://localhost:5175")
+                    policy.SetIsOriginAllowed(origin =>
+                    {
+                        var uri = new Uri(origin);
+                        // Allow localhost on any port
+                        if (uri.Host == "localhost" || uri.Host == "127.0.0.1")
+                            return true;
+                        // Allow any device on a local network (192.168.x.x, 10.x.x.x, 172.16-31.x.x)
+                        if (uri.Host.StartsWith("192.168.") || uri.Host.StartsWith("10.") ||
+                            System.Text.RegularExpressions.Regex.IsMatch(uri.Host, @"^172\.(1[6-9]|2\d|3[01])\."))
+                            return true;
+                        return false;
+                    })
                           .AllowAnyHeader()
                           .AllowAnyMethod()
                           .AllowCredentials();
@@ -187,7 +198,7 @@ namespace CHNU_Connect.API
             });
 
             // ---------- PIPELINE ----------
-            app.UseHttpsRedirection();
+            // UseHttpsRedirection disabled — app runs on HTTP for local network access
 
             app.UseCors("AllowReactApp");
 

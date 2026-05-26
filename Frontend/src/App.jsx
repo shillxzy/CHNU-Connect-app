@@ -23,6 +23,7 @@ import GroupCreate from './components/Groups/GroupCreate';
 import GroupEdit from './components/Groups/GroupEdit';
 import ScheduleEditPage from './components/Schedule/ScheduleEditPage';
 import ScheduleViewPage from './components/Schedule/ScheduleViewPage';
+import MySchedulePage from './components/Schedule/MySchedulePage';
 import SearchPage from './components/Search/SearchPage';
 import SettingsPage from './components/Settings/SettingsPage';
 import NotificationsPage from './components/Notifications/NotificationsPage';
@@ -128,8 +129,11 @@ function AppRoutes() {
         <Route path="chats/:chatId" element={<Chats />} />
         <Route path="notifications" element={<NotificationsPage />} />
 
-        {/* ✅ Перегляд розкладу — для всіх авторизованих */}
+        {/* Перегляд розкладу конкретної групи */}
         <Route path="group/schedule/:id" element={<ScheduleViewPage />} />
+
+        {/* Мій розклад — всі групи поточного користувача */}
+        <Route path="schedule" element={<MySchedulePage />} />
 
         <Route
           path="admin-panel"

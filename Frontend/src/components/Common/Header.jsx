@@ -176,6 +176,9 @@ const Header = () => {
           <NavLink to="/groups" className={navIsActive}>
             Групи
           </NavLink>
+          <NavLink to="/schedule" className={navIsActive}>
+            Розклад
+          </NavLink>
           <NavLink to="/about" className={navIsActive}>
             Про Нас
           </NavLink>

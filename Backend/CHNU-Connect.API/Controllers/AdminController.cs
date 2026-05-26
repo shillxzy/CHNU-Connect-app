@@ -17,17 +17,20 @@ namespace CHNU_Connect.API.Controllers
         private readonly IAdminActionService _adminActionService;
         private readonly IUserService _userService;
         private readonly IAdminPermissionService _permissionService;
+        private readonly IActivityLogService _activityLogService;
         private readonly ILogger<AdminController> _logger;
 
         public AdminController(
             IAdminActionService adminActionService,
             IUserService userService,
             IAdminPermissionService permissionService,
+            IActivityLogService activityLogService,
             ILogger<AdminController> logger)
         {
             _adminActionService = adminActionService;
             _userService = userService;
             _permissionService = permissionService;
+            _activityLogService = activityLogService;
             _logger = logger;
         }
 
@@ -224,6 +227,8 @@ namespace CHNU_Connect.API.Controllers
                     Reason = request.Reason
                 });
 
+                var adminUser = await _userService.GetByIdAsync(currentUserId.Value);
+                await _activityLogService.LogAsync(currentUserId.Value, adminUser?.FullName ?? "Admin", "user_blocked", "User", userId);
                 _logger.LogInformation("User blocked: {UserId} by admin: {AdminId}", userId, currentUserId);
                 return Ok(new { message = "User blocked successfully." });
             }
@@ -257,6 +262,8 @@ namespace CHNU_Connect.API.Controllers
                     Reason = request.Reason
                 });
 
+                var adminUser2 = await _userService.GetByIdAsync(currentUserId.Value);
+                await _activityLogService.LogAsync(currentUserId.Value, adminUser2?.FullName ?? "Admin", "user_unblocked", "User", userId);
                 _logger.LogInformation("User unblocked: {UserId} by admin: {AdminId}", userId, currentUserId);
                 return Ok(new { message = "User unblocked successfully." });
             }
@@ -332,6 +339,30 @@ namespace CHNU_Connect.API.Controllers
                 return NotFound("User not found");
 
             return Ok("Role successfully updated");
+        }
+
+        // ==================== ACTIVITY LOG ====================
+
+        [HttpGet("activity-log")]
+        public async Task<IActionResult> GetActivityLog(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 20,
+            [FromQuery] DateTime? from = null,
+            [FromQuery] DateTime? to = null,
+            [FromQuery] string? action = null,
+            [FromQuery] int? userId = null)
+        {
+            try
+            {
+                var (items, totalCount) = await _activityLogService.GetPagedAsync(
+                    page, pageSize, from, to, action, userId);
+                return Ok(new { items, totalCount, page, pageSize });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting activity log");
+                return StatusCode(500, new { message = "An error occurred while retrieving activity log." });
+            }
         }
 
         // ==================== HELPERS ====================

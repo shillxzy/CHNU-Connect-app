@@ -16,17 +16,20 @@ namespace CHNU_Connect.API.Controllers
         private readonly IUserService _userService;
         private readonly IConfiguration _configuration;
         private readonly ILogger<AuthController> _logger;
+        private readonly IActivityLogService _activityLogService;
 
         public AuthController(
-            IAuthService authService, 
-            IUserService userService, 
+            IAuthService authService,
+            IUserService userService,
             IConfiguration configuration,
-            ILogger<AuthController> logger)
+            ILogger<AuthController> logger,
+            IActivityLogService activityLogService)
         {
             _authService = authService;
             _userService = userService;
             _configuration = configuration;
             _logger = logger;
+            _activityLogService = activityLogService;
         }
 
         [HttpPost("register")]
@@ -67,7 +70,8 @@ namespace CHNU_Connect.API.Controllers
             try
             {
                 var loginResponse = await _authService.Login(request);
-                
+
+                await _activityLogService.LogAsync(loginResponse.UserId, loginResponse.UserName, "login");
                 _logger.LogInformation("User logged in: {Email}", request.Email);
                 return Ok(loginResponse);
             }

@@ -52,9 +52,8 @@ namespace CHNU_Connect.API.Controllers
         {
             if (dto.Type == "group")
             {
-                var role = User.FindFirst("role")?.Value
-                        ?? User.FindFirst(ClaimTypes.Role)?.Value;
-                if (role != "teacher" && role != "admin" && role != "superAdmin")
+                var canCreate = User.IsInRole("teacher") || User.IsInRole("admin") || User.IsInRole("superAdmin");
+                if (!canCreate)
                     return Forbid();
             }
             var chat = await _chatService.CreateChatAsync(dto);

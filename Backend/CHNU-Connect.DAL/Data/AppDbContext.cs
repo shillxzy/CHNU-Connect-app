@@ -28,6 +28,7 @@ namespace CHNU_Connect.DAL.Data
         public DbSet<Notification> Notifications { get; set; } = null!;
         public DbSet<LessonSlot> LessonSlots { get; set; } = null!;
         public DbSet<AdminPermission> AdminPermissions { get; set; } = null!;
+        public DbSet<ActivityLog> ActivityLogs { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -484,6 +485,20 @@ namespace CHNU_Connect.DAL.Data
                     .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasIndex(e => new { e.UserId, e.Type }).IsUnique();
+            });
+
+            // ================= ACTIVITY LOG =================
+            modelBuilder.Entity<ActivityLog>(entity =>
+            {
+                entity.ToTable("activity_logs");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.UserId).HasColumnName("user_id").IsRequired();
+                entity.Property(e => e.UserName).HasColumnName("user_name").HasMaxLength(255).IsRequired();
+                entity.Property(e => e.Action).HasColumnName("action").HasMaxLength(100).IsRequired();
+                entity.Property(e => e.EntityType).HasColumnName("entity_type").HasMaxLength(50);
+                entity.Property(e => e.EntityId).HasColumnName("entity_id");
+                entity.Property(e => e.Timestamp).HasColumnName("timestamp").HasDefaultValueSql("now()");
             });
         }
     }

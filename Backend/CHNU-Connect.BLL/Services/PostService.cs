@@ -149,6 +149,12 @@ namespace CHNU_Connect.BLL.Services
             return postDtos;
         }
 
+        public async Task<int> GetTotalCountAsync()
+        {
+            var posts = await _postRepository.GetAllAsync();
+            return posts.Count();
+        }
+
         public async Task<IEnumerable<PostDto>> SearchPostsAsync(string searchTerm, int? currentUserId)
         {
             var posts = await _postRepository.GetAllAsync();

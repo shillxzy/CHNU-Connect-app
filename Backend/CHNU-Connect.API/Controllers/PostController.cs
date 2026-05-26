@@ -13,11 +13,13 @@ namespace CHNU_Connect.API.Controllers
     {
         private readonly IPostService _postService;
         private readonly ILogger<PostController> _logger;
+        private readonly IActivityLogService _activityLogService;
 
-        public PostController(IPostService postService, ILogger<PostController> logger)
+        public PostController(IPostService postService, ILogger<PostController> logger, IActivityLogService activityLogService)
         {
             _postService = postService;
             _logger = logger;
+            _activityLogService = activityLogService;
         }
 
         [HttpGet]
@@ -38,14 +40,15 @@ namespace CHNU_Connect.API.Controllers
         }
 
         [HttpGet("feed")]
-        public async Task<IActionResult> GetFeed([FromQuery] int? page = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetFeed([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             try
             {
                 var currentUserId = GetCurrentUserId();
-                var feed = await _postService.GetFeedAsync(currentUserId, page, pageSize);
+                var items = await _postService.GetFeedAsync(currentUserId, page, pageSize);
+                var totalCount = await _postService.GetTotalCountAsync();
 
-                return Ok(feed);
+                return Ok(new { items, totalCount, page, pageSize });
             }
             catch (Exception ex)
             {
@@ -92,6 +95,7 @@ namespace CHNU_Connect.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "teacher,admin,superAdmin")]
         public async Task<IActionResult> CreatePost([FromBody] CreatePostDto request)
         {
             try
@@ -102,6 +106,8 @@ namespace CHNU_Connect.API.Controllers
 
                 var post = await _postService.CreatePostAsync(request, currentUserId.Value);
 
+                var userName = User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value ?? "Unknown";
+                await _activityLogService.LogAsync(currentUserId.Value, userName, "post_created", "Post", post.Id);
                 _logger.LogInformation("Post created by user: {UserId}", currentUserId);
 
                 return CreatedAtAction(nameof(GetPost), new { id = post.Id }, post);
@@ -167,6 +173,8 @@ namespace CHNU_Connect.API.Controllers
                 if (!success)
                     return BadRequest(new { message = "Failed to delete post." });
 
+                var userName = User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value ?? "Unknown";
+                await _activityLogService.LogAsync(currentUserId.Value, userName, "post_deleted", "Post", id);
                 _logger.LogInformation("Post deleted: {PostId} by user: {UserId}", id, currentUserId);
 
                 return Ok(new { message = "Post deleted successfully." });
@@ -271,6 +279,7 @@ namespace CHNU_Connect.API.Controllers
         }
 
         [HttpPost("with-image")]
+        [Authorize(Roles = "teacher,admin,superAdmin")]
         public async Task<IActionResult> CreatePostWithImage([FromForm] CreatePostWithImageDto request)
         {
             var currentUserId = GetCurrentUserId();

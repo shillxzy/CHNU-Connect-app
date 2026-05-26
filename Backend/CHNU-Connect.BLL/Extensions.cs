@@ -25,6 +25,7 @@ namespace CHNU_Connect.BLL
             services.AddScoped<IScheduleService, ScheduleService>();
             services.AddScoped<ISubGroupService, SubGroupService>();
             services.AddScoped<IAdminPermissionService, AdminPermissionService>();
+            services.AddScoped<IActivityLogService, ActivityLogService>();
 
             return services;
         }

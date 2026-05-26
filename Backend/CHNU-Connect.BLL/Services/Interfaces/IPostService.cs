@@ -24,6 +24,8 @@ namespace CHNU_Connect.BLL.Services.Interfaces
 
         Task<IEnumerable<PostDto>> GetFeedAsync(int? currentUserId, int? page = 1, int pageSize = 10);
 
+        Task<int> GetTotalCountAsync();
+
         Task<IEnumerable<PostDto>> SearchPostsAsync(string searchTerm, int? currentUserId);
     }
 }

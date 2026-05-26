@@ -25,3 +25,6 @@ export const updateUser = (id, data) => api.put(`/Admin/users/${id}`, data);
 export const deleteEvent = (id) => api.delete(`/Event/${id}`);
 export const deleteGroup = (id) => api.delete(`/Group/${id}`);
 export const deletePost = (id) => api.delete(`/Post/${id}`);
+
+export const getActivityLog = (params) =>
+  api.get('/Admin/activity-log', { params });

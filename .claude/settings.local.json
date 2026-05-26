@@ -36,7 +36,10 @@
       "Bash(Get-ChildItem -Recurse -File -Name)",
       "Bash(Select-String -Pattern \"\\(Seed|Initialize\\)\")",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\hedge\\\\OneDrive\\\\Desktop\\\\CNU_connect\\\\CHNU-Connect-app\" -Recurse -Filter \"pre-commit\" -ErrorAction SilentlyContinue)",
-      "Bash(Select-Object FullName)"
+      "Bash(Select-Object FullName)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\hedge\\\\OneDrive\\\\Desktop\\\\CNU_connect\\\\CHNU-Connect-app\" -Recurse -Directory)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Sort-Object)"
     ]
   }
 }

@@ -19,7 +19,8 @@
 
 .chnu-schedule-header-corner {
   display: flex;
-  min-width: 160px; /* 80px Час + 80px Тиждень */
+  width: 160px; /* 80px Пара + 80px Тиждень — must match time-col + week-label */
+  flex-shrink: 0;
 }
 
 .col-pair {
@@ -86,6 +87,7 @@
 /* TIME COLUMN */
 .chnu-schedule-time-col {
   width: 80px;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -125,6 +127,7 @@
 
 .chnu-schedule-week-label {
   width: 80px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -138,8 +141,7 @@
 .chnu-schedule-days-container {
   flex: 1;
   display: flex;
-  table-layout: fixed; 
-  width: 100%;
+  min-width: 0;
 }
 
 .chnu-schedule-day-cells {
